@@ -33,7 +33,7 @@ describe('Audit Logging Unit Tests', () => {
     vi.clearAllMocks();
     // Get the mocked prisma instance
     const { prisma } = await import('@/lib/prisma');
-    mockPrismaAuditLog = prisma.auditLog as {
+    mockPrismaAuditLog = prisma.auditLog as unknown as {
       create: ReturnType<typeof vi.fn>;
       findMany: ReturnType<typeof vi.fn>;
       count: ReturnType<typeof vi.fn>;

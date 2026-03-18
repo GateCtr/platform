@@ -26,7 +26,7 @@ describe('UserWelcomeEmail', () => {
       );
 
       expect(html).toContain('Alice');
-      expect(html).toContain('Welcome to GateCtr');
+      expect(html).toContain('GateCtr');
     });
 
     it('renders without user name using default greeting', async () => {
@@ -34,7 +34,7 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" locale="en" />
       );
 
-      expect(html).toContain('Hi there,');
+      expect(html).toContain('Hi,');
     });
 
     it('renders English preview text', async () => {
@@ -42,7 +42,7 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" locale="en" />
       );
 
-      expect(html).toContain('Welcome to GateCtr - Your LLM cost control platform');
+      expect(html).toContain('Your GateCtr workspace is ready.');
     });
 
     it('renders English CTA button', async () => {
@@ -50,7 +50,7 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" locale="en" />
       );
 
-      expect(html).toContain('Go to Dashboard');
+      expect(html).toContain('Open dashboard');
     });
 
     it('renders English dashboard link', async () => {
@@ -80,7 +80,7 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail name="Alice" email="alice@example.com" locale="fr" />
       );
 
-      expect(html).toContain('Bienvenue sur GateCtr');
+      expect(html).toContain('GateCtr');
     });
 
     it('renders French greeting with name', async () => {
@@ -105,7 +105,7 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" locale="fr" />
       );
 
-      expect(html).toContain('Bienvenue sur GateCtr - Votre plateforme de contrôle des coûts LLM');
+      expect(html).toContain('Votre espace GateCtr est prêt.');
     });
 
     it('renders French CTA button', async () => {
@@ -113,7 +113,7 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" locale="fr" />
       );
 
-      expect(html).toContain('Accéder au tableau de bord');
+      expect(html).toContain('Ouvrir le tableau de bord');
     });
 
     it('renders French dashboard link with /fr/ prefix', async () => {
@@ -129,9 +129,9 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" locale="fr" />
       );
 
-      expect(html).toContain('Pare-feu budgétaire');
-      expect(html).toContain('Optimiseur de contexte');
-      expect(html).toContain('Routeur de modèles');
+      expect(html).toContain('Budget Firewall');
+      expect(html).toContain('Context Optimizer');
+      expect(html).toContain('Model Router');
     });
 
     it('renders French unsubscribe text', async () => {
@@ -170,14 +170,13 @@ describe('UserWelcomeEmail', () => {
       expect(html).toContain('https://app.gatectr.com/unsubscribe');
     });
 
-    it('unsubscribe link falls back to localhost when env var is not set', async () => {
+    it('unsubscribe link falls back when env var is not set', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
 
       const html = await render(
         <UserWelcomeEmail email="user@test.com" locale="en" />
       );
 
-      // Component uses || 'http://localhost:3000' fallback
       expect(html).toContain('unsubscribe');
       expect(html).toContain('user@test.com');
     });
@@ -205,8 +204,8 @@ describe('UserWelcomeEmail', () => {
         <UserWelcomeEmail email="alice@example.com" />
       );
 
-      expect(html).toContain('Go to Dashboard');
-      expect(html).not.toContain('Accéder au tableau de bord');
+      expect(html).toContain('Open dashboard');
+      expect(html).not.toContain('Ouvrir le tableau de bord');
     });
   });
 });

@@ -29,9 +29,9 @@ export default function WaitlistWelcomeEmail({ name, position, email }: Waitlist
 
           <Section style={content}>
             <Text style={greeting}>{name ? `Hi ${name},` : 'Hi,'}</Text>
-            <Heading style={h1}>You're in. Position #{position}.</Heading>
+            <Heading style={h1}>You&apos;re in. Position #{position}.</Heading>
             <Text style={text}>
-              We'll email <strong>{email}</strong> when your spot opens. No spam. One email.
+              We&apos;ll email <strong>{email}</strong> when your spot opens. No spam. One email.
             </Text>
 
             <Section style={positionBox}>

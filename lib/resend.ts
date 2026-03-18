@@ -4,11 +4,18 @@ import WaitlistWelcomeEmail from '@/components/emails/waitlist-welcome';
 import WaitlistInviteEmail from '@/components/emails/waitlist-invite';
 import UserWelcomeEmail from '@/components/emails/user-welcome';
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not defined');
+function getResend(): Resend {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY is not defined');
+  }
+  return new Resend(process.env.RESEND_API_KEY);
 }
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+export const resend = new Proxy({} as Resend, {
+  get(_target, prop) {
+    return getResend()[prop as keyof Resend];
+  },
+});
 
 export async function sendWelcomeWaitlistEmail(
   email: string,

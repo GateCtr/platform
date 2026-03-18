@@ -55,7 +55,7 @@ describe('Auth Utilities Unit Tests', () => {
     mockAuth = clerkModule.auth as ReturnType<typeof vi.fn>;
     
     const { prisma } = await import('@/lib/prisma');
-    mockPrismaUser = prisma.user as { findUnique: ReturnType<typeof vi.fn> };
+    mockPrismaUser = prisma.user as unknown as { findUnique: ReturnType<typeof vi.fn> };
     
     const permissionsModule = await import('@/lib/permissions');
     mockHasPermission = permissionsModule.hasPermission as ReturnType<typeof vi.fn>;
