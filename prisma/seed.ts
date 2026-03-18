@@ -124,7 +124,12 @@ async function main() {
     },
   });
 
-  console.log("✅ Plans created:", { freePlan, proPlan, teamPlan, enterprisePlan });
+  console.log("✅ Plans created:", {
+    freePlan,
+    proPlan,
+    teamPlan,
+    enterprisePlan,
+  });
 
   // Create default roles
   const roles: Array<{

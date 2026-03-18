@@ -250,17 +250,15 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm prisma generate
 
-      - name: Set DATABASE_URL for branch
-        id: set_db_url
+      - name: Run migrations on Neon branch
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "DB_URL=${{ secrets.NEON_DATABASE_URL_MAIN }}" >> $GITHUB_ENV
+            DB_URL="${{ secrets.NEON_DATABASE_URL_MAIN }}"
           else
-            echo "DB_URL=${{ secrets.NEON_DATABASE_URL_DEVELOP }}" >> $GITHUB_ENV
+            DB_URL="${{ secrets.NEON_DATABASE_URL_DEVELOP }}"
           fi
-
-      - name: Run migrations on Neon branch
-        if: env.DB_URL != ''
-        run: pnpm prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ env.DB_URL }}
+          if [ -z "$DB_URL" ]; then
+            echo "⚠️  No DATABASE_URL secret configured for this branch — skipping migrations."
+            exit 0
+          fi
+          DATABASE_URL="$DB_URL" pnpm prisma migrate deploy
