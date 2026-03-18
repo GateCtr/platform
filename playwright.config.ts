@@ -22,9 +22,13 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm dev",
+    command: "pnpm start",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      DATABASE_URL: process.env.DATABASE_URL ?? "",
+      SKIP_ENV_VALIDATION: "true",
+    },
   },
 });
