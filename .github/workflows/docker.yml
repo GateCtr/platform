@@ -80,10 +80,13 @@ jobs:
     needs: build-and-push
     if: github.event_name != 'pull_request'
     steps:
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME_LOWER=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:${{ github.ref_name }}
           format: 'sarif'
           output: 'trivy-results.sarif'
 

@@ -64,7 +64,67 @@ async function main() {
     },
   });
 
-  console.log("✅ Plans created:", { freePlan, proPlan });
+  const teamPlan = await prisma.plan.upsert({
+    where: { name: "TEAM" },
+    update: {},
+    create: {
+      name: "TEAM",
+      displayName: "Team",
+      description: "For teams that need collaboration and governance",
+      stripePriceIdMonthly: "price_team_monthly",
+      stripePriceIdYearly: "price_team_yearly",
+      isActive: true,
+      isPublic: true,
+      sortOrder: 3,
+      limits: {
+        create: {
+          maxTokensPerMonth: 10000000,
+          maxRequestsPerDay: 100000,
+          maxRequestsPerMinute: 500,
+          maxProjects: -1, // unlimited
+          maxApiKeys: 50,
+          maxWebhooks: -1, // unlimited
+          maxTeamMembers: -1, // unlimited
+          contextOptimizerEnabled: true,
+          modelRouterEnabled: true,
+          advancedAnalytics: true,
+          auditLogsRetentionDays: 90,
+          supportLevel: "priority",
+        },
+      },
+    },
+  });
+
+  const enterprisePlan = await prisma.plan.upsert({
+    where: { name: "ENTERPRISE" },
+    update: {},
+    create: {
+      name: "ENTERPRISE",
+      displayName: "Enterprise",
+      description: "Unlimited scale with dedicated support and SLA",
+      isActive: true,
+      isPublic: true,
+      sortOrder: 4,
+      limits: {
+        create: {
+          maxTokensPerMonth: -1, // unlimited
+          maxRequestsPerDay: -1, // unlimited
+          maxRequestsPerMinute: -1, // unlimited
+          maxProjects: -1, // unlimited
+          maxApiKeys: -1, // unlimited
+          maxWebhooks: -1, // unlimited
+          maxTeamMembers: -1, // unlimited
+          contextOptimizerEnabled: true,
+          modelRouterEnabled: true,
+          advancedAnalytics: true,
+          auditLogsRetentionDays: -1, // unlimited
+          supportLevel: "enterprise",
+        },
+      },
+    },
+  });
+
+  console.log("✅ Plans created:", { freePlan, proPlan, teamPlan, enterprisePlan });
 
   // Create default roles
   const roles: Array<{
