@@ -1,0 +1,9 @@
+node_modules
+.next
+.kiro
+coverage
+playwright-report
+public
+prisma/migrations
+*.lock
+pnpm-lock.yaml

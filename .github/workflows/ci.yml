@@ -251,8 +251,10 @@ jobs:
         run: pnpm prisma generate
 
       - name: Run migrations on Neon branch
+        # Skip if the secret is not configured yet
+        if: |
+          (github.ref == 'refs/heads/main' && secrets.NEON_DATABASE_URL_MAIN != '') ||
+          (github.ref == 'refs/heads/develop' && secrets.NEON_DATABASE_URL_DEVELOP != '')
         run: pnpm prisma migrate deploy
         env:
-          # NEON_DATABASE_URL_DEVELOP and NEON_DATABASE_URL_MAIN must be set
-          # in GitHub repo secrets (Settings → Secrets → Actions)
           DATABASE_URL: ${{ github.ref == 'refs/heads/main' && secrets.NEON_DATABASE_URL_MAIN || secrets.NEON_DATABASE_URL_DEVELOP }}
