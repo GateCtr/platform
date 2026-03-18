@@ -18,7 +18,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -43,7 +42,11 @@ import {
   UserRound,
   Plus,
   Check,
+  Sun,
+  Moon,
+  Monitor,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
 
@@ -76,55 +79,87 @@ function TeamSwitcher() {
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton
           size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-foreground hover:bg-sidebar-accent"
         >
-          {/* Avatar workspace */}
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-xs font-bold shrink-0 select-none">
+          {/* Workspace avatar */}
+          <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold shrink-0 select-none">
             {isLoading ? "…" : initials}
           </div>
           <div className="flex flex-col gap-0.5 leading-none min-w-0">
-            <span className="font-semibold text-sm truncate">
+            <span className="font-semibold text-sm truncate text-sidebar-foreground">
               {isLoading ? t("loading") : orgName}
             </span>
-            <span className="text-[11px] text-muted-foreground truncate capitalize">
+            <span className="text-[11px] text-sidebar-foreground/50 truncate capitalize">
               {planLabel} {t("plan")}
             </span>
           </div>
-          <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-muted-foreground" />
+          <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-sidebar-foreground/40" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-60"
+        className="w-64"
         align="start"
         side="bottom"
-        sideOffset={6}
+        sideOffset={8}
       >
-        <DropdownMenuLabel className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider px-2 py-1.5">
-          {t("workspaces")}
-        </DropdownMenuLabel>
-        {teams.map((team) => (
-          <DropdownMenuItem
-            key={team.id}
-            onClick={() => switchTeam(team.id)}
-            className="gap-2.5"
-          >
-            <div className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[10px] font-bold shrink-0">
-              {team.name.slice(0, 2).toUpperCase()}
-            </div>
-            <span className="truncate flex-1">{team.name}</span>
-            {activeTeam?.id === team.id && (
-              <Check className="size-3.5 text-primary shrink-0" />
-            )}
-          </DropdownMenuItem>
-        ))}
+        {/* Section label */}
+        <div className="px-3 pt-2.5 pb-1">
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+            {t("workspaces")}
+          </p>
+        </div>
+
+        {/* Team list */}
+        <div className="px-1 pb-1">
+          {teams.map((team) => {
+            const isActive = activeTeam?.id === team.id;
+            const teamInitials = team.name.slice(0, 2).toUpperCase();
+            return (
+              <DropdownMenuItem
+                key={team.id}
+                onClick={() => switchTeam(team.id)}
+                className="gap-2.5 rounded-md px-2 py-2 cursor-pointer"
+              >
+                <div
+                  className={[
+                    "flex size-7 items-center justify-center rounded-md text-[11px] font-bold shrink-0",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground",
+                  ].join(" ")}
+                >
+                  {teamInitials}
+                </div>
+                <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                  <span className="text-sm font-medium truncate">
+                    {team.name}
+                  </span>
+                  {isActive && activeTeam?.plan && (
+                    <span className="text-[10px] text-muted-foreground capitalize">
+                      {activeTeam.plan.toLowerCase()} {t("plan")}
+                    </span>
+                  )}
+                </div>
+                {isActive && (
+                  <Check className="size-3.5 text-primary shrink-0" />
+                )}
+              </DropdownMenuItem>
+            );
+          })}
+        </div>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="gap-2.5 text-muted-foreground">
-          <div className="flex size-6 items-center justify-center rounded-md border border-dashed border-muted-foreground/40 shrink-0">
-            <Plus className="size-3" />
-          </div>
-          {t("newWorkspace")}
-        </DropdownMenuItem>
+
+        {/* New workspace */}
+        <div className="px-1 py-1">
+          <DropdownMenuItem className="gap-2.5 rounded-md px-2 py-2 text-muted-foreground cursor-pointer">
+            <div className="flex size-7 items-center justify-center rounded-md border border-dashed border-muted-foreground/30 shrink-0">
+              <Plus className="size-3.5" />
+            </div>
+            <span className="text-sm">{t("newWorkspace")}</span>
+          </DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -136,6 +171,7 @@ function UserMenu() {
   const t = useTranslations("dashboard.sidebar");
   const { user } = useUser();
   const { signOut } = useClerk();
+  const { theme, setTheme } = useTheme();
 
   const name = user?.fullName ?? user?.firstName ?? "User";
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
@@ -152,60 +188,103 @@ function UserMenu() {
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton
           size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-foreground hover:bg-sidebar-accent"
         >
-          <Avatar className="size-7 shrink-0">
+          <Avatar className="size-7 shrink-0 rounded-md">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-[11px] font-semibold">
+            <AvatarFallback className="text-[11px] font-semibold rounded-md">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0.5 leading-none min-w-0">
-            <span className="font-medium text-sm truncate">{name}</span>
-            <span className="text-[11px] text-muted-foreground truncate">
+            <span className="font-medium text-sm truncate text-sidebar-foreground">
+              {name}
+            </span>
+            <span className="text-[11px] text-sidebar-foreground/50 truncate">
               {email}
             </span>
           </div>
-          <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-muted-foreground" />
+          <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-sidebar-foreground/40" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-60"
+        className="w-64"
         align="start"
         side="top"
-        sideOffset={6}
+        sideOffset={8}
       >
-        <div className="flex items-center gap-2.5 px-2 py-2">
-          <Avatar className="size-8 shrink-0">
+        {/* User header — non-interactive */}
+        <div className="flex items-center gap-3 px-3 py-3 border-b border-border">
+          <Avatar className="size-9 shrink-0 rounded-lg">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-xs font-semibold">
+            <AvatarFallback className="text-xs font-semibold rounded-lg">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-sm font-medium truncate">{name}</span>
+            <span className="text-sm font-semibold truncate">{name}</span>
             <span className="text-[11px] text-muted-foreground truncate">
               {email}
             </span>
           </div>
         </div>
+
+        {/* Navigation items */}
+        <div className="py-1">
+          <DropdownMenuItem asChild className="gap-2.5 mx-1 rounded-md">
+            <Link href="/settings">
+              <UserRound className="size-4 text-muted-foreground" />
+              {t("profile")}
+            </Link>
+          </DropdownMenuItem>
+        </div>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild className="gap-2.5">
-          <Link href="/settings">
-            <UserRound className="size-4 text-muted-foreground" />
-            {t("profile")}
-          </Link>
-        </DropdownMenuItem>
+
+        {/* Theme switcher */}
+        <div className="px-3 py-2">
+          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">
+            {t("theme")}
+          </p>
+          <div className="flex items-center gap-1 p-0.5 rounded-md bg-muted">
+            {(
+              [
+                { value: "light", icon: Sun },
+                { value: "system", icon: Monitor },
+                { value: "dark", icon: Moon },
+              ] as const
+            ).map(({ value, icon: Icon }) => (
+              <button
+                key={value}
+                onClick={() => setTheme(value)}
+                className={[
+                  "flex-1 flex items-center justify-center gap-1.5 py-1 rounded text-xs font-medium transition-colors",
+                  theme === value
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground",
+                ].join(" ")}
+              >
+                <Icon className="size-3" />
+                <span className="capitalize">{value}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          variant="destructive"
-          className="gap-2.5"
-          onClick={() => signOut({ redirectUrl: "/" })}
-        >
-          <LogOut className="size-4" />
-          {t("signOut")}
-        </DropdownMenuItem>
+
+        {/* Sign out */}
+        <div className="py-1">
+          <DropdownMenuItem
+            variant="destructive"
+            className="gap-2.5 mx-1 rounded-md"
+            onClick={() => signOut({ redirectUrl: "/" })}
+          >
+            <LogOut className="size-4" />
+            {t("signOut")}
+          </DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -264,11 +343,11 @@ export function DashboardSidebar() {
                       asChild
                       isActive={isActive}
                       tooltip={t(key)}
-                      className="gap-3 rounded-lg"
+                      className="gap-3 rounded-md h-9"
                     >
                       <Link href={href}>
                         <Icon className="size-4 shrink-0" />
-                        <span className="text-sm">{t(key)}</span>
+                        <span>{t(key)}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -293,7 +372,7 @@ export function DashboardSidebar() {
                     asChild
                     isActive={cleanPath.startsWith(href)}
                     tooltip={t(key)}
-                    className="gap-3 rounded-lg"
+                    className="gap-3 rounded-md h-9"
                   >
                     <Link href={href}>
                       <Icon className="size-4 shrink-0" />

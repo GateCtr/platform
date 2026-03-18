@@ -16,16 +16,28 @@ jobs:
     name: Setup
     outputs:
       branch: ${{ steps.branch_name.outputs.current_branch }}
+      neon_configured: ${{ steps.check.outputs.configured }}
     runs-on: ubuntu-latest
     steps:
       - name: Get branch name
         id: branch_name
         uses: tj-actions/branch-names@v8
 
+      - name: Check Neon secrets
+        id: check
+        run: |
+          if [ -n "${{ secrets.NEON_API_KEY }}" ] && [ -n "${{ vars.NEON_PROJECT_ID }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "⚠️  NEON_API_KEY or NEON_PROJECT_ID not configured — Neon jobs will be skipped."
+          fi
+
   create_neon_branch:
     name: Create Neon Branch
     needs: setup
     if: |
+      needs.setup.outputs.neon_configured == 'true' &&
       github.event_name == 'pull_request' && (
         github.event.action == 'synchronize'
         || github.event.action == 'opened'
@@ -74,7 +86,9 @@ jobs:
   delete_neon_branch:
     name: Delete Neon Branch
     needs: setup
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    if: |
+      needs.setup.outputs.neon_configured == 'true' &&
+      github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Delete Neon Branch

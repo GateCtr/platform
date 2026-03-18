@@ -16,7 +16,7 @@
  * a Next.js runtime.
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -39,20 +39,8 @@ vi.mock("@clerk/nextjs/server", () => ({
   clerkMiddleware: vi.fn(
     (handler: (auth: unknown, req: unknown) => unknown) => handler,
   ),
-  createRouteMatcher: vi.fn((patterns: string[]) => {
-    return (req: { nextUrl: { pathname: string } }) => {
-      const { pathname } = req.nextUrl;
-      return patterns.some((pattern) => {
-        // Simple pattern matching for tests
-        const regexStr = pattern
-          .replace(/\(\.\*\)/g, ".*")
-          .replace(/\*/g, ".*")
-          .replace(/\//g, "\\/")
-          .replace(/\.\*/g, ".*");
-        return new RegExp(`^${regexStr}$`).test(pathname);
-      });
-    };
-  }),
+  // createRouteMatcher is not exercised in these unit tests — stub it out
+  createRouteMatcher: vi.fn(() => vi.fn(() => false)),
 }));
 
 vi.mock("next/server", () => ({
@@ -70,31 +58,6 @@ vi.mock("next/server", () => ({
 vi.mock("./i18n/routing", () => ({
   routing: { defaultLocale: "en", locales: ["en", "fr"] },
 }));
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Build a minimal mock Next.js request */
-function makeRequest(
-  pathname: string,
-  baseUrl = "http://localhost:3000",
-): {
-  nextUrl: { pathname: string };
-  url: string;
-  headers: { get: (key: string) => string | null };
-} {
-  return {
-    nextUrl: { pathname },
-    url: `${baseUrl}${pathname}`,
-    headers: { get: () => null },
-  };
-}
-
-/** Build a mock auth() result */
-function makeAuth(userId: string | null, sessionClaims?: object) {
-  return async () => ({ userId, sessionClaims: sessionClaims ?? null });
-}
 
 // ---------------------------------------------------------------------------
 // sanitizeRedirectUrl — extracted logic tests
@@ -288,7 +251,8 @@ describe("Public routes allow unauthenticated access (Req 2.2)", () => {
 describe("Admin routes require admin role (Req 6.2)", () => {
   function isAdminRoute(pathname: string): boolean {
     return (
-      /^\/admin(\/.*)?$/.test(pathname) || /^\/fr\/admin(\/.*)?$/.test(pathname)
+      /^\/admin(\/.*)?$/.test(pathname) ||
+      /^\/fr\/admin(\/.*)?$/.test(pathname)
     );
   }
 
