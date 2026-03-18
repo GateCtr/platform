@@ -25,7 +25,7 @@ export default async function OnboardingLayout({
   const { sessionClaims } = await auth()
 
   // Already onboarded — send to dashboard
-  if (sessionClaims?.metadata?.onboardingComplete === true) {
+  if (sessionClaims?.publicMetadata?.onboardingComplete === true) {
     redirect('/dashboard')
   }
 
