@@ -129,7 +129,7 @@ jobs:
           SKIP_ENV_VALIDATION: true
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: .next
@@ -194,7 +194,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
           path: .next
@@ -206,7 +206,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
 
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
