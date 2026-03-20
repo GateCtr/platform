@@ -4,8 +4,11 @@
  * **Validates: Requirements 1.2, 9.1**
  *
  * Property 9: Checkout requires valid price (partial — env guard behavior)
- * Tests that the Stripe client enforces the STRIPE_SECRET_KEY env guard at
- * module load time, and that any non-empty string key produces a valid client.
+ * Tests that the Stripe client enforces the STRIPE_SECRET_KEY env guard,
+ * and that any non-empty string key produces a valid client.
+ *
+ * Note: The guard is enforced at call time (not module load) to allow
+ * Docker builds without env vars. getStripe() is the enforcement point.
  */
 
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -16,11 +19,10 @@ import * as fc from "fast-check";
 // ---------------------------------------------------------------------------
 
 /**
- * Dynamically re-imports lib/stripe.ts in a fresh module context so that the
- * module-level throw is re-evaluated with the current process.env state.
+ * Re-imports lib/stripe in a fresh module context so the lazy singleton
+ * is reset and getStripe() re-evaluates with the current process.env state.
  */
 async function importStripeModule() {
-  // Bust the module cache so the module-level guard re-runs
   vi.resetModules();
   return import("@/lib/stripe");
 }
@@ -33,7 +35,6 @@ describe("Stripe client — env guard (Requirement 1.2)", () => {
   const originalKey = process.env.STRIPE_SECRET_KEY;
 
   afterEach(() => {
-    // Restore the original env var after each test
     if (originalKey !== undefined) {
       process.env.STRIPE_SECRET_KEY = originalKey;
     } else {
@@ -45,17 +46,15 @@ describe("Stripe client — env guard (Requirement 1.2)", () => {
   it("throws 'STRIPE_SECRET_KEY is not set' when env var is absent", async () => {
     delete process.env.STRIPE_SECRET_KEY;
 
-    await expect(importStripeModule()).rejects.toThrow(
-      "STRIPE_SECRET_KEY is not set",
-    );
+    const mod = await importStripeModule();
+    expect(() => mod.getStripe()).toThrow("STRIPE_SECRET_KEY is not set");
   });
 
   it("throws 'STRIPE_SECRET_KEY is not set' when env var is empty string", async () => {
     process.env.STRIPE_SECRET_KEY = "";
 
-    await expect(importStripeModule()).rejects.toThrow(
-      "STRIPE_SECRET_KEY is not set",
-    );
+    const mod = await importStripeModule();
+    expect(() => mod.getStripe()).toThrow("STRIPE_SECRET_KEY is not set");
   });
 
   it("exports a non-null stripe instance when STRIPE_SECRET_KEY is set", async () => {
@@ -72,7 +71,6 @@ describe("Stripe client — env guard (Requirement 1.2)", () => {
 
     const mod = await importStripeModule();
 
-    // The Stripe SDK exposes the configured API version on the instance
     expect(
       (
         mod.stripe as {
@@ -93,10 +91,8 @@ describe("Property 9: Checkout requires valid price — env guard behavior", () 
   /**
    * **Validates: Requirements 1.2, 9.1**
    *
-   * For any non-empty string used as STRIPE_SECRET_KEY, the Stripe client
-   * must initialize without throwing. This is the partial env-guard aspect of
-   * Property 9: the checkout flow can only proceed when a valid (non-empty)
-   * key is present.
+   * For any non-empty string used as STRIPE_SECRET_KEY, getStripe() must
+   * initialize without throwing. For absent or empty keys, it must throw.
    */
 
   const originalKey = process.env.STRIPE_SECRET_KEY;
@@ -113,7 +109,6 @@ describe("Property 9: Checkout requires valid price — env guard behavior", () 
   it("initializes without throwing for any non-empty API key string (≥100 iterations)", async () => {
     await fc.assert(
       fc.asyncProperty(
-        // Generate non-empty strings that look like API keys
         fc
           .string({ minLength: 1, maxLength: 128 })
           .filter((s) => s.trim().length > 0),
@@ -121,20 +116,19 @@ describe("Property 9: Checkout requires valid price — env guard behavior", () 
           process.env.STRIPE_SECRET_KEY = apiKey;
           vi.resetModules();
 
-          let mod: { stripe: unknown } | undefined;
+          const mod = await import("@/lib/stripe");
           let threw = false;
 
           try {
-            mod = await import("@/lib/stripe");
+            mod.getStripe();
           } catch {
             threw = true;
           }
 
           // A non-empty key must never trigger the env guard throw
           expect(threw).toBe(false);
-          expect(mod).toBeDefined();
-          expect(mod!.stripe).toBeDefined();
-          expect(mod!.stripe).not.toBeNull();
+          expect(mod.stripe).toBeDefined();
+          expect(mod.stripe).not.toBeNull();
         },
       ),
       { numRuns: 100 },
@@ -144,7 +138,6 @@ describe("Property 9: Checkout requires valid price — env guard behavior", () 
   it("always throws for absent or empty STRIPE_SECRET_KEY (≥100 iterations)", async () => {
     await fc.assert(
       fc.asyncProperty(
-        // Generate either undefined (absent) or empty/whitespace-only strings
         fc.oneof(
           fc.constant(undefined),
           fc.constant(""),
@@ -158,13 +151,13 @@ describe("Property 9: Checkout requires valid price — env guard behavior", () 
           }
           vi.resetModules();
 
-          // Only truly absent or empty string should throw — whitespace-only
-          // strings that are non-empty won't trigger the falsy check in the
-          // implementation (which uses `if (!process.env.STRIPE_SECRET_KEY)`)
+          const mod = await import("@/lib/stripe");
+
+          // Only truly absent or empty string should throw
           const shouldThrow = keyValue === undefined || keyValue === "";
 
           if (shouldThrow) {
-            await expect(import("@/lib/stripe")).rejects.toThrow(
+            expect(() => mod.getStripe()).toThrow(
               "STRIPE_SECRET_KEY is not set",
             );
           }
