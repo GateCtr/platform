@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "title": "Waitlist Management",
+    "description": "Manage and invite users from the waitlist"
+  },
+  "title": "Waitlist Management",
+  "subtitle": "Manage and invite users from the waitlist",
+  "stats": {
+    "total": "Total",
+    "waiting": "Waiting",
+    "invited": "Invited",
+    "joined": "Joined"
+  },
+  "table": {
+    "position": "Position",
+    "email": "Email",
+    "name": "Name",
+    "company": "Company",
+    "useCase": "Use Case",
+    "status": "Status",
+    "joined": "Joined",
+    "actions": "Actions"
+  },
+  "filters": {
+    "all": "All Entries",
+    "waiting": "Waiting",
+    "invited": "Invited",
+    "joined": "Joined",
+    "skipped": "Blacklisted"
+  },
+  "search": {
+    "placeholder": "Search email, name...",
+    "noResults": "No entries match your search."
+  },
+  "actions": {
+    "invite": "Invite",
+    "inviteSelected": "Invite Selected ({count})",
+    "sending": "Sending...",
+    "export": "Export CSV",
+    "delete": "Delete",
+    "blacklist": "Blacklist"
+  },
+  "confirm": {
+    "deleteTitle": "Delete entry",
+    "deleteDescription": "Remove {email} from the waitlist. This cannot be undone.",
+    "blacklistTitle": "Blacklist entry",
+    "blacklistDescription": "Block {email} from re-registering. The entry stays in the database.",
+    "cancel": "Cancel",
+    "confirmDelete": "Delete",
+    "confirmBlacklist": "Blacklist"
+  },
+  "messages": {
+    "inviteSuccess": "{count} invite(s) sent",
+    "inviteFailed": "Failed to send invites",
+    "loadFailed": "Failed to load waitlist",
+    "deleteSuccess": "Entry deleted",
+    "skipSuccess": "Entry blacklisted",
+    "actionFailed": "Action failed. Try again."
+  },
+  "empty": "No entries found"
+}

@@ -1,0 +1,65 @@
+{
+  "page": {
+    "title": "Sécurité",
+    "description": "Gérez votre mot de passe, comptes connectés, sessions actives et la suppression du compte."
+  },
+  "sections": {
+    "connectedAccounts": "Comptes connectés",
+    "password": "Mot de passe",
+    "twoFactor": "Authentification à deux facteurs",
+    "activeSessions": "Sessions actives",
+    "activityLog": "Activité récente",
+    "dangerZone": "Zone de danger"
+  },
+  "connectedAccounts": {
+    "description": "Connectez-vous avec n'importe quel compte lié. Votre email principal reste le même.",
+    "connect": "Connecter",
+    "disconnect": "Déconnecter",
+    "connected": "Connecté",
+    "cannotDisconnect": "Vous devez conserver au moins une méthode de connexion.",
+    "providers": {
+      "google": "Google",
+      "github": "GitHub",
+      "gitlab": "GitLab"
+    }
+  },
+  "password": {
+    "currentLabel": "Mot de passe actuel",
+    "newLabel": "Nouveau mot de passe",
+    "setLabel": "Définir un mot de passe",
+    "hint": "Minimum 8 caractères.",
+    "update": "Mettre à jour",
+    "set": "Définir le mot de passe",
+    "saving": "Enregistrement…",
+    "saved": "Mot de passe mis à jour",
+    "errorTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "errorFailed": "Échec de la mise à jour. Vérifiez votre mot de passe actuel et réessayez."
+  },
+  "twoFactor": {
+    "disabled": "Désactivé",
+    "comingSoon": "L'authentification à deux facteurs arrive prochainement.",
+    "comingSoonBadge": "Bientôt disponible"
+  },
+  "sessions": {
+    "current": "Session actuelle",
+    "lastActive": "Dernière activité",
+    "revoke": "Révoquer",
+    "revokeAll": "Révoquer toutes les autres sessions",
+    "revoking": "Révocation…",
+    "noOtherSessions": "Aucune autre session active.",
+    "unknown": "Appareil inconnu"
+  },
+  "activityLog": {
+    "description": "Tous les appareils actuellement connectés à votre compte.",
+    "empty": "Aucune activité récente."
+  },
+  "dangerZone": {
+    "deleteTitle": "Supprimer votre compte",
+    "deleteDescription": "Supprime définitivement votre compte, projets, clés API et toutes les données. Irréversible."
+  },
+  "errors": {
+    "disconnectFailed": "Échec de la déconnexion. Réessayez.",
+    "connectFailed": "Échec de la connexion. Réessayez.",
+    "revokeFailed": "Échec de la révocation. Réessayez."
+  }
+}

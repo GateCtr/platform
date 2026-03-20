@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { useActiveTeam } from "@/hooks/use-active-team";
+import { useUsageSummary } from "@/hooks/use-usage-summary";
 import { Bell, Zap, ChevronRight } from "lucide-react";
 
 // ─── Breadcrumb map ───────────────────────────────────────────────────────────
@@ -41,34 +42,36 @@ function useBreadcrumb() {
 
 // ─── Token usage pill ─────────────────────────────────────────────────────────
 
-const PLAN_LIMITS: Record<string, number> = {
-  FREE: 50_000,
-  PRO: 2_000_000,
-  TEAM: 10_000_000,
-};
-
-function TokenUsagePill({ plan }: { plan: string }) {
+function TokenUsagePill() {
   const t = useTranslations("dashboard.header");
-  const upper = plan.toUpperCase();
-  const limit = PLAN_LIMITS[upper];
+  const { data, isLoading } = useUsageSummary();
 
-  // Placeholder: 0 tokens used until real usage API exists
-  const used = 0;
-  const pct = limit ? Math.min(Math.round((used / limit) * 100), 100) : 0;
+  if (isLoading || !data) {
+    return (
+      <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/60 border border-border/60 min-w-[120px] h-[42px] animate-pulse" />
+    );
+  }
+
+  const { tokensUsed, tokensLimit, plan } = data;
+  const upper = plan.toUpperCase();
+  const pct = tokensLimit ? Math.min(Math.round((tokensUsed / tokensLimit) * 100), 100) : 0;
 
   const color =
-    pct >= 90
-      ? "bg-error-500"
-      : pct >= 70
-        ? "bg-warning-500"
-        : "bg-secondary-500";
+    pct >= 90 ? "bg-error-500" : pct >= 70 ? "bg-warning-500" : "bg-secondary-500";
 
   const limitLabel =
-    upper === "ENTERPRISE"
+    upper === "ENTERPRISE" || tokensLimit === null
       ? t("unlimited")
-      : limit >= 1_000_000
-        ? `${limit / 1_000_000}M`
-        : `${limit / 1_000}K`;
+      : tokensLimit >= 1_000_000
+        ? `${tokensLimit / 1_000_000}M`
+        : `${tokensLimit / 1_000}K`;
+
+  const usedLabel =
+    tokensUsed >= 1_000_000
+      ? `${(tokensUsed / 1_000_000).toFixed(1)}M`
+      : tokensUsed >= 1_000
+        ? `${(tokensUsed / 1_000).toFixed(1)}K`
+        : tokensUsed.toLocaleString();
 
   return (
     <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/60 border border-border/60">
@@ -78,7 +81,7 @@ function TokenUsagePill({ plan }: { plan: string }) {
             {t("tokens")}
           </span>
           <span className="text-[11px] font-semibold tabular-nums">
-            {used.toLocaleString()}{" "}
+            {usedLabel}{" "}
             <span className="text-muted-foreground font-normal">
               / {limitLabel}
             </span>
@@ -102,8 +105,10 @@ export function DashboardHeader() {
   const t = useTranslations("dashboard");
   const breadcrumb = useBreadcrumb();
   const { activeTeam, isLoading } = useActiveTeam();
+  const { data: usage } = useUsageSummary();
 
-  const plan = activeTeam?.plan ?? "FREE";
+  // Use usage summary plan as source of truth (reflects latest subscription state)
+  const plan = usage?.plan ?? activeTeam?.plan ?? "FREE";
   const isFreePlan = plan.toUpperCase() === "FREE";
 
   return (
@@ -131,7 +136,7 @@ export function DashboardHeader() {
       {/* Right side */}
       <div className="ml-auto flex items-center gap-1.5">
         {/* Token usage — hidden on mobile */}
-        {!isLoading && <TokenUsagePill plan={plan} />}
+        {!isLoading && <TokenUsagePill />}
 
         {/* Upgrade CTA — Free plan only */}
         {!isLoading && isFreePlan && (

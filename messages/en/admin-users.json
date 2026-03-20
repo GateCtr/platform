@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "title": "User Management",
+    "description": "Manage users, roles, and account states"
+  },
+  "title": "User Management",
+  "subtitle": "Manage users, roles, and account states",
+  "empty": "No users match your filters.",
+  "stats": {
+    "total": "Total",
+    "active": "Active",
+    "suspended": "Suspended",
+    "banned": "Banned"
+  },
+  "filters": {
+    "search": "Search by name or email…",
+    "allStatuses": "All statuses",
+    "allRoles": "All roles",
+    "allPlans": "All plans",
+    "export": "Export CSV"
+  },
+  "table": {
+    "name": "User",
+    "roles": "Roles",
+    "plan": "Plan",
+    "status": "Status",
+    "tokens": "Tokens (30d)",
+    "lastLogin": "Last login",
+    "joined": "Joined",
+    "actions": "Actions"
+  },
+  "status": {
+    "active": "Active",
+    "suspended": "Suspended",
+    "banned": "Banned",
+    "inactive": "Inactive"
+  },
+  "actions": {
+    "viewDetails": "View details",
+    "assignRole": "Assign role",
+    "revokeRole": "Reset to Developer",
+    "changePlan": "Change plan",
+    "suspend": "Suspend account",
+    "reactivate": "Reactivate account",
+    "ban": "Ban permanently",
+    "forceSignOut": "Force sign-out",
+    "delete": "Delete user",
+    "deleteHint": "Permanent. Cannot be undone."
+  },
+  "detail": {
+    "assignRole": "Role",
+    "changePlan": "Plan",
+    "accountActions": "Account actions",
+    "tokenUsage": "Tokens (30d)",
+    "projects": "Projects",
+    "joined": "Joined",
+    "lastLogin": "Last login",
+    "banReason": "Ban reason",
+    "authProvider": "Sign-in method"
+  },
+  "feedback": {
+    "success": "Done."
+  },
+  "confirm": {
+    "cancel": "Cancel",
+    "suspend": {
+      "title": "Suspend account",
+      "description": "This will disable sign-in for {email}. You can reactivate at any time.",
+      "confirm": "Suspend"
+    },
+    "reactivate": {
+      "title": "Reactivate account",
+      "description": "This will restore access for {email}.",
+      "confirm": "Reactivate"
+    },
+    "ban": {
+      "title": "Ban user permanently",
+      "description": "This will permanently ban {email} and revoke all access.",
+      "reasonLabel": "Reason",
+      "reasonPlaceholder": "Violation of terms of service",
+      "confirm": "Ban permanently"
+    },
+    "signout": {
+      "title": "Force sign-out",
+      "description": "All active sessions for {email} will be revoked immediately.",
+      "confirm": "Force sign-out"
+    },
+    "delete": {
+      "title": "Delete user",
+      "description": "This will permanently delete {email} and all their data. This cannot be undone.",
+      "confirm": "Delete permanently"
+    },
+    "changePlan": {
+      "title": "Change plan",
+      "description": "Select a new plan for {email}.",
+      "selectLabel": "New plan",
+      "confirm": "Apply"
+    }
+  }
+}

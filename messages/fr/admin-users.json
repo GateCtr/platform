@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "title": "Gestion des utilisateurs",
+    "description": "Gérer les utilisateurs, rôles et états des comptes"
+  },
+  "title": "Gestion des utilisateurs",
+  "subtitle": "Gérer les utilisateurs, rôles et états des comptes",
+  "empty": "Aucun utilisateur ne correspond aux filtres.",
+  "stats": {
+    "total": "Total",
+    "active": "Actifs",
+    "suspended": "Suspendus",
+    "banned": "Bannis"
+  },
+  "filters": {
+    "search": "Rechercher par nom ou e-mail…",
+    "allStatuses": "Tous les statuts",
+    "allRoles": "Tous les rôles",
+    "allPlans": "Tous les plans",
+    "export": "Exporter CSV"
+  },
+  "table": {
+    "name": "Utilisateur",
+    "roles": "Rôles",
+    "plan": "Plan",
+    "status": "Statut",
+    "tokens": "Tokens (30j)",
+    "lastLogin": "Dernière connexion",
+    "joined": "Inscrit le",
+    "actions": "Actions"
+  },
+  "status": {
+    "active": "Actif",
+    "suspended": "Suspendu",
+    "banned": "Banni",
+    "inactive": "Inactif"
+  },
+  "actions": {
+    "viewDetails": "Voir les détails",
+    "assignRole": "Attribuer un rôle",
+    "revokeRole": "Réinitialiser en Developer",
+    "changePlan": "Changer de plan",
+    "suspend": "Suspendre le compte",
+    "reactivate": "Réactiver le compte",
+    "ban": "Bannir définitivement",
+    "forceSignOut": "Forcer la déconnexion",
+    "delete": "Supprimer l'utilisateur",
+    "deleteHint": "Définitif. Irréversible."
+  },
+  "detail": {
+    "assignRole": "Rôle",
+    "changePlan": "Plan",
+    "accountActions": "Actions sur le compte",
+    "tokenUsage": "Tokens (30j)",
+    "projects": "Projets",
+    "joined": "Inscrit le",
+    "lastLogin": "Dernière connexion",
+    "banReason": "Motif du bannissement",
+    "authProvider": "Méthode de connexion"
+  },
+  "feedback": {
+    "success": "Effectué."
+  },
+  "confirm": {
+    "cancel": "Annuler",
+    "suspend": {
+      "title": "Suspendre le compte",
+      "description": "La connexion sera désactivée pour {email}. Vous pouvez réactiver à tout moment.",
+      "confirm": "Suspendre"
+    },
+    "reactivate": {
+      "title": "Réactiver le compte",
+      "description": "L'accès sera restauré pour {email}.",
+      "confirm": "Réactiver"
+    },
+    "ban": {
+      "title": "Bannir définitivement",
+      "description": "Cela bannira définitivement {email} et révoquera tous les accès.",
+      "reasonLabel": "Motif",
+      "reasonPlaceholder": "Violation des conditions d'utilisation",
+      "confirm": "Bannir définitivement"
+    },
+    "signout": {
+      "title": "Forcer la déconnexion",
+      "description": "Toutes les sessions actives de {email} seront révoquées immédiatement.",
+      "confirm": "Forcer la déconnexion"
+    },
+    "delete": {
+      "title": "Supprimer l'utilisateur",
+      "description": "Cela supprimera définitivement {email} et toutes ses données. Irréversible.",
+      "confirm": "Supprimer définitivement"
+    },
+    "changePlan": {
+      "title": "Changer de plan",
+      "description": "Sélectionnez un nouveau plan pour {email}.",
+      "selectLabel": "Nouveau plan",
+      "confirm": "Appliquer"
+    }
+  }
+}

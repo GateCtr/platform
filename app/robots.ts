@@ -1,15 +1,9 @@
 import type { MetadataRoute } from "next";
-import { getSeoContext, type SeoContext } from "@/lib/seo";
 
-export function generateRobots(context: SeoContext): MetadataRoute.Robots {
-  // App subdomain: disallow all, no sitemap
-  if (context.isAppSubdomain) {
-    return {
-      rules: [{ userAgent: "*", disallow: "/" }],
-    };
-  }
+const BASE_URL =
+  process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com";
 
-  // Marketing subdomain: allow public pages, disallow private routes
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
@@ -20,7 +14,7 @@ export function generateRobots(context: SeoContext): MetadataRoute.Robots {
           "/fr/dashboard",
           "/admin",
           "/fr/admin",
-          "/api",
+          "/api/",
           "/onboarding",
           "/fr/onboarding",
           "/sign-in",
@@ -30,11 +24,6 @@ export function generateRobots(context: SeoContext): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: `${context.marketingUrl}/sitemap.xml`,
+    sitemap: `${BASE_URL}/sitemap.xml`,
   };
-}
-
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  const context = await getSeoContext();
-  return generateRobots(context);
 }

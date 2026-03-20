@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "title": "Gestion de la liste d'attente",
+    "description": "Gérer et inviter les utilisateurs de la liste d'attente"
+  },
+  "title": "Gestion de la liste d'attente",
+  "subtitle": "Gérer et inviter les utilisateurs de la liste d'attente",
+  "stats": {
+    "total": "Total",
+    "waiting": "En attente",
+    "invited": "Invités",
+    "joined": "Inscrits"
+  },
+  "table": {
+    "position": "Position",
+    "email": "Email",
+    "name": "Nom",
+    "company": "Entreprise",
+    "useCase": "Cas d'usage",
+    "status": "Statut",
+    "joined": "Inscrit le",
+    "actions": "Actions"
+  },
+  "filters": {
+    "all": "Toutes les entrées",
+    "waiting": "En attente",
+    "invited": "Invités",
+    "joined": "Inscrits",
+    "skipped": "Blacklistés"
+  },
+  "search": {
+    "placeholder": "Rechercher email, nom...",
+    "noResults": "Aucune entrée ne correspond à votre recherche."
+  },
+  "actions": {
+    "invite": "Inviter",
+    "inviteSelected": "Inviter la sélection ({count})",
+    "sending": "Envoi...",
+    "export": "Exporter CSV",
+    "delete": "Supprimer",
+    "blacklist": "Blacklister"
+  },
+  "confirm": {
+    "deleteTitle": "Supprimer l'entrée",
+    "deleteDescription": "Supprimer {email} de la liste d'attente. Action irréversible.",
+    "blacklistTitle": "Blacklister l'entrée",
+    "blacklistDescription": "Bloquer {email} pour qu'il ne puisse pas se réinscrire. L'entrée reste en base.",
+    "cancel": "Annuler",
+    "confirmDelete": "Supprimer",
+    "confirmBlacklist": "Blacklister"
+  },
+  "messages": {
+    "inviteSuccess": "{count} invitation(s) envoyée(s)",
+    "inviteFailed": "Échec de l'envoi des invitations",
+    "loadFailed": "Échec du chargement",
+    "deleteSuccess": "Entrée supprimée",
+    "skipSuccess": "Entrée blacklistée",
+    "actionFailed": "Action échouée. Réessayez."
+  },
+  "empty": "Aucune entrée trouvée"
+}

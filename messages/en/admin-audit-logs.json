@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "title": "Audit Logs",
+    "description": "Security and access event history"
+  },
+  "title": "Audit Logs",
+  "subtitle": "Security and access event history",
+  "entries": "{count} entries",
+  "table": {
+    "timestamp": "Timestamp",
+    "user": "User",
+    "resource": "Resource",
+    "action": "Action",
+    "status": "Status"
+  },
+  "status": {
+    "success": "Success",
+    "failed": "Failed",
+    "all": "All statuses"
+  },
+  "filters": {
+    "search": "Search email...",
+    "resource": "All resources",
+    "status": "All statuses",
+    "clearAll": "Clear filters",
+    "export": "Export CSV"
+  },
+  "detail": {
+    "title": "Event detail",
+    "id": "Event ID",
+    "timestamp": "Timestamp",
+    "user": "User",
+    "actor": "Actor",
+    "resource": "Resource",
+    "action": "Action",
+    "resourceId": "Resource ID",
+    "ip": "IP address",
+    "userAgent": "User agent",
+    "error": "Error",
+    "oldValue": "Before",
+    "newValue": "After",
+    "noData": "No additional data"
+  },
+  "empty": "No audit log entries found",
+  "emptyFiltered": "No entries match the current filters"
+}

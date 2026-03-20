@@ -3,48 +3,122 @@
     "title": "Setup",
     "description": "30 seconds. Your workspace is ready."
   },
-  "page": {
-    "title": "30 seconds to your first save.",
-    "subtitle": "Tell us how you use LLMs. We'll configure the rest."
+  "panel": {
+    "eyebrow": "Setup",
+    "headline": "One gateway.\nEvery LLM.",
+    "tagline": "Swap your endpoint. Keep your keys.\nGateCtr controls. You save.",
+    "features": {
+      "optimizer": { "label": "-40% tokens", "sub": "Context Optimizer on every request." },
+      "firewall":  { "label": "Budget Firewall", "sub": "Hard caps. No surprise invoices." },
+      "router":    { "label": "Model Router", "sub": "Right model. Right cost. Automatic." },
+      "security":  { "label": "Your key stays yours", "sub": "AES-256. Never stored in plain text." }
+    },
+    "copyright": "© {year} GateCtr"
   },
-  "section": {
-    "organization": "Your workspace",
-    "usage": "Your use case"
+  "progress": {
+    "step": "Step {current} of {total}",
+    "workspace": "Workspace",
+    "provider": "LLM",
+    "budget": "Budget",
+    "project": "Project"
   },
-  "form": {
-    "orgName": {
+  "nav": {
+    "back": "Back"
+  },
+  "workspace": {
+    "title": "Set up your workspace.",
+    "subtitle": "30 seconds.",
+    "workspaceName": {
       "label": "Workspace name",
       "placeholder": "Acme Inc.",
-      "hint": "Used to identify your workspace in GateCtr."
+      "hint": "Identifies your workspace in GateCtr."
     },
     "usageType": {
-      "label": "Usage type",
-      "personal": "Personal",
+      "label": "How will you use GateCtr?",
+      "solo": "Solo",
+      "soloDesc": "Just me",
       "team": "Team",
-      "enterprise": "Enterprise"
+      "teamDesc": "2–20 people",
+      "enterprise": "Enterprise",
+      "enterpriseDesc": "20+ people"
     },
-    "useCase": {
-      "label": "Primary use case",
-      "chatbot": "Chatbot",
-      "analytics": "Analytics",
-      "content": "Content generation",
-      "code": "Code assistance",
-      "other": "Other",
-      "hint": "Tailors your dashboard defaults."
-    },
-    "teamSize": {
-      "label": "Team size",
-      "solo": "Just me",
-      "small": "2–10",
-      "medium": "11–50",
-      "large": "50+"
-    },
-    "submit": "Set up workspace",
-    "submitting": "Saving..."
+    "submit": "Continue",
+    "errors": {
+      "required": "Workspace name required.",
+      "minLength": "At least 2 characters.",
+      "failed": "Setup failed. Try again."
+    }
   },
-  "errors": {
-    "orgName": "Workspace name required.",
-    "orgNameMin": "At least 2 characters.",
-    "failed": "Setup failed. Try again."
+  "provider": {
+    "title": "Connect your first LLM.",
+    "subtitle": "Your key stays yours.",
+    "providerLabel": "Provider",
+    "keyLabel": "API key",
+    "keyPlaceholder": "sk-...",
+    "keyHint": "Encrypted with AES-256. Never stored in plain text.",
+    "nameLabel": "Key name",
+    "namePlaceholder": "Default",
+    "whereToFind": "Where to find my key?",
+    "skipWarning": "Without a provider key, GateCtr can't route your requests.",
+    "submit": "Connect",
+    "connecting": "Connecting...",
+    "skip": "Set up later",
+    "errors": {
+      "providerRequired": "Select a provider.",
+      "keyRequired": "API key required.",
+      "failed": "Connection failed. Try again."
+    }
+  },
+  "budget": {
+    "title": "Set your budget.",
+    "subtitle": "No surprise invoices.",
+    "monthlyLimit": {
+      "label": "Monthly token limit",
+      "unit": "tokens / month",
+      "hint": "Your {plan} plan includes {limit} tokens/month."
+    },
+    "alertThreshold": {
+      "label": "Alert at {pct}% usage"
+    },
+    "hardStop": {
+      "label": "Block requests when limit is reached",
+      "hint": "Disable to receive alerts only."
+    },
+    "summary": {
+      "label": "Budget summary",
+      "limit": "Limit",
+      "alert": "Alert",
+      "block": "Block",
+      "notify": "Notify",
+      "onLimit": "On limit"
+    },
+    "submit": "Continue",
+    "submitting": "Saving...",
+    "errors": {
+      "failed": "Failed to save budget. Try again."
+    }
+  },
+  "project": {
+    "title": "Create your first project.",
+    "subtitle": "One project. One endpoint.",
+    "projectName": {
+      "label": "Project name",
+      "placeholder": "My API",
+      "hint": "Groups your LLM calls and usage data.",
+      "hintSub": "You can create more projects from the dashboard.",
+      "description": "Used to identify this project in your dashboard and API calls."
+    },
+    "suggestions": {
+      "label": "Quick suggestions"
+    },
+    "submit": "Finish setup",
+    "submitting": "Creating...",
+    "skip": "Skip for now",
+    "errors": {
+      "required": "Project name required.",
+      "minLength": "At least 2 characters.",
+      "quotaExceeded": "Project limit reached. Upgrade to add more.",
+      "failed": "Failed to create project. Try again."
+    }
   }
 }

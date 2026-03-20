@@ -39,13 +39,33 @@
         "dev": "Personal / dev"
       }
     },
+    "referralCode": {
+      "label": "Referral code (optional)",
+      "placeholder": "e.g. abc12345"
+    },
     "submit": "Request access",
     "submitting": "Sending..."
   },
   "success": {
     "title": "You're in.",
     "message": "Position #{position}. We'll email you when your spot opens.",
-    "cta": "Back to home"
+    "cta": "Back to home",
+    "referral": {
+      "title": "Move up the list",
+      "description": "Share your link. Each signup moves you up.",
+      "copy": "Copy",
+      "copied": "Copied"
+    }
+  },
+  "statusCheck": {
+    "title": "Already registered?",
+    "cta": "Check",
+    "notFound": "Email not found.",
+    "error": "Check failed. Try again.",
+    "position": "Position",
+    "status": "Status",
+    "referrals": "Referrals",
+    "referralCount": "{count} signup(s)"
   },
   "errors": {
     "duplicate": "Already registered.",
@@ -65,6 +85,10 @@
     "router": {
       "title": "Model Router",
       "description": "GateCtr picks the right LLM. You pay less."
+    },
+    "analytics": {
+      "title": "Usage Dashboard",
+      "description": "Every token. Every cost. Real-time."
     }
   }
 }

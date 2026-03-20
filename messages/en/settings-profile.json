@@ -1,0 +1,73 @@
+{
+  "page": {
+    "title": "Profile",
+    "description": "Your name and display preferences."
+  },
+  "sections": {
+    "identity": "Identity",
+    "preferences": "Preferences",
+    "dangerZone": "Danger zone"
+  },
+  "fields": {
+    "name": {
+      "label": "Full name",
+      "placeholder": "Your name",
+      "description": "Displayed across the dashboard and in emails."
+    },
+    "email": {
+      "label": "Email",
+      "description": "Managed by your authentication provider. Change it in your account settings."
+    },
+    "authProvider": {
+      "label": "Sign-in method",
+      "email": "Email",
+      "google": "Google",
+      "github": "GitHub",
+      "microsoft": "Microsoft",
+      "apple": "Apple"
+    },
+    "language": {
+      "label": "Language",
+      "en": "English",
+      "fr": "Français"
+    },
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
+  "actions": {
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "deleteAccount": "Delete account"
+  },
+  "success": {
+    "updated": "Profile updated."
+  },
+  "errors": {
+    "name_required": "Name is required.",
+    "name_too_short": "Name must be at least 2 characters.",
+    "failed": "Update failed. Try again.",
+    "unknown": "Something went wrong."
+  },
+  "deleteAccount": {
+    "title": "Delete your account",
+    "description": "This will permanently delete:",
+    "consequences": [
+      "Your account and profile",
+      "All your projects and API keys",
+      "All usage history and analytics",
+      "Your active subscription (no refund)"
+    ],
+    "confirmLabel": "To confirm, type your email address:",
+    "confirmPlaceholder": "your@email.com",
+    "confirmMismatch": "Email doesn't match.",
+    "trigger": "Delete account",
+    "confirm": "Permanently delete my account",
+    "cancel": "Cancel",
+    "deleting": "Deleting…"
+  }
+}

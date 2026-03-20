@@ -1,169 +1,182 @@
 import { prisma } from "../lib/prisma";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyRecord = Record<string, any>;
+
+async function upsertPlanWithLimits(
+  planData: {
+    name: "FREE" | "PRO" | "TEAM" | "ENTERPRISE";
+    displayName: string;
+    description?: string;
+    stripePriceIdMonthly?: string | null;
+    stripePriceIdYearly?: string | null;
+    isActive?: boolean;
+    isPublic?: boolean;
+    sortOrder?: number;
+  },
+  limitsData: AnyRecord,
+) {
+  const plan = await prisma.plan.upsert({
+    where: { name: planData.name as "FREE" | "PRO" | "TEAM" | "ENTERPRISE" },
+    update: {
+      displayName: planData.displayName,
+      description: planData.description,
+      stripePriceIdMonthly: planData.stripePriceIdMonthly ?? null,
+      stripePriceIdYearly: planData.stripePriceIdYearly ?? null,
+      isActive: planData.isActive,
+      isPublic: planData.isPublic,
+      sortOrder: planData.sortOrder,
+    },
+    create: planData,
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (prisma.planLimit as any).upsert({
+    where: { planId: plan.id },
+    update: limitsData,
+    create: {
+      ...limitsData,
+      plan: { connect: { id: plan.id } },
+    },
+  });
+
+  return plan;
+}
+
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // Create default plans
-  const freePlan = await prisma.plan.upsert({
-    where: { name: "FREE" },
-    update: {},
-    create: {
+  // ── Plans ──────────────────────────────────────────────────────────────────
+
+  const freePlan = await upsertPlanWithLimits(
+    {
       name: "FREE",
       displayName: "Free",
       description: "Perfect for testing and small projects",
       isActive: true,
       isPublic: true,
       sortOrder: 1,
-      limits: {
-        create: {
-          maxTokensPerMonth: 100000,
-          maxRequestsPerDay: 100,
-          maxRequestsPerMinute: 10,
-          maxProjects: 1,
-          maxApiKeys: 2,
-          maxWebhooks: 0,
-          maxTeamMembers: 1,
-          contextOptimizerEnabled: false,
-          modelRouterEnabled: false,
-          advancedAnalytics: false,
-          auditLogsRetentionDays: 7,
-          supportLevel: "community",
-        },
-      },
     },
-  });
+    {
+      maxTokensPerMonth: 50_000,
+      maxRequestsPerDay: 1_000,
+      maxRequestsPerMinute: 10,
+      maxProjects: 1,
+      maxApiKeys: 1,
+      maxWebhooks: 1,
+      maxTeamMembers: 1,
+      contextOptimizerEnabled: false,
+      modelRouterEnabled: false,
+      advancedAnalytics: false,
+      auditLogsRetentionDays: 7,
+      supportLevel: "community",
+    },
+  );
 
-  const proPlan = await prisma.plan.upsert({
-    where: { name: "PRO" },
-    update: {},
-    create: {
+  const proPlan = await upsertPlanWithLimits(
+    {
       name: "PRO",
       displayName: "Pro",
       description: "For professionals and growing teams",
-      stripePriceIdMonthly: "price_pro_monthly",
-      stripePriceIdYearly: "price_pro_yearly",
+      stripePriceIdMonthly: process.env.STRIPE_PRICE_PRO_MONTHLY ?? null,
+      stripePriceIdYearly: process.env.STRIPE_PRICE_PRO_YEARLY ?? null,
       isActive: true,
       isPublic: true,
       sortOrder: 2,
-      limits: {
-        create: {
-          maxTokensPerMonth: 5000000,
-          maxRequestsPerDay: 10000,
-          maxRequestsPerMinute: 100,
-          maxProjects: 10,
-          maxApiKeys: 10,
-          maxWebhooks: 5,
-          maxTeamMembers: 5,
-          contextOptimizerEnabled: true,
-          modelRouterEnabled: true,
-          advancedAnalytics: true,
-          auditLogsRetentionDays: 30,
-          supportLevel: "email",
-        },
-      },
     },
-  });
+    {
+      maxTokensPerMonth: 2_000_000,
+      maxRequestsPerDay: 60_000,
+      maxRequestsPerMinute: 60,
+      maxProjects: 5,
+      maxApiKeys: 5,
+      maxWebhooks: null,
+      maxTeamMembers: 1,
+      contextOptimizerEnabled: true,
+      modelRouterEnabled: true,
+      advancedAnalytics: true,
+      auditLogsRetentionDays: 30,
+      supportLevel: "email",
+    },
+  );
 
-  const teamPlan = await prisma.plan.upsert({
-    where: { name: "TEAM" },
-    update: {},
-    create: {
+  const teamPlan = await upsertPlanWithLimits(
+    {
       name: "TEAM",
       displayName: "Team",
       description: "For teams that need collaboration and governance",
-      stripePriceIdMonthly: "price_team_monthly",
-      stripePriceIdYearly: "price_team_yearly",
+      stripePriceIdMonthly: process.env.STRIPE_PRICE_TEAM_MONTHLY ?? null,
+      stripePriceIdYearly: process.env.STRIPE_PRICE_TEAM_YEARLY ?? null,
       isActive: true,
       isPublic: true,
       sortOrder: 3,
-      limits: {
-        create: {
-          maxTokensPerMonth: 10000000,
-          maxRequestsPerDay: 100000,
-          maxRequestsPerMinute: 500,
-          maxProjects: -1, // unlimited
-          maxApiKeys: 50,
-          maxWebhooks: -1, // unlimited
-          maxTeamMembers: -1, // unlimited
-          contextOptimizerEnabled: true,
-          modelRouterEnabled: true,
-          advancedAnalytics: true,
-          auditLogsRetentionDays: 90,
-          supportLevel: "priority",
-        },
-      },
     },
-  });
+    {
+      maxTokensPerMonth: 10_000_000,
+      maxRequestsPerDay: 200_000,
+      maxRequestsPerMinute: 200,
+      maxProjects: null,
+      maxApiKeys: null,
+      maxWebhooks: null,
+      maxTeamMembers: 3, // 3 inclus — supplémentaires facturés $15/seat/mois
+      contextOptimizerEnabled: true,
+      modelRouterEnabled: true,
+      advancedAnalytics: true,
+      auditLogsRetentionDays: 90,
+      supportLevel: "priority",
+    },
+  );
 
-  const enterprisePlan = await prisma.plan.upsert({
-    where: { name: "ENTERPRISE" },
-    update: {},
-    create: {
+  const enterprisePlan = await upsertPlanWithLimits(
+    {
       name: "ENTERPRISE",
       displayName: "Enterprise",
       description: "Unlimited scale with dedicated support and SLA",
+      stripePriceIdMonthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY ?? null,
+      stripePriceIdYearly: process.env.STRIPE_PRICE_ENTERPRISE_YEARLY ?? null,
       isActive: true,
       isPublic: true,
       sortOrder: 4,
-      limits: {
-        create: {
-          maxTokensPerMonth: -1, // unlimited
-          maxRequestsPerDay: -1, // unlimited
-          maxRequestsPerMinute: -1, // unlimited
-          maxProjects: -1, // unlimited
-          maxApiKeys: -1, // unlimited
-          maxWebhooks: -1, // unlimited
-          maxTeamMembers: -1, // unlimited
-          contextOptimizerEnabled: true,
-          modelRouterEnabled: true,
-          advancedAnalytics: true,
-          auditLogsRetentionDays: -1, // unlimited
-          supportLevel: "enterprise",
-        },
-      },
     },
-  });
+    {
+      maxTokensPerMonth: null,
+      maxRequestsPerDay: null,
+      maxRequestsPerMinute: 1_000,
+      maxProjects: null,
+      maxApiKeys: null,
+      maxWebhooks: null,
+      maxTeamMembers: null,
+      contextOptimizerEnabled: true,
+      modelRouterEnabled: true,
+      advancedAnalytics: true,
+      auditLogsRetentionDays: 365,
+      supportLevel: "dedicated",
+    },
+  );
 
   console.log("✅ Plans created:", {
-    freePlan,
-    proPlan,
-    teamPlan,
-    enterprisePlan,
+    freePlan: freePlan.name,
+    proPlan: proPlan.name,
+    teamPlan: teamPlan.name,
+    enterprisePlan: enterprisePlan.name,
   });
 
-  // Create default roles
-  const roles: Array<{
-    name:
-      | "SUPER_ADMIN"
-      | "ADMIN"
-      | "MANAGER"
-      | "DEVELOPER"
-      | "VIEWER"
-      | "SUPPORT";
+  // ── Roles ──────────────────────────────────────────────────────────────────
+
+  const roleDefinitions: Array<{
+    name: "SUPER_ADMIN" | "ADMIN" | "MANAGER" | "DEVELOPER" | "VIEWER" | "SUPPORT";
     displayName: string;
     description: string;
   }> = [
-    {
-      name: "SUPER_ADMIN",
-      displayName: "Super Admin",
-      description: "Full system access",
-    },
+    { name: "SUPER_ADMIN", displayName: "Super Admin", description: "Full system access" },
     { name: "ADMIN", displayName: "Admin", description: "Organization admin" },
     { name: "MANAGER", displayName: "Manager", description: "Team manager" },
-    {
-      name: "DEVELOPER",
-      displayName: "Developer",
-      description: "Developer access",
-    },
+    { name: "DEVELOPER", displayName: "Developer", description: "Developer access" },
     { name: "VIEWER", displayName: "Viewer", description: "Read-only access" },
-    {
-      name: "SUPPORT",
-      displayName: "Support",
-      description: "Support team access",
-    },
+    { name: "SUPPORT", displayName: "Support", description: "Support team access" },
   ];
 
-  for (const role of roles) {
+  for (const role of roleDefinitions) {
     await prisma.role.upsert({
       where: { name: role.name },
       update: {},
@@ -173,483 +186,159 @@ async function main() {
 
   console.log("✅ Roles created");
 
-  // Create permissions
-  const permissions = [
-    // User management
-    { resource: "user", action: "read", description: "View user information" },
-    { resource: "user", action: "create", description: "Create new users" },
-    {
-      resource: "user",
-      action: "update",
-      description: "Update user information",
-    },
-    { resource: "user", action: "delete", description: "Delete users" },
+  // ── Permissions ────────────────────────────────────────────────────────────
 
-    // Project management
-    { resource: "project", action: "read", description: "View projects" },
-    {
-      resource: "project",
-      action: "create",
-      description: "Create new projects",
-    },
-    { resource: "project", action: "update", description: "Update projects" },
-    { resource: "project", action: "delete", description: "Delete projects" },
-
-    // API Key management
-    { resource: "api_key", action: "read", description: "View API keys" },
-    { resource: "api_key", action: "create", description: "Create API keys" },
-    { resource: "api_key", action: "update", description: "Update API keys" },
-    { resource: "api_key", action: "delete", description: "Delete API keys" },
-
-    // Budget management
-    { resource: "budget", action: "read", description: "View budgets" },
-    { resource: "budget", action: "create", description: "Create budgets" },
-    { resource: "budget", action: "update", description: "Update budgets" },
-    { resource: "budget", action: "delete", description: "Delete budgets" },
-
-    // Analytics
-    { resource: "analytics", action: "read", description: "View analytics" },
-    {
-      resource: "analytics",
-      action: "export",
-      description: "Export analytics data",
-    },
-
-    // Webhooks
-    { resource: "webhook", action: "read", description: "View webhooks" },
-    { resource: "webhook", action: "create", description: "Create webhooks" },
-    { resource: "webhook", action: "update", description: "Update webhooks" },
-    { resource: "webhook", action: "delete", description: "Delete webhooks" },
-
-    // Team management
-    { resource: "team", action: "read", description: "View teams" },
-    { resource: "team", action: "create", description: "Create teams" },
-    { resource: "team", action: "update", description: "Update teams" },
-    { resource: "team", action: "delete", description: "Delete teams" },
-    { resource: "team", action: "invite", description: "Invite team members" },
-    {
-      resource: "team",
-      action: "remove_member",
-      description: "Remove team members",
-    },
-
-    // Billing
-    {
-      resource: "billing",
-      action: "read",
-      description: "View billing information",
-    },
-    {
-      resource: "billing",
-      action: "update",
-      description: "Update billing information",
-    },
-
-    // Admin features
-    { resource: "plan", action: "read", description: "View plans" },
-    { resource: "plan", action: "create", description: "Create plans" },
-    { resource: "plan", action: "update", description: "Update plans" },
-    { resource: "plan", action: "delete", description: "Delete plans" },
-
-    {
-      resource: "feature_flag",
-      action: "read",
-      description: "View feature flags",
-    },
-    {
-      resource: "feature_flag",
-      action: "create",
-      description: "Create feature flags",
-    },
-    {
-      resource: "feature_flag",
-      action: "update",
-      description: "Update feature flags",
-    },
-    {
-      resource: "feature_flag",
-      action: "delete",
-      description: "Delete feature flags",
-    },
-
-    { resource: "audit_log", action: "read", description: "View audit logs" },
-
-    { resource: "system", action: "read", description: "View system health" },
-    {
-      resource: "system",
-      action: "manage",
-      description: "Manage system settings",
-    },
+  const permissionDefs = [
+    { resource: "user", action: "read" },
+    { resource: "user", action: "create" },
+    { resource: "user", action: "update" },
+    { resource: "user", action: "delete" },
+    { resource: "project", action: "read" },
+    { resource: "project", action: "create" },
+    { resource: "project", action: "update" },
+    { resource: "project", action: "delete" },
+    { resource: "api_key", action: "read" },
+    { resource: "api_key", action: "create" },
+    { resource: "api_key", action: "update" },
+    { resource: "api_key", action: "delete" },
+    { resource: "budget", action: "read" },
+    { resource: "budget", action: "create" },
+    { resource: "budget", action: "update" },
+    { resource: "budget", action: "delete" },
+    { resource: "analytics", action: "read" },
+    { resource: "analytics", action: "export" },
+    { resource: "webhook", action: "read" },
+    { resource: "webhook", action: "create" },
+    { resource: "webhook", action: "update" },
+    { resource: "webhook", action: "delete" },
+    { resource: "team", action: "read" },
+    { resource: "team", action: "create" },
+    { resource: "team", action: "update" },
+    { resource: "team", action: "delete" },
+    { resource: "team", action: "invite" },
+    { resource: "team", action: "remove_member" },
+    { resource: "billing", action: "read" },
+    { resource: "billing", action: "update" },
+    { resource: "plan", action: "read" },
+    { resource: "plan", action: "create" },
+    { resource: "plan", action: "update" },
+    { resource: "plan", action: "delete" },
+    { resource: "feature_flag", action: "read" },
+    { resource: "feature_flag", action: "create" },
+    { resource: "feature_flag", action: "update" },
+    { resource: "feature_flag", action: "delete" },
+    { resource: "audit_log", action: "read" },
+    { resource: "system", action: "read" },
+    { resource: "system", action: "manage" },
   ];
 
-  const createdPermissions: Record<
-    string,
-    { id: string; resource: string; action: string }
-  > = {};
-  for (const permission of permissions) {
+  const createdPermissions: Record<string, { id: string }> = {};
+  for (const p of permissionDefs) {
     const created = await prisma.permission.upsert({
-      where: {
-        resource_action: {
-          resource: permission.resource,
-          action: permission.action,
-        },
-      },
+      where: { resource_action: { resource: p.resource, action: p.action } },
       update: {},
-      create: permission,
+      create: p,
     });
-    createdPermissions[`${permission.resource}:${permission.action}`] = created;
+    createdPermissions[`${p.resource}:${p.action}`] = created;
   }
 
   console.log("✅ Permissions created");
 
-  // Get created roles
-  const superAdminRole = await prisma.role.findUnique({
-    where: { name: "SUPER_ADMIN" },
-  });
-  const adminRole = await prisma.role.findUnique({ where: { name: "ADMIN" } });
-  const managerRole = await prisma.role.findUnique({
-    where: { name: "MANAGER" },
-  });
-  const developerRole = await prisma.role.findUnique({
-    where: { name: "DEVELOPER" },
-  });
-  const viewerRole = await prisma.role.findUnique({
-    where: { name: "VIEWER" },
-  });
-  const supportRole = await prisma.role.findUnique({
-    where: { name: "SUPPORT" },
-  });
+  // ── Role → Permission assignments ──────────────────────────────────────────
 
-  // Assign permissions to roles
-  const rolePermissions = [
-    // SUPER_ADMIN - All permissions
-    ...Object.values(createdPermissions).map((perm) => ({
-      roleId: superAdminRole!.id,
-      permissionId: perm.id,
-    })),
+  const roles = await prisma.role.findMany();
+  const roleMap = Object.fromEntries(roles.map((r) => [r.name, r]));
 
-    // ADMIN - Most permissions except system management
-    { roleId: adminRole!.id, permissionId: createdPermissions["user:read"].id },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["user:create"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["user:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["project:read"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["project:create"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["project:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["project:delete"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["api_key:read"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["api_key:create"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["api_key:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["api_key:delete"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["budget:read"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["budget:create"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["budget:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["budget:delete"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["analytics:read"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["analytics:export"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["webhook:read"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["webhook:create"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["webhook:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["webhook:delete"].id,
-    },
-    { roleId: adminRole!.id, permissionId: createdPermissions["team:read"].id },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["team:create"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["team:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["team:delete"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["team:invite"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["team:remove_member"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["billing:read"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["billing:update"].id,
-    },
-    {
-      roleId: adminRole!.id,
-      permissionId: createdPermissions["audit_log:read"].id,
-    },
+  const p = (key: string) => createdPermissions[key].id;
 
-    // MANAGER - Team and project management
+  const assignments: Array<{ roleName: string; permKeys: string[] }> = [
     {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["user:read"].id,
+      roleName: "SUPER_ADMIN",
+      permKeys: Object.keys(createdPermissions),
     },
     {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["project:read"].id,
+      roleName: "ADMIN",
+      permKeys: [
+        "user:read", "user:create", "user:update",
+        "project:read", "project:create", "project:update", "project:delete",
+        "api_key:read", "api_key:create", "api_key:update", "api_key:delete",
+        "budget:read", "budget:create", "budget:update", "budget:delete",
+        "analytics:read", "analytics:export",
+        "webhook:read", "webhook:create", "webhook:update", "webhook:delete",
+        "team:read", "team:create", "team:update", "team:delete", "team:invite", "team:remove_member",
+        "billing:read", "billing:update",
+        "audit_log:read",
+      ],
     },
     {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["project:create"].id,
+      roleName: "MANAGER",
+      permKeys: [
+        "user:read",
+        "project:read", "project:create", "project:update",
+        "api_key:read", "api_key:create",
+        "budget:read", "budget:update",
+        "analytics:read",
+        "webhook:read", "webhook:create", "webhook:update",
+        "team:read", "team:invite",
+        "billing:read",
+      ],
     },
     {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["project:update"].id,
+      roleName: "DEVELOPER",
+      permKeys: [
+        "project:read", "project:create", "project:update",
+        "api_key:read", "api_key:create",
+        "budget:read",
+        "analytics:read",
+        "webhook:read", "webhook:create",
+        "team:read",
+      ],
     },
     {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["api_key:read"].id,
+      roleName: "VIEWER",
+      permKeys: [
+        "project:read", "api_key:read", "budget:read",
+        "analytics:read", "webhook:read", "team:read",
+      ],
     },
     {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["api_key:create"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["budget:read"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["budget:update"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["analytics:read"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["webhook:read"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["webhook:create"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["webhook:update"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["team:read"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["team:invite"].id,
-    },
-    {
-      roleId: managerRole!.id,
-      permissionId: createdPermissions["billing:read"].id,
-    },
-
-    // DEVELOPER - Development access
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["project:read"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["project:create"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["project:update"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["api_key:read"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["api_key:create"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["budget:read"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["analytics:read"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["webhook:read"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["webhook:create"].id,
-    },
-    {
-      roleId: developerRole!.id,
-      permissionId: createdPermissions["team:read"].id,
-    },
-
-    // VIEWER - Read-only access
-    {
-      roleId: viewerRole!.id,
-      permissionId: createdPermissions["project:read"].id,
-    },
-    {
-      roleId: viewerRole!.id,
-      permissionId: createdPermissions["api_key:read"].id,
-    },
-    {
-      roleId: viewerRole!.id,
-      permissionId: createdPermissions["budget:read"].id,
-    },
-    {
-      roleId: viewerRole!.id,
-      permissionId: createdPermissions["analytics:read"].id,
-    },
-    {
-      roleId: viewerRole!.id,
-      permissionId: createdPermissions["webhook:read"].id,
-    },
-    {
-      roleId: viewerRole!.id,
-      permissionId: createdPermissions["team:read"].id,
-    },
-
-    // SUPPORT - Support team access
-    {
-      roleId: supportRole!.id,
-      permissionId: createdPermissions["user:read"].id,
-    },
-    {
-      roleId: supportRole!.id,
-      permissionId: createdPermissions["project:read"].id,
-    },
-    {
-      roleId: supportRole!.id,
-      permissionId: createdPermissions["analytics:read"].id,
-    },
-    {
-      roleId: supportRole!.id,
-      permissionId: createdPermissions["audit_log:read"].id,
-    },
-    {
-      roleId: supportRole!.id,
-      permissionId: createdPermissions["system:read"].id,
+      roleName: "SUPPORT",
+      permKeys: ["user:read", "project:read", "analytics:read", "audit_log:read", "system:read"],
     },
   ];
 
-  for (const rp of rolePermissions) {
-    await prisma.rolePermission.upsert({
-      where: {
-        roleId_permissionId: {
-          roleId: rp.roleId,
-          permissionId: rp.permissionId,
-        },
-      },
-      update: {},
-      create: rp,
-    });
+  for (const { roleName, permKeys } of assignments) {
+    const role = roleMap[roleName];
+    if (!role) continue;
+    for (const key of permKeys) {
+      await prisma.rolePermission.upsert({
+        where: { roleId_permissionId: { roleId: role.id, permissionId: p(key) } },
+        update: {},
+        create: { roleId: role.id, permissionId: p(key) },
+      });
+    }
   }
 
   console.log("✅ Role permissions assigned");
 
-  // Create LLM Provider Configs
+  // ── LLM Provider Configs ───────────────────────────────────────────────────
+
   const providers = [
-    {
-      provider: "openai",
-      displayName: "OpenAI",
-      baseUrl: "https://api.openai.com/v1",
-      defaultTimeout: 30000,
-      maxRetries: 3,
-      retryDelay: 1000,
-    },
-    {
-      provider: "anthropic",
-      displayName: "Anthropic",
-      baseUrl: "https://api.anthropic.com/v1",
-      defaultTimeout: 30000,
-      maxRetries: 3,
-      retryDelay: 1000,
-    },
-    {
-      provider: "mistral",
-      displayName: "Mistral AI",
-      baseUrl: "https://api.mistral.ai/v1",
-      defaultTimeout: 30000,
-      maxRetries: 3,
-      retryDelay: 1000,
-    },
+    { provider: "openai", displayName: "OpenAI", baseUrl: "https://api.openai.com/v1" },
+    { provider: "anthropic", displayName: "Anthropic", baseUrl: "https://api.anthropic.com/v1" },
+    { provider: "mistral", displayName: "Mistral AI", baseUrl: "https://api.mistral.ai/v1" },
+    { provider: "gemini", displayName: "Google Gemini", baseUrl: "https://generativelanguage.googleapis.com/v1beta" },
   ];
 
   for (const provider of providers) {
     await prisma.lLMProviderConfig.upsert({
       where: { provider: provider.provider },
       update: {},
-      create: provider,
+      create: { ...provider, defaultTimeout: 30000, maxRetries: 3, retryDelay: 1000 },
     });
   }
 
   console.log("✅ LLM Provider configs created");
-
   console.log("🎉 Seeding completed!");
 }
 

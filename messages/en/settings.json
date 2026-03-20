@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "profile": "Profile",
+    "workspace": "Workspace",
+    "team": "Team",
+    "providers": "LLM Providers",
+    "apiKeys": "API Keys",
+    "budget": "Budget",
+    "notifications": "Notifications",
+    "security": "Security",
+    "billing": "Billing"
+  },
+  "navGroups": {
+    "account": "Account",
+    "workspace": "Workspace",
+    "platform": "Platform"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Your name, avatar, and account preferences."
+  },
+  "workspace": {
+    "title": "Workspace",
+    "description": "Workspace name, slug, and usage type."
+  },
+  "team": {
+    "title": "Team",
+    "description": "Members, roles, and invitations.",
+    "planRequired": "Team plan required",
+    "planRequiredDescription": "Upgrade to Team to manage members and roles."
+  },
+  "providers": {
+    "title": "LLM Providers",
+    "description": "Your API keys for OpenAI, Anthropic, Mistral, Gemini. Encrypted. Yours."
+  },
+  "apiKeys": {
+    "title": "API Keys",
+    "description": "GateCtr SDK keys. Control access per project."
+  },
+  "budget": {
+    "title": "Budget",
+    "description": "Global token limits and alert thresholds."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Alert channels and thresholds.",
+    "planRequired": "Pro plan required",
+    "planRequiredDescription": "Upgrade to Pro to configure notification channels."
+  },
+  "security": {
+    "title": "Security",
+    "description": "Active sessions and authentication settings."
+  },
+  "billing": {
+    "title": "Billing",
+    "description": "Plan, usage, and invoices."
+  }
+}
