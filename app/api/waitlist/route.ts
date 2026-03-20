@@ -177,7 +177,8 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      const header = "position,email,name,company,useCase,status,referralCode,createdAt,invitedAt,joinedAt";
+      const header =
+        "position,email,name,company,useCase,status,referralCode,createdAt,invitedAt,joinedAt";
       const rows = all.map((e) =>
         [
           e.position,
@@ -240,7 +241,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const { id, action } = await request.json() as { id: string; action: "delete" | "skip" };
+    const { id, action } = (await request.json()) as {
+      id: string;
+      action: "delete" | "skip";
+    };
 
     if (!id) {
       return NextResponse.json({ error: "Entry ID required" }, { status: 400 });
@@ -265,6 +269,9 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true, action: "deleted" });
   } catch (error) {
     console.error("Waitlist delete error:", error);
-    return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to process request" },
+      { status: 500 },
+    );
   }
 }

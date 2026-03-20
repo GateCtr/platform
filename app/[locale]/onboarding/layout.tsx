@@ -33,8 +33,11 @@ export default async function OnboardingLayout({
   const { sessionClaims } = await auth();
 
   if (
-    (sessionClaims?.publicMetadata as { onboardingComplete?: boolean } | undefined)
-      ?.onboardingComplete === true
+    (
+      sessionClaims?.publicMetadata as
+        | { onboardingComplete?: boolean }
+        | undefined
+    )?.onboardingComplete === true
   ) {
     redirect("/dashboard");
   }
@@ -61,7 +64,10 @@ export default async function OnboardingLayout({
 
         <div className="relative z-10 flex flex-col h-full px-10 py-10">
           {/* Logo */}
-          <Logo variant="full" className="**:fill-primary-foreground **:text-primary-foreground" />
+          <Logo
+            variant="full"
+            className="**:fill-primary-foreground **:text-primary-foreground"
+          />
 
           {/* Main copy */}
           <div className="flex-1 flex flex-col justify-center gap-10">
@@ -123,9 +129,7 @@ export default async function OnboardingLayout({
 
         {/* Scrollable content */}
         <div className="flex-1 flex items-start justify-center px-6 py-10 overflow-y-auto">
-          <div className="w-full max-w-md">
-            {children}
-          </div>
+          <div className="w-full max-w-md">{children}</div>
         </div>
       </div>
     </div>

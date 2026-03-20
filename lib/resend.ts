@@ -124,7 +124,13 @@ export async function sendOnboardingCompleteEmail(
 ) {
   try {
     const html = await render(
-      OnboardingCompleteEmail({ email, name: name || undefined, workspaceName, hasProvider, locale }),
+      OnboardingCompleteEmail({
+        email,
+        name: name || undefined,
+        workspaceName,
+        hasProvider,
+        locale,
+      }),
     );
     const subject =
       locale === "fr"
@@ -160,10 +166,16 @@ export async function sendBillingUpgradeEmail(
 ) {
   try {
     const html = await render(BillingUpgradeEmail({ email, planName, locale }));
-    const subject = locale === "fr"
-      ? `Votre plan ${planName} est actif`
-      : `Your ${planName} plan is active`;
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const subject =
+      locale === "fr"
+        ? `Votre plan ${planName} est actif`
+        : `Your ${planName} plan is active`;
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send billing upgrade email:", err);
@@ -179,9 +191,17 @@ export async function sendBillingReceiptEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(BillingReceiptEmail({ email, amount, invoicePdfUrl, locale }));
-    const subject = locale === "fr" ? "Votre reçu GateCtr" : "Your GateCtr receipt";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      BillingReceiptEmail({ email, amount, invoicePdfUrl, locale }),
+    );
+    const subject =
+      locale === "fr" ? "Votre reçu GateCtr" : "Your GateCtr receipt";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send billing receipt email:", err);
@@ -196,11 +216,19 @@ export async function sendBillingPaymentFailedEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(BillingPaymentFailedEmail({ email, portalUrl, locale }));
-    const subject = locale === "fr"
-      ? "Paiement échoué — action requise"
-      : "Payment failed — action required";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      BillingPaymentFailedEmail({ email, portalUrl, locale }),
+    );
+    const subject =
+      locale === "fr"
+        ? "Paiement échoué — action requise"
+        : "Payment failed — action required";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send payment failed email:", err);
@@ -216,11 +244,19 @@ export async function sendBillingRenewalReminderEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(BillingRenewalReminderEmail({ email, renewalDate, amount, locale }));
-    const subject = locale === "fr"
-      ? "Votre abonnement se renouvelle dans 7 jours"
-      : "Your subscription renews in 7 days";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      BillingRenewalReminderEmail({ email, renewalDate, amount, locale }),
+    );
+    const subject =
+      locale === "fr"
+        ? "Votre abonnement se renouvelle dans 7 jours"
+        : "Your subscription renews in 7 days";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send renewal reminder email:", err);
@@ -236,11 +272,19 @@ export async function sendBillingCancellationEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(BillingCancellationEmail({ email, planName, accessUntil, locale }));
-    const subject = locale === "fr"
-      ? `Annulation programmée — accès jusqu'au ${accessUntil.toLocaleDateString("fr-FR")}`
-      : `Cancellation scheduled — access until ${accessUntil.toLocaleDateString("en-US")}`;
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      BillingCancellationEmail({ email, planName, accessUntil, locale }),
+    );
+    const subject =
+      locale === "fr"
+        ? `Annulation programmée — accès jusqu'au ${accessUntil.toLocaleDateString("fr-FR")}`
+        : `Cancellation scheduled — access until ${accessUntil.toLocaleDateString("en-US")}`;
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send billing cancellation email:", err);
@@ -255,11 +299,17 @@ export async function sendBillingDowngradeEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(BillingDowngradeEmail({ email, lostFeatures, locale }));
-    const subject = locale === "fr"
-      ? "Votre plan a été modifié"
-      : "Your plan has changed";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      BillingDowngradeEmail({ email, lostFeatures, locale }),
+    );
+    const subject =
+      locale === "fr" ? "Votre plan a été modifié" : "Your plan has changed";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send billing downgrade email:", err);
@@ -281,11 +331,19 @@ export async function sendUserSuspendedEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(UserSuspendedEmail({ email, name: name || undefined, locale }));
-    const subject = locale === "fr"
-      ? "Votre compte GateCtr a été suspendu"
-      : "Your GateCtr account has been suspended";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      UserSuspendedEmail({ email, name: name || undefined, locale }),
+    );
+    const subject =
+      locale === "fr"
+        ? "Votre compte GateCtr a été suspendu"
+        : "Your GateCtr account has been suspended";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send user suspended email:", err);
@@ -301,11 +359,24 @@ export async function sendUserBannedEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(UserBannedEmail({ email, name: name || undefined, reason: reason || undefined, locale }));
-    const subject = locale === "fr"
-      ? "Votre compte GateCtr a été banni"
-      : "Your GateCtr account has been banned";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      UserBannedEmail({
+        email,
+        name: name || undefined,
+        reason: reason || undefined,
+        locale,
+      }),
+    );
+    const subject =
+      locale === "fr"
+        ? "Votre compte GateCtr a été banni"
+        : "Your GateCtr account has been banned";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send user banned email:", err);
@@ -320,11 +391,19 @@ export async function sendUserReactivatedEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(UserReactivatedEmail({ email, name: name || undefined, locale }));
-    const subject = locale === "fr"
-      ? "Votre compte GateCtr a été réactivé"
-      : "Your GateCtr account has been reactivated";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      UserReactivatedEmail({ email, name: name || undefined, locale }),
+    );
+    const subject =
+      locale === "fr"
+        ? "Votre compte GateCtr a été réactivé"
+        : "Your GateCtr account has been reactivated";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send user reactivated email:", err);
@@ -339,11 +418,19 @@ export async function sendUserDeletedEmail(
   locale: "en" | "fr" = "en",
 ) {
   try {
-    const html = await render(UserDeletedEmail({ email, name: name || undefined, locale }));
-    const subject = locale === "fr"
-      ? "Votre compte GateCtr a été supprimé"
-      : "Your GateCtr account has been deleted";
-    await resend.emails.send({ from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>", to: email, subject, html });
+    const html = await render(
+      UserDeletedEmail({ email, name: name || undefined, locale }),
+    );
+    const subject =
+      locale === "fr"
+        ? "Votre compte GateCtr a été supprimé"
+        : "Your GateCtr account has been deleted";
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject,
+      html,
+    });
     return { success: true };
   } catch (err) {
     console.error("Failed to send user deleted email:", err);

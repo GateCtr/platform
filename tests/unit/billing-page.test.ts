@@ -69,9 +69,7 @@ vi.mock("@/lib/prisma", () => ({
  * Fetch invoices from Stripe — returns [] on any error, never throws.
  * This mirrors the try/catch block in BillingPage.
  */
-async function fetchInvoicesSafe(
-  stripeCustomerId: string,
-): Promise<
+async function fetchInvoicesSafe(stripeCustomerId: string): Promise<
   {
     id: string;
     created: number;

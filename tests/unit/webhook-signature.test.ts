@@ -38,7 +38,10 @@ const mockTransaction = vi.fn();
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
-    stripeEvent: { create: mockStripeEventCreate, update: mockStripeEventUpdate },
+    stripeEvent: {
+      create: mockStripeEventCreate,
+      update: mockStripeEventUpdate,
+    },
     subscription: {
       upsert: mockSubscriptionUpsert,
       update: mockSubscriptionUpdate,
@@ -50,8 +53,12 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-vi.mock("@/lib/redis", () => ({ redis: { del: vi.fn().mockResolvedValue(1) } }));
-vi.mock("@/lib/audit", () => ({ logAudit: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/lib/redis", () => ({
+  redis: { del: vi.fn().mockResolvedValue(1) },
+}));
+vi.mock("@/lib/audit", () => ({
+  logAudit: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock("@/lib/webhooks", () => ({ dispatchWebhook: vi.fn() }));
 vi.mock("@/lib/resend", () => ({
   sendBillingUpgradeEmail: vi.fn().mockResolvedValue({ success: true }),
@@ -67,7 +74,9 @@ vi.mock("@/lib/resend", () => ({
 // ---------------------------------------------------------------------------
 
 function makeRequest(body: string, sig: string | null): NextRequest {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (sig !== null) headers["stripe-signature"] = sig;
   return new NextRequest("http://localhost/api/webhooks/stripe", {
     method: "POST",
@@ -86,83 +95,79 @@ describe("Property 9: Webhook signature rejection", () => {
     process.env.STRIPE_WEBHOOK_SECRET = "whsec_test_secret";
     // constructEvent always throws for invalid signatures
     mockConstructEvent.mockImplementation(() => {
-      throw new Error("No signatures found matching the expected signature for payload");
+      throw new Error(
+        "No signatures found matching the expected signature for payload",
+      );
     });
   });
 
-  it(
-    "returns 400 for any invalid stripe-signature header value (>=100 iterations)",
-    async () => {
-      const { POST } = await import("@/app/api/webhooks/stripe/route");
+  it("returns 400 for any invalid stripe-signature header value (>=100 iterations)", async () => {
+    const { POST } = await import("@/app/api/webhooks/stripe/route");
 
-      await fc.assert(
-        fc.asyncProperty(
-          // Arbitrary request bodies
-          fc.oneof(
-            fc.string(),
-            fc.constant("{}"),
-            fc.constant('{"id":"evt_test","type":"checkout.session.completed"}'),
-          ),
-          // Arbitrary non-empty signature strings (all invalid — constructEvent throws)
-          fc.string({ minLength: 1, maxLength: 200 }),
-          async (body, invalidSig) => {
-            mockConstructEvent.mockClear();
-            mockStripeEventCreate.mockClear();
-            mockSubscriptionUpsert.mockClear();
-            mockSubscriptionUpdate.mockClear();
-            mockUserUpdate.mockClear();
-            mockTransaction.mockClear();
-
-            const req = makeRequest(body, invalidSig);
-            const res = await POST(req);
-
-            // Must return 400
-            expect(res.status).toBe(400);
-
-            // Must not write any DB records
-            expect(mockStripeEventCreate).not.toHaveBeenCalled();
-            expect(mockSubscriptionUpsert).not.toHaveBeenCalled();
-            expect(mockSubscriptionUpdate).not.toHaveBeenCalled();
-            expect(mockUserUpdate).not.toHaveBeenCalled();
-            expect(mockTransaction).not.toHaveBeenCalled();
-          },
+    await fc.assert(
+      fc.asyncProperty(
+        // Arbitrary request bodies
+        fc.oneof(
+          fc.string(),
+          fc.constant("{}"),
+          fc.constant('{"id":"evt_test","type":"checkout.session.completed"}'),
         ),
-        { numRuns: 100 },
-      );
-    },
-  );
+        // Arbitrary non-empty signature strings (all invalid — constructEvent throws)
+        fc.string({ minLength: 1, maxLength: 200 }),
+        async (body, invalidSig) => {
+          mockConstructEvent.mockClear();
+          mockStripeEventCreate.mockClear();
+          mockSubscriptionUpsert.mockClear();
+          mockSubscriptionUpdate.mockClear();
+          mockUserUpdate.mockClear();
+          mockTransaction.mockClear();
 
-  it(
-    "returns 400 when stripe-signature header is absent (>=100 iterations)",
-    async () => {
-      const { POST } = await import("@/app/api/webhooks/stripe/route");
+          const req = makeRequest(body, invalidSig);
+          const res = await POST(req);
 
-      await fc.assert(
-        fc.asyncProperty(
-          fc.oneof(
-            fc.string(),
-            fc.constant("{}"),
-            fc.constant('{"id":"evt_test","type":"invoice.payment_failed"}'),
-          ),
-          async (body) => {
-            mockStripeEventCreate.mockClear();
-            mockSubscriptionUpdate.mockClear();
-            mockUserUpdate.mockClear();
+          // Must return 400
+          expect(res.status).toBe(400);
 
-            // No stripe-signature header
-            const req = makeRequest(body, null);
-            const res = await POST(req);
+          // Must not write any DB records
+          expect(mockStripeEventCreate).not.toHaveBeenCalled();
+          expect(mockSubscriptionUpsert).not.toHaveBeenCalled();
+          expect(mockSubscriptionUpdate).not.toHaveBeenCalled();
+          expect(mockUserUpdate).not.toHaveBeenCalled();
+          expect(mockTransaction).not.toHaveBeenCalled();
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
 
-            expect(res.status).toBe(400);
-            expect(mockStripeEventCreate).not.toHaveBeenCalled();
-            expect(mockSubscriptionUpdate).not.toHaveBeenCalled();
-            expect(mockUserUpdate).not.toHaveBeenCalled();
-          },
+  it("returns 400 when stripe-signature header is absent (>=100 iterations)", async () => {
+    const { POST } = await import("@/app/api/webhooks/stripe/route");
+
+    await fc.assert(
+      fc.asyncProperty(
+        fc.oneof(
+          fc.string(),
+          fc.constant("{}"),
+          fc.constant('{"id":"evt_test","type":"invoice.payment_failed"}'),
         ),
-        { numRuns: 100 },
-      );
-    },
-  );
+        async (body) => {
+          mockStripeEventCreate.mockClear();
+          mockSubscriptionUpdate.mockClear();
+          mockUserUpdate.mockClear();
+
+          // No stripe-signature header
+          const req = makeRequest(body, null);
+          const res = await POST(req);
+
+          expect(res.status).toBe(400);
+          expect(mockStripeEventCreate).not.toHaveBeenCalled();
+          expect(mockSubscriptionUpdate).not.toHaveBeenCalled();
+          expect(mockUserUpdate).not.toHaveBeenCalled();
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
 
   it("returns 400 with an error field in the response body on invalid signature", async () => {
     const { POST } = await import("@/app/api/webhooks/stripe/route");
@@ -187,29 +192,23 @@ describe("Property 9: Webhook signature rejection", () => {
     expect(body).toHaveProperty("error");
   });
 
-  it(
-    "does NOT call constructEvent when stripe-signature header is absent (>=100 iterations)",
-    async () => {
-      const { POST } = await import("@/app/api/webhooks/stripe/route");
+  it("does NOT call constructEvent when stripe-signature header is absent (>=100 iterations)", async () => {
+    const { POST } = await import("@/app/api/webhooks/stripe/route");
 
-      await fc.assert(
-        fc.asyncProperty(
-          fc.string(),
-          async (body) => {
-            mockConstructEvent.mockClear();
+    await fc.assert(
+      fc.asyncProperty(fc.string(), async (body) => {
+        mockConstructEvent.mockClear();
 
-            const req = makeRequest(body, null);
-            await POST(req);
+        const req = makeRequest(body, null);
+        await POST(req);
 
-            // Handler must short-circuit before calling constructEvent
-            // when the header is missing
-            expect(mockConstructEvent).not.toHaveBeenCalled();
-          },
-        ),
-        { numRuns: 100 },
-      );
-    },
-  );
+        // Handler must short-circuit before calling constructEvent
+        // when the header is missing
+        expect(mockConstructEvent).not.toHaveBeenCalled();
+      }),
+      { numRuns: 100 },
+    );
+  });
 
   it("processes event normally when signature is valid (control case)", async () => {
     const { POST } = await import("@/app/api/webhooks/stripe/route");
@@ -237,8 +236,16 @@ describe("Property 9: Webhook signature rejection", () => {
     mockConstructEvent.mockReturnValue(event);
     mockStripeEventCreate.mockResolvedValue({ id: eventId, processed: false });
     mockStripeEventUpdate.mockResolvedValue({ id: eventId, processed: true });
-    mockSubscriptionFindUnique.mockResolvedValue({ id: "sub-db", userId: "u1", stripeSubscriptionId: "sub_control_001" });
-    mockUserFindUnique.mockResolvedValue({ id: "u1", email: "t@t.com", locale: "en" });
+    mockSubscriptionFindUnique.mockResolvedValue({
+      id: "sub-db",
+      userId: "u1",
+      stripeSubscriptionId: "sub_control_001",
+    });
+    mockUserFindUnique.mockResolvedValue({
+      id: "u1",
+      email: "t@t.com",
+      locale: "en",
+    });
 
     const req = makeRequest(JSON.stringify(event), "v1,valid_signature");
     const res = await POST(req);

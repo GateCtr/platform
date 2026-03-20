@@ -23,21 +23,21 @@ export interface RateLimitResult {
 
 export const RATE_LIMITS = {
   /** Auth endpoints — sign-in attempts, password reset */
-  auth: { limit: 10, window: 900, prefix: "rl:auth" },           // 10/15min per IP
+  auth: { limit: 10, window: 900, prefix: "rl:auth" }, // 10/15min per IP
   /** Billing checkout — prevent checkout spam */
-  checkout: { limit: 5, window: 3600, prefix: "rl:checkout" },   // 5/hour per user
+  checkout: { limit: 5, window: 3600, prefix: "rl:checkout" }, // 5/hour per user
   /** API key creation */
-  apiKeys: { limit: 10, window: 3600, prefix: "rl:apikeys" },    // 10/hour per user
+  apiKeys: { limit: 10, window: 3600, prefix: "rl:apikeys" }, // 10/hour per user
   /** Admin actions (bulk invite, refund, etc.) */
-  admin: { limit: 30, window: 60, prefix: "rl:admin" },          // 30/min per user
+  admin: { limit: 30, window: 60, prefix: "rl:admin" }, // 30/min per user
   /** Waitlist join — already has its own, but unified here */
-  waitlist: { limit: 3, window: 3600, prefix: "rl:waitlist" },   // 3/hour per IP
+  waitlist: { limit: 3, window: 3600, prefix: "rl:waitlist" }, // 3/hour per IP
   /** Onboarding form submissions */
   onboarding: { limit: 10, window: 3600, prefix: "rl:onboarding" }, // 10/hour per user
   /** Generic public API */
-  publicApi: { limit: 60, window: 60, prefix: "rl:public" },     // 60/min per IP
+  publicApi: { limit: 60, window: 60, prefix: "rl:public" }, // 60/min per IP
   /** Webhook delivery endpoints */
-  webhooks: { limit: 100, window: 60, prefix: "rl:webhooks" },   // 100/min per user
+  webhooks: { limit: 100, window: 60, prefix: "rl:webhooks" }, // 100/min per user
 } as const satisfies Record<string, RateLimitConfig>;
 
 // ─── Core sliding window ──────────────────────────────────────────────────────
@@ -65,7 +65,8 @@ export async function rateLimit(
 
     // Get remaining TTL for reset timestamp
     const ttl = await redis.ttl(key);
-    const reset = Math.floor(Date.now() / 1000) + (ttl > 0 ? ttl : config.window);
+    const reset =
+      Math.floor(Date.now() / 1000) + (ttl > 0 ? ttl : config.window);
     const remaining = Math.max(0, config.limit - count);
 
     return {
@@ -76,7 +77,12 @@ export async function rateLimit(
     };
   } catch {
     // Fail-open: Redis unavailable → allow request
-    return { allowed: true, remaining: config.limit, reset: 0, limit: config.limit };
+    return {
+      allowed: true,
+      remaining: config.limit,
+      reset: 0,
+      limit: config.limit,
+    };
   }
 }
 

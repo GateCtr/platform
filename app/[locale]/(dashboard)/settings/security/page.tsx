@@ -28,7 +28,9 @@ export default async function SecuritySettingsPage() {
     <div className="max-w-2xl">
       <div className="mb-6">
         <h1 className="text-xl font-semibold">{t("page.title")}</h1>
-        <p className="text-sm text-muted-foreground mt-1">{t("page.description")}</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {t("page.description")}
+        </p>
       </div>
       <SecurityForm email={dbUser.email} hasPassword={hasPassword} />
     </div>

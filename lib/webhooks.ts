@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
 /**
  * Dispatch a GateCtr webhook event to all of a user's configured endpoints.
@@ -20,7 +21,7 @@ export async function dispatchWebhook(
       event,
       project_id: userId,
       timestamp: new Date().toISOString(),
-      data,
+      data: data as Prisma.InputJsonValue,
     };
 
     await Promise.allSettled(
@@ -38,7 +39,7 @@ export async function dispatchWebhook(
             data: {
               webhookId: wh.id,
               event,
-              payload,
+              payload: payload as Prisma.InputJsonValue,
               status: res.status,
               responseMs: 0,
               success: res.ok,

@@ -36,10 +36,11 @@ export default function WaitlistInviteEmail({
       <Preview>{`Your GateCtr spot is open. ${expiryDays} days left.`}</Preview>
       <Body style={main}>
         <Container style={container}>
-
           {/* ── Logo ── */}
           <Section style={logoSection}>
-            <Text style={logoText}>Gate<span style={logoAccent}>Ctr</span></Text>
+            <Text style={logoText}>
+              Gate<span style={logoAccent}>Ctr</span>
+            </Text>
           </Section>
 
           <Hr style={divider} />
@@ -49,8 +50,8 @@ export default function WaitlistInviteEmail({
             <Text style={greeting}>Hi{name ? ` ${name}` : ""},</Text>
             <Text style={h1}>Your spot is open.</Text>
             <Text style={subtext}>
-              Connect in 5 min. Your API key stays yours.
-              GateCtr routes, optimizes, and controls — you just save.
+              Connect in 5 min. Your API key stays yours. GateCtr routes,
+              optimizes, and controls — you just save.
             </Text>
 
             {/* Invite code box */}
@@ -79,16 +80,34 @@ export default function WaitlistInviteEmail({
             <Section style={stepsBox}>
               <Text style={stepsHeading}>5 min setup</Text>
               <Row style={stepRow}>
-                <Column style={stepNum}><Text style={stepNumText}>1</Text></Column>
-                <Column><Text style={stepText}>Create your account with <strong>{email}</strong></Text></Column>
+                <Column style={stepNum}>
+                  <Text style={stepNumText}>1</Text>
+                </Column>
+                <Column>
+                  <Text style={stepText}>
+                    Create your account with <strong>{email}</strong>
+                  </Text>
+                </Column>
               </Row>
               <Row style={stepRow}>
-                <Column style={stepNum}><Text style={stepNumText}>2</Text></Column>
-                <Column><Text style={stepText}>Add your LLM API keys (OpenAI, Anthropic, Mistral…)</Text></Column>
+                <Column style={stepNum}>
+                  <Text style={stepNumText}>2</Text>
+                </Column>
+                <Column>
+                  <Text style={stepText}>
+                    Add your LLM API keys (OpenAI, Anthropic, Mistral…)
+                  </Text>
+                </Column>
               </Row>
               <Row style={stepRow}>
-                <Column style={stepNum}><Text style={stepNumText}>3</Text></Column>
-                <Column><Text style={stepText}>Swap your endpoint URL. That&apos;s it.</Text></Column>
+                <Column style={stepNum}>
+                  <Text style={stepNumText}>3</Text>
+                </Column>
+                <Column>
+                  <Text style={stepText}>
+                    Swap your endpoint URL. That&apos;s it.
+                  </Text>
+                </Column>
               </Row>
             </Section>
 
@@ -108,10 +127,11 @@ export default function WaitlistInviteEmail({
           <Section style={footer}>
             <Text style={footerText}>GateCtr — One gateway. Every LLM.</Text>
             <Text style={footerText}>
-              <Link href="https://gatectr.com" style={footerLink}>gatectr.com</Link>
+              <Link href="https://gatectr.com" style={footerLink}>
+                gatectr.com
+              </Link>
             </Text>
           </Section>
-
         </Container>
       </Body>
     </Html>
@@ -122,7 +142,8 @@ export default function WaitlistInviteEmail({
 
 const main: React.CSSProperties = {
   backgroundColor: "#f4f7fb",
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 };
 
 const container: React.CSSProperties = {

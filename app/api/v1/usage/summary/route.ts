@@ -5,7 +5,8 @@ import { getPlanLimits } from "@/lib/plan-guard";
 
 export async function GET(): Promise<NextResponse> {
   const { userId: clerkId } = await auth();
-  if (!clerkId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!clerkId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const user = await prisma.user.findUnique({
     where: { clerkId },

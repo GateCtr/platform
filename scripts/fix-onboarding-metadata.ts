@@ -11,7 +11,7 @@ config({ path: ".env.local" });
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
-import { createClerkClient } from "@clerk/backend";
+import { createClerkClient } from "@clerk/nextjs/server";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 // @ts-expect-error - Type mismatch between @types/pg versions
@@ -37,7 +37,8 @@ async function main() {
 
   const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
   const clerkUser = await clerk.users.getUser(user.clerkId);
-  const existingMeta = (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
+  const existingMeta =
+    (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
 
   console.log(`Clerk publicMetadata (before):`, existingMeta);
 

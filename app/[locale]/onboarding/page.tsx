@@ -41,14 +41,17 @@ export default function OnboardingPage() {
     window.location.href = redirectTo;
   }, [redirectTo]);
 
-  const navigate = useCallback((target: OnboardingStep, dir: "forward" | "back") => {
-    setDirection(dir);
-    setAnimating(true);
-    setTimeout(() => {
-      setStep(target);
-      setAnimating(false);
-    }, 180);
-  }, []);
+  const navigate = useCallback(
+    (target: OnboardingStep, dir: "forward" | "back") => {
+      setDirection(dir);
+      setAnimating(true);
+      setTimeout(() => {
+        setStep(target);
+        setAnimating(false);
+      }, 180);
+    },
+    [],
+  );
 
   function goNext() {
     const idx = STEPS.indexOf(step);
@@ -77,21 +80,30 @@ export default function OnboardingPage() {
 
   const currentIndex = STEPS.indexOf(step);
 
-  const stepMeta: Record<OnboardingStep, { title: string; subtitle: string }> = {
-    workspace: { title: t("workspace.title"), subtitle: t("workspace.subtitle") },
-    provider:  { title: t("provider.title"),  subtitle: t("provider.subtitle") },
-    budget:    { title: t("budget.title"),     subtitle: t("budget.subtitle") },
-    project:   { title: t("project.title"),    subtitle: t("project.subtitle") },
-  };
+  const stepMeta: Record<OnboardingStep, { title: string; subtitle: string }> =
+    {
+      workspace: {
+        title: t("workspace.title"),
+        subtitle: t("workspace.subtitle"),
+      },
+      provider: {
+        title: t("provider.title"),
+        subtitle: t("provider.subtitle"),
+      },
+      budget: { title: t("budget.title"), subtitle: t("budget.subtitle") },
+      project: { title: t("project.title"), subtitle: t("project.subtitle") },
+    };
 
   return (
     <div className="space-y-8">
-
       {/* Progress */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium text-muted-foreground">
-            {t("progress.step", { current: currentIndex + 1, total: STEPS.length })}
+            {t("progress.step", {
+              current: currentIndex + 1,
+              total: STEPS.length,
+            })}
           </p>
           <p className="text-sm font-semibold text-foreground">
             {t(`progress.${step}`)}
@@ -106,8 +118,8 @@ export default function OnboardingPage() {
                 i < currentIndex
                   ? "bg-primary"
                   : i === currentIndex
-                  ? "bg-primary/20"
-                  : "bg-muted"
+                    ? "bg-primary/20"
+                    : "bg-muted",
               )}
             >
               {i === currentIndex && (
@@ -138,12 +150,10 @@ export default function OnboardingPage() {
               ? direction === "forward"
                 ? "opacity-0 translate-x-4"
                 : "opacity-0 -translate-x-4"
-              : "opacity-100 translate-x-0"
+              : "opacity-100 translate-x-0",
           )}
         >
-          {step === "workspace" && (
-            <WorkspaceStep onComplete={goNext} />
-          )}
+          {step === "workspace" && <WorkspaceStep onComplete={goNext} />}
           {step === "provider" && (
             <ProviderStep onComplete={goNext} onSkip={goNext} onBack={goBack} />
           )}
@@ -166,8 +176,8 @@ export default function OnboardingPage() {
               i === currentIndex
                 ? "h-2 w-6 bg-primary shadow-sm shadow-primary/50"
                 : i < currentIndex
-                ? "h-2 w-2 bg-primary/40"
-                : "h-2 w-2 bg-muted"
+                  ? "h-2 w-2 bg-primary/40"
+                  : "h-2 w-2 bg-muted",
             )}
           />
         ))}

@@ -21,15 +21,26 @@ export default getRequestConfig(async ({ requestLocale }) => {
     dashboard: (await import(`../messages/${locale}/dashboard.json`)).default,
     billing: (await import(`../messages/${locale}/billing.json`)).default,
     // Admin — split per page
-    adminShared: (await import(`../messages/${locale}/admin-shared.json`)).default,
-    adminBilling: (await import(`../messages/${locale}/admin-billing.json`)).default,
-    adminUsers: (await import(`../messages/${locale}/admin-users.json`)).default,
-    adminAuditLogs: (await import(`../messages/${locale}/admin-audit-logs.json`)).default,
-    adminOverview: (await import(`../messages/${locale}/admin-overview.json`)).default,
-    adminWaitlist: (await import(`../messages/${locale}/admin-waitlist.json`)).default,
+    adminShared: (await import(`../messages/${locale}/admin-shared.json`))
+      .default,
+    adminBilling: (await import(`../messages/${locale}/admin-billing.json`))
+      .default,
+    adminUsers: (await import(`../messages/${locale}/admin-users.json`))
+      .default,
+    adminAuditLogs: (
+      await import(`../messages/${locale}/admin-audit-logs.json`)
+    ).default,
+    adminOverview: (await import(`../messages/${locale}/admin-overview.json`))
+      .default,
+    adminWaitlist: (await import(`../messages/${locale}/admin-waitlist.json`))
+      .default,
     settings: (await import(`../messages/${locale}/settings.json`)).default,
-    settingsProfile: (await import(`../messages/${locale}/settings-profile.json`)).default,
-    settingsSecurity: (await import(`../messages/${locale}/settings-security.json`)).default,
+    settingsProfile: (
+      await import(`../messages/${locale}/settings-profile.json`)
+    ).default,
+    settingsSecurity: (
+      await import(`../messages/${locale}/settings-security.json`)
+    ).default,
   };
 
   return {

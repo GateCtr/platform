@@ -16,13 +16,15 @@ function generateApiKey(): { raw: string; prefix: string; hash: string } {
 
 export async function POST(req: NextRequest) {
   const { userId: clerkId } = await auth();
-  if (!clerkId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!clerkId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dbUser = await prisma.user.findUnique({
     where: { clerkId },
     select: { id: true },
   });
-  if (!dbUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!dbUser)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   // ── Rate limit: 10 creations/hour per user ──────────────────────────────────
   const rl = await rateLimit(dbUser.id, RATE_LIMITS.apiKeys);
@@ -31,7 +33,11 @@ export async function POST(req: NextRequest) {
   const quotaResult = await checkQuota(dbUser.id, "api_keys");
   if (!quotaResult.allowed) return quotaExceededResponse(quotaResult);
 
-  const body = await req.json() as { name?: string; projectId?: string; scopes?: string[] };
+  const body = (await req.json()) as {
+    name?: string;
+    projectId?: string;
+    scopes?: string[];
+  };
   if (!body.name) {
     return NextResponse.json({ error: "name is required" }, { status: 400 });
   }

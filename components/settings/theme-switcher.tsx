@@ -11,9 +11,7 @@ export function ThemeSwitcher() {
 
   // resolvedTheme is undefined on SSR — use it to gate rendering
   if (!resolvedTheme) {
-    return (
-      <div className="h-9 w-48 rounded-md bg-muted animate-pulse" />
-    );
+    return <div className="h-9 w-48 rounded-md bg-muted animate-pulse" />;
   }
 
   return (
@@ -33,7 +31,7 @@ export function ThemeSwitcher() {
             "flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors",
             theme === value
               ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           <Icon className="size-3.5" />

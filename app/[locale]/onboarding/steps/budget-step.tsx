@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Loader2, AlertCircle, ShieldCheck, Bell, TrendingUp, Zap } from "lucide-react";
+import {
+  Loader2,
+  AlertCircle,
+  ShieldCheck,
+  Bell,
+  TrendingUp,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -33,11 +40,16 @@ function getThresholdColor(pct: number): string {
 
 function getThresholdBg(pct: number): string {
   if (pct >= 90) return "bg-destructive/10 border-destructive/30";
-  if (pct >= 75) return "bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800";
+  if (pct >= 75)
+    return "bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800";
   return "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-800";
 }
 
-export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProps) {
+export function BudgetStep({
+  onComplete,
+  onBack,
+  plan = "Free",
+}: BudgetStepProps) {
   const t = useTranslations("onboarding.budget");
   const tNav = useTranslations("onboarding.nav");
 
@@ -58,7 +70,10 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
     fd.set("hardStop", String(hardStop));
     const res = await setupBudget(fd);
     setIsSubmitting(false);
-    if (res?.error) { setError(t("errors.failed")); return; }
+    if (res?.error) {
+      setError(t("errors.failed"));
+      return;
+    }
     onComplete();
   }
 
@@ -66,11 +81,12 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
 
   return (
     <div className="space-y-5">
-
       {/* Monthly token limit */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium">{t("monthlyLimit.label")}</Label>
+          <Label className="text-sm font-medium">
+            {t("monthlyLimit.label")}
+          </Label>
           <Badge variant="outline" className="font-mono text-xs">
             {formatTokens(monthlyLimit)} / mo
           </Badge>
@@ -81,7 +97,9 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
             <span className="text-3xl font-bold tabular-nums tracking-tight text-foreground">
               {monthlyLimit.toLocaleString()}
             </span>
-            <span className="text-sm text-muted-foreground mb-1">{t("monthlyLimit.unit")}</span>
+            <span className="text-sm text-muted-foreground mb-1">
+              {t("monthlyLimit.unit")}
+            </span>
           </div>
 
           {/* Visual bar */}
@@ -121,11 +139,21 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
           <Label className="text-sm font-medium">
             {t("alertThreshold.label", { pct: alertThreshold })}
           </Label>
-          <span className={cn("text-xs font-semibold tabular-nums", getThresholdColor(alertThreshold))}>
+          <span
+            className={cn(
+              "text-xs font-semibold tabular-nums",
+              getThresholdColor(alertThreshold),
+            )}
+          >
             {alertAt.toLocaleString()} tokens
           </span>
         </div>
-        <div className={cn("rounded-lg border p-4 space-y-3 transition-colors", getThresholdBg(alertThreshold))}>
+        <div
+          className={cn(
+            "rounded-lg border p-4 space-y-3 transition-colors",
+            getThresholdBg(alertThreshold),
+          )}
+        >
           <Slider
             min={50}
             max={95}
@@ -135,7 +163,12 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
           />
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>50%</span>
-            <span className={cn("font-bold text-sm", getThresholdColor(alertThreshold))}>
+            <span
+              className={cn(
+                "font-bold text-sm",
+                getThresholdColor(alertThreshold),
+              )}
+            >
               {alertThreshold}%
             </span>
             <span>95%</span>
@@ -151,22 +184,29 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
           "w-full flex items-start justify-between gap-4 rounded-lg border p-4 transition-all duration-200 text-left",
           hardStop
             ? "border-primary/30 bg-primary/5 shadow-sm"
-            : "border-border hover:border-primary/20 hover:bg-accent/20"
+            : "border-border hover:border-primary/20 hover:bg-accent/20",
         )}
       >
         <div className="flex items-start gap-3">
-          <div className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-lg shrink-0 transition-colors",
-            hardStop ? "bg-primary/10" : "bg-muted"
-          )}>
-            {hardStop
-              ? <ShieldCheck className="h-4.5 w-4.5 text-primary" />
-              : <Bell className="h-4.5 w-4.5 text-muted-foreground" />
-            }
+          <div
+            className={cn(
+              "flex h-9 w-9 items-center justify-center rounded-lg shrink-0 transition-colors",
+              hardStop ? "bg-primary/10" : "bg-muted",
+            )}
+          >
+            {hardStop ? (
+              <ShieldCheck className="h-4.5 w-4.5 text-primary" />
+            ) : (
+              <Bell className="h-4.5 w-4.5 text-muted-foreground" />
+            )}
           </div>
           <div className="space-y-0.5">
-            <p className="text-sm font-medium text-foreground">{t("hardStop.label")}</p>
-            <p className="text-xs text-muted-foreground">{t("hardStop.hint")}</p>
+            <p className="text-sm font-medium text-foreground">
+              {t("hardStop.label")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t("hardStop.hint")}
+            </p>
           </div>
         </div>
         <Switch
@@ -180,20 +220,39 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
       <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
         <div className="flex items-center gap-2 mb-2">
           <Zap className="h-3.5 w-3.5 text-primary" />
-          <span className="text-xs font-semibold text-foreground uppercase tracking-wide">{t("summary.label")}</span>
+          <span className="text-xs font-semibold text-foreground uppercase tracking-wide">
+            {t("summary.label")}
+          </span>
         </div>
         <div className="grid grid-cols-3 gap-2 text-center">
           <div>
-            <p className="text-sm font-bold text-foreground">{formatTokens(monthlyLimit)}</p>
-            <p className="text-[10px] text-muted-foreground">{t("summary.limit")}</p>
+            <p className="text-sm font-bold text-foreground">
+              {formatTokens(monthlyLimit)}
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              {t("summary.limit")}
+            </p>
           </div>
           <div>
-            <p className={cn("text-sm font-bold", getThresholdColor(alertThreshold))}>{alertThreshold}%</p>
-            <p className="text-[10px] text-muted-foreground">{t("summary.alert")}</p>
+            <p
+              className={cn(
+                "text-sm font-bold",
+                getThresholdColor(alertThreshold),
+              )}
+            >
+              {alertThreshold}%
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              {t("summary.alert")}
+            </p>
           </div>
           <div>
-            <p className="text-sm font-bold text-foreground">{hardStop ? t("summary.block") : t("summary.notify")}</p>
-            <p className="text-[10px] text-muted-foreground">{t("summary.onLimit")}</p>
+            <p className="text-sm font-bold text-foreground">
+              {hardStop ? t("summary.block") : t("summary.notify")}
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              {t("summary.onLimit")}
+            </p>
           </div>
         </div>
       </div>
@@ -205,12 +264,24 @@ export function BudgetStep({ onComplete, onBack, plan = "Free" }: BudgetStepProp
         </Alert>
       )}
 
-      <Button variant="cta-primary" size="lg" className="w-full" disabled={isSubmitting} onClick={handleSubmit}>
+      <Button
+        variant="cta-primary"
+        size="lg"
+        className="w-full"
+        disabled={isSubmitting}
+        onClick={handleSubmit}
+      >
         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {isSubmitting ? t("submitting") : t("submit")}
       </Button>
 
-      <Button type="button" variant="cta-ghost" size="sm" className="w-full" onClick={onBack}>
+      <Button
+        type="button"
+        variant="cta-ghost"
+        size="sm"
+        className="w-full"
+        onClick={onBack}
+      >
         {tNav("back")}
       </Button>
     </div>

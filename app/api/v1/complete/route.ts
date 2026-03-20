@@ -8,13 +8,15 @@ import { quotaExceededResponse } from "@/lib/quota-response";
 export async function POST(req: NextRequest) {
   // ── Auth ────────────────────────────────────────────────────────────────────
   const { userId: clerkId } = await auth();
-  if (!clerkId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!clerkId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dbUser = await prisma.user.findUnique({
     where: { clerkId },
     select: { id: true },
   });
-  if (!dbUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!dbUser)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const userId = dbUser.id;
 
@@ -28,7 +30,7 @@ export async function POST(req: NextRequest) {
   if (!monthResult.allowed) return quotaExceededResponse(monthResult);
 
   // ── Placeholder — LLM routing logic goes here ───────────────────────────────
-  const body = await req.json() as { prompt?: string; model?: string };
+  const body = (await req.json()) as { prompt?: string; model?: string };
 
   return NextResponse.json({
     id: `cmpl_${Date.now()}`,

@@ -62,8 +62,12 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-vi.mock("@/lib/redis", () => ({ redis: { del: vi.fn().mockResolvedValue(1) } }));
-vi.mock("@/lib/audit", () => ({ logAudit: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/lib/redis", () => ({
+  redis: { del: vi.fn().mockResolvedValue(1) },
+}));
+vi.mock("@/lib/audit", () => ({
+  logAudit: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock("@/lib/webhooks", () => ({ dispatchWebhook: vi.fn() }));
 vi.mock("@/lib/resend", () => ({
   sendBillingUpgradeEmail: vi.fn().mockResolvedValue({ success: true }),
@@ -78,7 +82,10 @@ vi.mock("@/lib/resend", () => ({
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeDeletedSubscriptionEvent(subscriptionId: string, customerId: string) {
+function makeDeletedSubscriptionEvent(
+  subscriptionId: string,
+  customerId: string,
+) {
   return {
     id: `evt_del_${subscriptionId}`,
     type: "customer.subscription.deleted",
@@ -120,77 +127,86 @@ describe("Property 11: No auto-delete on plan downgrade", () => {
     process.env.STRIPE_WEBHOOK_SECRET = "whsec_test_secret";
   });
 
-  it(
-    "never calls project/apiKey/webhook delete after subscription.deleted (>=100 iterations)",
-    async () => {
-      const { POST } = await import("@/app/api/webhooks/stripe/route");
+  it("never calls project/apiKey/webhook delete after subscription.deleted (>=100 iterations)", async () => {
+    const { POST } = await import("@/app/api/webhooks/stripe/route");
 
-      await fc.assert(
-        fc.asyncProperty(
-          fc.string({ minLength: 5, maxLength: 30 }).map((s) => `sub_${s}`),
-          fc.string({ minLength: 5, maxLength: 30 }).map((s) => `cus_${s}`),
-          fc.string({ minLength: 5, maxLength: 30 }).map((s) => `user_${s}`),
-          async (subscriptionId, customerId, userId) => {
-            vi.clearAllMocks();
+    await fc.assert(
+      fc.asyncProperty(
+        fc.string({ minLength: 5, maxLength: 30 }).map((s) => `sub_${s}`),
+        fc.string({ minLength: 5, maxLength: 30 }).map((s) => `cus_${s}`),
+        fc.string({ minLength: 5, maxLength: 30 }).map((s) => `user_${s}`),
+        async (subscriptionId, customerId, userId) => {
+          vi.clearAllMocks();
 
-            const event = makeDeletedSubscriptionEvent(subscriptionId, customerId);
+          const event = makeDeletedSubscriptionEvent(
+            subscriptionId,
+            customerId,
+          );
 
-            // Valid signature — constructEvent succeeds
-            mockConstructEvent.mockReturnValue(event);
-            mockStripeEventCreate.mockResolvedValue({
-              id: event.id,
-              processed: false,
-            });
-            mockStripeEventUpdate.mockResolvedValue({
-              id: event.id,
-              processed: true,
-            });
-            mockSubscriptionFindUnique.mockResolvedValue({
-              id: "sub-db-id",
-              userId,
-              stripeSubscriptionId: subscriptionId,
-              stripeCustomerId: customerId,
-              user: { id: userId, email: "user@example.com", plan: "PRO" },
-            });
-            mockPlanFindUnique.mockResolvedValue({ id: "plan-free", name: "FREE" });
-            // $transaction executes the array of prisma calls — resolve them
-            mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
-              Promise.all(ops),
-            );
-            mockSubscriptionUpdate.mockResolvedValue({ id: "sub-db-id", status: "CANCELED" });
-            mockUserUpdate.mockResolvedValue({ id: userId, plan: "FREE" });
-            mockUserFindUnique.mockResolvedValue({
-              id: userId,
-              email: "user@example.com",
-              locale: "en",
-              plan: "PRO",
-            });
+          // Valid signature — constructEvent succeeds
+          mockConstructEvent.mockReturnValue(event);
+          mockStripeEventCreate.mockResolvedValue({
+            id: event.id,
+            processed: false,
+          });
+          mockStripeEventUpdate.mockResolvedValue({
+            id: event.id,
+            processed: true,
+          });
+          mockSubscriptionFindUnique.mockResolvedValue({
+            id: "sub-db-id",
+            userId,
+            stripeSubscriptionId: subscriptionId,
+            stripeCustomerId: customerId,
+            user: { id: userId, email: "user@example.com", plan: "PRO" },
+          });
+          mockPlanFindUnique.mockResolvedValue({
+            id: "plan-free",
+            name: "FREE",
+          });
+          // $transaction executes the array of prisma calls — resolve them
+          mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+            Promise.all(ops),
+          );
+          mockSubscriptionUpdate.mockResolvedValue({
+            id: "sub-db-id",
+            status: "CANCELED",
+          });
+          mockUserUpdate.mockResolvedValue({ id: userId, plan: "FREE" });
+          mockUserFindUnique.mockResolvedValue({
+            id: userId,
+            email: "user@example.com",
+            locale: "en",
+            plan: "PRO",
+          });
 
-            const req = makeRequest(event);
-            const res = await POST(req);
+          const req = makeRequest(event);
+          const res = await POST(req);
 
-            // Handler must succeed
-            expect(res.status).toBe(200);
+          // Handler must succeed
+          expect(res.status).toBe(200);
 
-            // CRITICAL: must never delete user data
-            expect(mockProjectDelete).not.toHaveBeenCalled();
-            expect(mockProjectDeleteMany).not.toHaveBeenCalled();
-            expect(mockApiKeyDelete).not.toHaveBeenCalled();
-            expect(mockApiKeyDeleteMany).not.toHaveBeenCalled();
-            expect(mockWebhookDelete).not.toHaveBeenCalled();
-            expect(mockWebhookDeleteMany).not.toHaveBeenCalled();
-          },
-        ),
-        { numRuns: 100 },
-      );
-    },
-  );
+          // CRITICAL: must never delete user data
+          expect(mockProjectDelete).not.toHaveBeenCalled();
+          expect(mockProjectDeleteMany).not.toHaveBeenCalled();
+          expect(mockApiKeyDelete).not.toHaveBeenCalled();
+          expect(mockApiKeyDeleteMany).not.toHaveBeenCalled();
+          expect(mockWebhookDelete).not.toHaveBeenCalled();
+          expect(mockWebhookDeleteMany).not.toHaveBeenCalled();
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
 
   it("downgrades User.plan to FREE after subscription.deleted", async () => {
     const { POST } = await import("@/app/api/webhooks/stripe/route");
     vi.clearAllMocks();
 
-    const event = makeDeletedSubscriptionEvent("sub_downgrade_001", "cus_downgrade_001");
+    const event = makeDeletedSubscriptionEvent(
+      "sub_downgrade_001",
+      "cus_downgrade_001",
+    );
     mockConstructEvent.mockReturnValue(event);
     mockStripeEventCreate.mockResolvedValue({ id: event.id, processed: false });
     mockStripeEventUpdate.mockResolvedValue({ id: event.id, processed: true });
@@ -198,18 +214,30 @@ describe("Property 11: No auto-delete on plan downgrade", () => {
       id: "sub-db-id",
       userId: "user_downgrade_001",
       stripeSubscriptionId: "sub_downgrade_001",
-      user: { id: "user_downgrade_001", email: "user@example.com", plan: "TEAM" },
+      user: {
+        id: "user_downgrade_001",
+        email: "user@example.com",
+        plan: "TEAM",
+      },
     });
     mockPlanFindUnique.mockResolvedValue({ id: "plan-free", name: "FREE" });
-    mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) => Promise.all(ops));
-    mockSubscriptionUpdate.mockResolvedValue({ id: "sub-db-id", status: "CANCELED" });
+    mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+      Promise.all(ops),
+    );
+    mockSubscriptionUpdate.mockResolvedValue({
+      id: "sub-db-id",
+      status: "CANCELED",
+    });
     mockUserFindUnique.mockResolvedValue({
       id: "user_downgrade_001",
       email: "user@example.com",
       locale: "en",
       plan: "TEAM",
     });
-    mockUserUpdate.mockResolvedValue({ id: "user_downgrade_001", plan: "FREE" });
+    mockUserUpdate.mockResolvedValue({
+      id: "user_downgrade_001",
+      plan: "FREE",
+    });
 
     const req = makeRequest(event);
     const res = await POST(req);
@@ -229,7 +257,10 @@ describe("Property 11: No auto-delete on plan downgrade", () => {
     const { POST } = await import("@/app/api/webhooks/stripe/route");
     vi.clearAllMocks();
 
-    const event = makeDeletedSubscriptionEvent("sub_cancel_002", "cus_cancel_002");
+    const event = makeDeletedSubscriptionEvent(
+      "sub_cancel_002",
+      "cus_cancel_002",
+    );
     mockConstructEvent.mockReturnValue(event);
     mockStripeEventCreate.mockResolvedValue({ id: event.id, processed: false });
     mockStripeEventUpdate.mockResolvedValue({ id: event.id, processed: true });
@@ -240,8 +271,13 @@ describe("Property 11: No auto-delete on plan downgrade", () => {
       user: { id: "user_cancel_002", email: "user@example.com", plan: "PRO" },
     });
     mockPlanFindUnique.mockResolvedValue({ id: "plan-free", name: "FREE" });
-    mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) => Promise.all(ops));
-    mockSubscriptionUpdate.mockResolvedValue({ id: "sub-db-id", status: "CANCELED" });
+    mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+      Promise.all(ops),
+    );
+    mockSubscriptionUpdate.mockResolvedValue({
+      id: "sub-db-id",
+      status: "CANCELED",
+    });
     mockUserFindUnique.mockResolvedValue({
       id: "user_cancel_002",
       email: "user@example.com",

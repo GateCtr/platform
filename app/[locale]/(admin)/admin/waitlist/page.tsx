@@ -3,8 +3,16 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import {
-  Mail, CheckCircle2, Clock, Send, Filter, Search,
-  Download, Trash2, Ban, MoreHorizontal,
+  Mail,
+  CheckCircle2,
+  Clock,
+  Send,
+  Filter,
+  Search,
+  Download,
+  Trash2,
+  Ban,
+  MoreHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,22 +20,43 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import {
-  Card, CardContent, CardHeader, CardTitle, CardDescription,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -52,17 +81,25 @@ type FilterValue = "all" | "WAITING" | "INVITED" | "JOINED" | "SKIPPED";
 // ─── Stats bar ────────────────────────────────────────────────────────────────
 
 function StatsBar({
-  total, waiting, invited, joined, loading, labels,
+  total,
+  waiting,
+  invited,
+  joined,
+  loading,
+  labels,
 }: {
-  total: number; waiting: number; invited: number; joined: number;
+  total: number;
+  waiting: number;
+  invited: number;
+  joined: number;
   loading: boolean;
   labels: { total: string; waiting: string; invited: string; joined: string };
 }) {
   const items = [
-    { label: labels.total,   value: total,   dot: "bg-muted-foreground" },
+    { label: labels.total, value: total, dot: "bg-muted-foreground" },
     { label: labels.waiting, value: waiting, dot: "bg-muted-foreground" },
     { label: labels.invited, value: invited, dot: "bg-amber-500" },
-    { label: labels.joined,  value: joined,  dot: "bg-secondary-500" },
+    { label: labels.joined, value: joined, dot: "bg-secondary-500" },
   ];
   return (
     <div className="flex items-center gap-1 flex-wrap">
@@ -71,10 +108,13 @@ function StatsBar({
           {i > 0 && <span className="text-border mx-1 select-none">·</span>}
           <span className={`size-1.5 rounded-full shrink-0 ${item.dot}`} />
           <span className="text-xs text-muted-foreground">{item.label}</span>
-          {loading
-            ? <Skeleton className="h-3.5 w-6 inline-block" />
-            : <span className="text-xs font-semibold tabular-nums">{item.value.toLocaleString()}</span>
-          }
+          {loading ? (
+            <Skeleton className="h-3.5 w-6 inline-block" />
+          ) : (
+            <span className="text-xs font-semibold tabular-nums">
+              {item.value.toLocaleString()}
+            </span>
+          )}
         </div>
       ))}
     </div>
@@ -84,16 +124,39 @@ function StatsBar({
 // ─── Status badge ─────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG = {
-  WAITING:  { icon: Clock,        className: "bg-muted text-muted-foreground border-border" },
-  INVITED:  { icon: Mail,         className: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400" },
-  JOINED:   { icon: CheckCircle2, className: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400" },
-  SKIPPED:  { icon: Ban,          className: "bg-destructive/10 text-destructive border-destructive/25" },
+  WAITING: {
+    icon: Clock,
+    className: "bg-muted text-muted-foreground border-border",
+  },
+  INVITED: {
+    icon: Mail,
+    className:
+      "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  },
+  JOINED: {
+    icon: CheckCircle2,
+    className:
+      "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
+  },
+  SKIPPED: {
+    icon: Ban,
+    className: "bg-destructive/10 text-destructive border-destructive/25",
+  },
 } as const;
 
-function StatusBadge({ status, label }: { status: WaitlistEntry["status"]; label: string }) {
+function StatusBadge({
+  status,
+  label,
+}: {
+  status: WaitlistEntry["status"];
+  label: string;
+}) {
   const { icon: Icon, className } = STATUS_CONFIG[status];
   return (
-    <Badge variant="outline" className={`gap-1 text-[10px] font-semibold uppercase tracking-wider h-5 px-1.5 ${className}`}>
+    <Badge
+      variant="outline"
+      className={`gap-1 text-[10px] font-semibold uppercase tracking-wider h-5 px-1.5 ${className}`}
+    >
       <Icon className="size-3 shrink-0" />
       {label}
     </Badge>
@@ -106,17 +169,24 @@ export default function AdminWaitlistPage() {
   const t = useTranslations("adminWaitlist");
   const tc = useTranslations("common.pagination");
 
-  const [entries, setEntries]         = useState<WaitlistEntry[]>([]);
-  const [total, setTotal]             = useState(0);
-  const [loading, setLoading]         = useState(true);
-  const [inviting, setInviting]       = useState(false);
-  const [filter, setFilter]           = useState<FilterValue>("all");
-  const [search, setSearch]           = useState("");
+  const [entries, setEntries] = useState<WaitlistEntry[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [inviting, setInviting] = useState(false);
+  const [filter, setFilter] = useState<FilterValue>("all");
+  const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [page, setPage]               = useState(1);
+  const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [alert, setAlert]             = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [confirmEntry, setConfirmEntry] = useState<{ id: string; email: string; action: "delete" | "skip" } | null>(null);
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+  const [confirmEntry, setConfirmEntry] = useState<{
+    id: string;
+    email: string;
+    action: "delete" | "skip";
+  } | null>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const PAGE_SIZE = 50;
@@ -128,13 +198,18 @@ export default function AdminWaitlistPage() {
       setDebouncedSearch(search);
       setPage(1);
     }, 300);
-    return () => { if (searchTimer.current) clearTimeout(searchTimer.current); };
+    return () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    };
   }, [search]);
 
   const fetchEntries = useCallback(async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ page: page.toString(), limit: PAGE_SIZE.toString() });
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: PAGE_SIZE.toString(),
+      });
       if (filter !== "all") params.append("status", filter);
       if (debouncedSearch) params.append("search", debouncedSearch);
       const res = await fetch(`/api/waitlist?${params}`);
@@ -150,13 +225,18 @@ export default function AdminWaitlistPage() {
     }
   }, [filter, page, debouncedSearch, t]);
 
-  useEffect(() => { fetchEntries(); }, [fetchEntries]);
+  useEffect(() => {
+    fetchEntries();
+  }, [fetchEntries]);
 
   const waitingEntries = entries.filter((e) => e.status === "WAITING");
-  const allWaitingSelected = waitingEntries.length > 0 && selectedIds.size === waitingEntries.length;
+  const allWaitingSelected =
+    waitingEntries.length > 0 && selectedIds.size === waitingEntries.length;
 
   const toggleAll = () =>
-    setSelectedIds(allWaitingSelected ? new Set() : new Set(waitingEntries.map((e) => e.id)));
+    setSelectedIds(
+      allWaitingSelected ? new Set() : new Set(waitingEntries.map((e) => e.id)),
+    );
 
   const toggleOne = (id: string) => {
     const next = new Set(selectedIds);
@@ -179,10 +259,16 @@ export default function AdminWaitlistPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setAlert({ type: "success", text: t("messages.inviteSuccess", { count: data.invited }) });
+        setAlert({
+          type: "success",
+          text: t("messages.inviteSuccess", { count: data.invited }),
+        });
         fetchEntries();
       } else {
-        setAlert({ type: "error", text: data.error ?? t("messages.inviteFailed") });
+        setAlert({
+          type: "error",
+          text: data.error ?? t("messages.inviteFailed"),
+        });
       }
     } catch {
       setAlert({ type: "error", text: t("messages.inviteFailed") });
@@ -201,12 +287,18 @@ export default function AdminWaitlistPage() {
       if (res.ok) {
         setAlert({
           type: "success",
-          text: action === "delete" ? t("messages.deleteSuccess") : t("messages.skipSuccess"),
+          text:
+            action === "delete"
+              ? t("messages.deleteSuccess")
+              : t("messages.skipSuccess"),
         });
         fetchEntries();
       } else {
         const data = await res.json();
-        setAlert({ type: "error", text: data.error ?? t("messages.actionFailed") });
+        setAlert({
+          type: "error",
+          text: data.error ?? t("messages.actionFailed"),
+        });
       }
     } catch {
       setAlert({ type: "error", text: t("messages.actionFailed") });
@@ -222,11 +314,13 @@ export default function AdminWaitlistPage() {
 
   const waitingCount = entries.filter((e) => e.status === "WAITING").length;
   const invitedCount = entries.filter((e) => e.status === "INVITED").length;
-  const joinedCount  = entries.filter((e) => e.status === "JOINED").length;
+  const joinedCount = entries.filter((e) => e.status === "JOINED").length;
   const showCheckbox = filter === "all" || filter === "WAITING";
 
   const statusLabel = (s: WaitlistEntry["status"]) =>
-    t(`filters.${s.toLowerCase() as "waiting" | "invited" | "joined" | "skipped"}`);
+    t(
+      `filters.${s.toLowerCase() as "waiting" | "invited" | "joined" | "skipped"}`,
+    );
 
   return (
     <div className="flex flex-col gap-6">
@@ -234,11 +328,16 @@ export default function AdminWaitlistPage() {
       <div className="flex flex-col gap-1.5">
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <StatsBar
-          total={total} waiting={waitingCount} invited={invitedCount} joined={joinedCount}
+          total={total}
+          waiting={waitingCount}
+          invited={invitedCount}
+          joined={joinedCount}
           loading={loading}
           labels={{
-            total: t("stats.total"), waiting: t("stats.waiting"),
-            invited: t("stats.invited"), joined: t("stats.joined"),
+            total: t("stats.total"),
+            waiting: t("stats.waiting"),
+            invited: t("stats.invited"),
+            joined: t("stats.joined"),
           }}
         />
       </div>
@@ -254,7 +353,9 @@ export default function AdminWaitlistPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <CardTitle className="text-base">{t("title")}</CardTitle>
-              <CardDescription className="text-xs mt-0.5">{t("subtitle")}</CardDescription>
+              <CardDescription className="text-xs mt-0.5">
+                {t("subtitle")}
+              </CardDescription>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {/* Search */}
@@ -269,31 +370,55 @@ export default function AdminWaitlistPage() {
               </div>
 
               {/* Filter */}
-              <Select value={filter} onValueChange={(v) => { setFilter(v as FilterValue); setPage(1); }}>
+              <Select
+                value={filter}
+                onValueChange={(v) => {
+                  setFilter(v as FilterValue);
+                  setPage(1);
+                }}
+              >
                 <SelectTrigger className="h-8 w-[150px] text-xs gap-1.5">
                   <Filter className="size-3.5 text-muted-foreground" />
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t("filters.all")}</SelectItem>
-                  <SelectItem value="WAITING">{t("filters.waiting")}</SelectItem>
-                  <SelectItem value="INVITED">{t("filters.invited")}</SelectItem>
+                  <SelectItem value="WAITING">
+                    {t("filters.waiting")}
+                  </SelectItem>
+                  <SelectItem value="INVITED">
+                    {t("filters.invited")}
+                  </SelectItem>
                   <SelectItem value="JOINED">{t("filters.joined")}</SelectItem>
-                  <SelectItem value="SKIPPED">{t("filters.skipped")}</SelectItem>
+                  <SelectItem value="SKIPPED">
+                    {t("filters.skipped")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
               {/* Export CSV */}
-              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={handleExportCsv}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 text-xs"
+                onClick={handleExportCsv}
+              >
                 <Download className="size-3.5" />
                 {t("actions.export")}
               </Button>
 
               {/* Invite selected */}
               {selectedIds.size > 0 && (
-                <Button size="sm" className="h-8 gap-1.5 text-xs" onClick={() => sendInvites(Array.from(selectedIds))} disabled={inviting}>
+                <Button
+                  size="sm"
+                  className="h-8 gap-1.5 text-xs"
+                  onClick={() => sendInvites(Array.from(selectedIds))}
+                  disabled={inviting}
+                >
                   <Send className="size-3.5" />
-                  {inviting ? t("actions.sending") : t("actions.inviteSelected", { count: selectedIds.size })}
+                  {inviting
+                    ? t("actions.sending")
+                    : t("actions.inviteSelected", { count: selectedIds.size })}
                 </Button>
               )}
             </div>
@@ -320,7 +445,9 @@ export default function AdminWaitlistPage() {
                   <TableHead>{t("table.email")}</TableHead>
                   <TableHead>{t("table.company")}</TableHead>
                   <TableHead>{t("table.status")}</TableHead>
-                  <TableHead className="text-right">{t("table.joined")}</TableHead>
+                  <TableHead className="text-right">
+                    {t("table.joined")}
+                  </TableHead>
                   <TableHead className="w-10" />
                 </TableRow>
               </TableHeader>
@@ -328,26 +455,50 @@ export default function AdminWaitlistPage() {
                 {loading ? (
                   Array.from({ length: 8 }).map((_, i) => (
                     <TableRow key={i}>
-                      {showCheckbox && <TableCell className="pl-4"><Skeleton className="size-4 rounded" /></TableCell>}
-                      <TableCell><Skeleton className="h-4 w-8" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-48" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
+                      {showCheckbox && (
+                        <TableCell className="pl-4">
+                          <Skeleton className="size-4 rounded" />
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <Skeleton className="h-4 w-8" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-48" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20 ml-auto" />
+                      </TableCell>
                       <TableCell />
                     </TableRow>
                   ))
                 ) : entries.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={showCheckbox ? 7 : 6} className="h-24 text-center text-muted-foreground">
+                    <TableCell
+                      colSpan={showCheckbox ? 7 : 6}
+                      className="h-24 text-center text-muted-foreground"
+                    >
                       {debouncedSearch ? t("search.noResults") : t("empty")}
                     </TableCell>
                   </TableRow>
                 ) : (
                   entries.map((entry) => {
-                    const initials = (entry.name ?? entry.email).slice(0, 2).toUpperCase();
+                    const initials = (entry.name ?? entry.email)
+                      .slice(0, 2)
+                      .toUpperCase();
                     return (
-                      <TableRow key={entry.id} className={selectedIds.has(entry.id) ? "bg-muted/30" : ""}>
+                      <TableRow
+                        key={entry.id}
+                        className={
+                          selectedIds.has(entry.id) ? "bg-muted/30" : ""
+                        }
+                      >
                         {showCheckbox && (
                           <TableCell className="pl-4">
                             {entry.status === "WAITING" && (
@@ -360,7 +511,10 @@ export default function AdminWaitlistPage() {
                           </TableCell>
                         )}
                         <TableCell>
-                          <Badge variant="outline" className="font-mono text-[10px] px-1.5">
+                          <Badge
+                            variant="outline"
+                            className="font-mono text-[10px] px-1.5"
+                          >
                             #{entry.position}
                           </Badge>
                         </TableCell>
@@ -372,9 +526,13 @@ export default function AdminWaitlistPage() {
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col gap-0.5 min-w-0">
-                              <span className="text-sm font-medium truncate">{entry.email}</span>
+                              <span className="text-sm font-medium truncate">
+                                {entry.email}
+                              </span>
                               {entry.name && (
-                                <span className="text-[11px] text-muted-foreground truncate">{entry.name}</span>
+                                <span className="text-[11px] text-muted-foreground truncate">
+                                  {entry.name}
+                                </span>
                               )}
                             </div>
                           </div>
@@ -383,7 +541,10 @@ export default function AdminWaitlistPage() {
                           {entry.company ?? "—"}
                         </TableCell>
                         <TableCell>
-                          <StatusBadge status={entry.status} label={statusLabel(entry.status)} />
+                          <StatusBadge
+                            status={entry.status}
+                            label={statusLabel(entry.status)}
+                          />
                         </TableCell>
                         <TableCell className="text-right text-xs text-muted-foreground tabular-nums">
                           {new Date(entry.createdAt).toLocaleDateString()}
@@ -391,7 +552,11 @@ export default function AdminWaitlistPage() {
                         <TableCell className="text-right pr-2">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0"
+                              >
                                 <MoreHorizontal className="size-3.5" />
                                 <span className="sr-only">Actions</span>
                               </Button>
@@ -407,17 +572,31 @@ export default function AdminWaitlistPage() {
                                   {t("actions.invite")}
                                 </DropdownMenuItem>
                               )}
-                              {entry.status === "WAITING" && <DropdownMenuSeparator />}
+                              {entry.status === "WAITING" && (
+                                <DropdownMenuSeparator />
+                              )}
                               <DropdownMenuItem
                                 className="gap-2 text-xs text-destructive focus:text-destructive"
-                                onClick={() => setConfirmEntry({ id: entry.id, email: entry.email, action: "skip" })}
+                                onClick={() =>
+                                  setConfirmEntry({
+                                    id: entry.id,
+                                    email: entry.email,
+                                    action: "skip",
+                                  })
+                                }
                               >
                                 <Ban className="size-3.5" />
                                 {t("actions.blacklist")}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="gap-2 text-xs text-destructive focus:text-destructive"
-                                onClick={() => setConfirmEntry({ id: entry.id, email: entry.email, action: "delete" })}
+                                onClick={() =>
+                                  setConfirmEntry({
+                                    id: entry.id,
+                                    email: entry.email,
+                                    action: "delete",
+                                  })
+                                }
                               >
                                 <Trash2 className="size-3.5" />
                                 {t("actions.delete")}
@@ -452,49 +631,109 @@ export default function AdminWaitlistPage() {
               </div>
             ) : (
               entries.map((entry) => {
-                const initials = (entry.name ?? entry.email).slice(0, 2).toUpperCase();
+                const initials = (entry.name ?? entry.email)
+                  .slice(0, 2)
+                  .toUpperCase();
                 const isSelected = selectedIds.has(entry.id);
                 return (
-                  <div key={entry.id} className={`flex items-start gap-3 px-4 py-3 transition-colors ${isSelected ? "bg-muted/30" : ""}`}>
+                  <div
+                    key={entry.id}
+                    className={`flex items-start gap-3 px-4 py-3 transition-colors ${isSelected ? "bg-muted/30" : ""}`}
+                  >
                     <div className="flex items-center gap-2 shrink-0 pt-0.5">
                       {showCheckbox && entry.status === "WAITING" && (
-                        <Checkbox checked={isSelected} onCheckedChange={() => toggleOne(entry.id)} aria-label={`Select ${entry.email}`} />
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => toggleOne(entry.id)}
+                          aria-label={`Select ${entry.email}`}
+                        />
                       )}
                       <Avatar className="size-9 rounded-md">
-                        <AvatarFallback className="text-xs font-semibold rounded-md bg-muted">{initials}</AvatarFallback>
+                        <AvatarFallback className="text-xs font-semibold rounded-md bg-muted">
+                          {initials}
+                        </AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-medium truncate">{entry.email}</span>
-                        <Badge variant="outline" className="font-mono text-[10px] px-1 h-4 shrink-0">#{entry.position}</Badge>
+                        <span className="text-sm font-medium truncate">
+                          {entry.email}
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="font-mono text-[10px] px-1 h-4 shrink-0"
+                        >
+                          #{entry.position}
+                        </Badge>
                       </div>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        {entry.name && <span className="text-xs text-muted-foreground">{entry.name}</span>}
-                        {entry.company && <span className="text-xs text-muted-foreground">· {entry.company}</span>}
-                        <span className="text-xs text-muted-foreground tabular-nums">{new Date(entry.createdAt).toLocaleDateString()}</span>
+                        {entry.name && (
+                          <span className="text-xs text-muted-foreground">
+                            {entry.name}
+                          </span>
+                        )}
+                        {entry.company && (
+                          <span className="text-xs text-muted-foreground">
+                            · {entry.company}
+                          </span>
+                        )}
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {new Date(entry.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2 shrink-0">
-                      <StatusBadge status={entry.status} label={statusLabel(entry.status)} />
+                      <StatusBadge
+                        status={entry.status}
+                        label={statusLabel(entry.status)}
+                      />
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0"
+                          >
                             <MoreHorizontal className="size-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
                           {entry.status === "WAITING" && (
-                            <DropdownMenuItem className="gap-2 text-xs" onClick={() => sendInvites([entry.id])} disabled={inviting}>
-                              <Mail className="size-3.5" />{t("actions.invite")}
+                            <DropdownMenuItem
+                              className="gap-2 text-xs"
+                              onClick={() => sendInvites([entry.id])}
+                              disabled={inviting}
+                            >
+                              <Mail className="size-3.5" />
+                              {t("actions.invite")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem className="gap-2 text-xs text-destructive focus:text-destructive" onClick={() => setConfirmEntry({ id: entry.id, email: entry.email, action: "skip" })}>
-                            <Ban className="size-3.5" />{t("actions.blacklist")}
+                          <DropdownMenuItem
+                            className="gap-2 text-xs text-destructive focus:text-destructive"
+                            onClick={() =>
+                              setConfirmEntry({
+                                id: entry.id,
+                                email: entry.email,
+                                action: "skip",
+                              })
+                            }
+                          >
+                            <Ban className="size-3.5" />
+                            {t("actions.blacklist")}
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2 text-xs text-destructive focus:text-destructive" onClick={() => setConfirmEntry({ id: entry.id, email: entry.email, action: "delete" })}>
-                            <Trash2 className="size-3.5" />{t("actions.delete")}
+                          <DropdownMenuItem
+                            className="gap-2 text-xs text-destructive focus:text-destructive"
+                            onClick={() =>
+                              setConfirmEntry({
+                                id: entry.id,
+                                email: entry.email,
+                                action: "delete",
+                              })
+                            }
+                          >
+                            <Trash2 className="size-3.5" />
+                            {t("actions.delete")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -515,9 +754,12 @@ export default function AdminWaitlistPage() {
                 pageSize={PAGE_SIZE}
                 onPageChange={setPage}
                 labels={{
-                  previous: tc("previous"), next: tc("next"),
-                  morePages: tc("morePages"), goPrevious: tc("goPrevious"),
-                  goNext: tc("goNext"), showing: tc("showing"),
+                  previous: tc("previous"),
+                  next: tc("next"),
+                  morePages: tc("morePages"),
+                  goPrevious: tc("goPrevious"),
+                  goNext: tc("goNext"),
+                  showing: tc("showing"),
                 }}
               />
             </div>
@@ -526,16 +768,25 @@ export default function AdminWaitlistPage() {
       </Card>
 
       {/* ── Confirm dialog ────────────────────────────────────────────────── */}
-      <AlertDialog open={!!confirmEntry} onOpenChange={(open) => !open && setConfirmEntry(null)}>
+      <AlertDialog
+        open={!!confirmEntry}
+        onOpenChange={(open) => !open && setConfirmEntry(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirmEntry?.action === "delete" ? t("confirm.deleteTitle") : t("confirm.blacklistTitle")}
+              {confirmEntry?.action === "delete"
+                ? t("confirm.deleteTitle")
+                : t("confirm.blacklistTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {confirmEntry?.action === "delete"
-                ? t("confirm.deleteDescription", { email: confirmEntry?.email ?? "" })
-                : t("confirm.blacklistDescription", { email: confirmEntry?.email ?? "" })}
+                ? t("confirm.deleteDescription", {
+                    email: confirmEntry?.email ?? "",
+                  })
+                : t("confirm.blacklistDescription", {
+                    email: confirmEntry?.email ?? "",
+                  })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -549,7 +800,9 @@ export default function AdminWaitlistPage() {
                 }
               }}
             >
-              {confirmEntry?.action === "delete" ? t("confirm.confirmDelete") : t("confirm.confirmBlacklist")}
+              {confirmEntry?.action === "delete"
+                ? t("confirm.confirmDelete")
+                : t("confirm.confirmBlacklist")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

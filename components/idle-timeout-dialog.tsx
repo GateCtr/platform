@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useIdleTimeout } from "@/hooks/use-idle-timeout";
 
 const WARNING_MS = 2 * 60 * 1000; // 2 min warning
-const IDLE_MS = 13 * 60 * 1000;   // 13 min idle → total 15 min
+const IDLE_MS = 13 * 60 * 1000; // 13 min idle → total 15 min
 
 export function IdleTimeoutDialog() {
   const { signOut } = useClerk();

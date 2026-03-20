@@ -34,8 +34,12 @@ vi.mock("@/components/idle-timeout-dialog", () => ({
 }));
 
 vi.mock("@/components/ui/sidebar", () => ({
-  SidebarProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SidebarInset: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SidebarProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarInset: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 import { requireAdmin } from "@/lib/auth";
@@ -94,7 +98,9 @@ describe("AdminLayout", () => {
     });
 
     it("redirects to /dashboard?error=access_denied when requireAdmin() throws", async () => {
-      mockRequireAdmin.mockRejectedValue(new Error("Unauthorized: Admin access required"));
+      mockRequireAdmin.mockRejectedValue(
+        new Error("Unauthorized: Admin access required"),
+      );
 
       try {
         await callLayout(<div>Content</div>);
@@ -102,17 +108,25 @@ describe("AdminLayout", () => {
         // expected
       }
 
-      expect(mockRedirect).toHaveBeenCalledWith("/dashboard?error=access_denied");
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/dashboard?error=access_denied",
+      );
     });
 
     it("does not render children when requireAdmin() throws", async () => {
-      mockRequireAdmin.mockRejectedValue(new Error("Unauthorized: Admin access required"));
+      mockRequireAdmin.mockRejectedValue(
+        new Error("Unauthorized: Admin access required"),
+      );
 
-      await expect(callLayout(<span>Admin page content</span>)).rejects.toThrow("NEXT_REDIRECT");
+      await expect(callLayout(<span>Admin page content</span>)).rejects.toThrow(
+        "NEXT_REDIRECT",
+      );
     });
 
     it("redirects to /fr/dashboard?error=access_denied for French locale", async () => {
-      mockRequireAdmin.mockRejectedValue(new Error("Unauthorized: Admin access required"));
+      mockRequireAdmin.mockRejectedValue(
+        new Error("Unauthorized: Admin access required"),
+      );
 
       try {
         await callLayout(<div>Content</div>, "fr");
@@ -120,11 +134,15 @@ describe("AdminLayout", () => {
         // expected
       }
 
-      expect(mockRedirect).toHaveBeenCalledWith("/fr/dashboard?error=access_denied");
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/fr/dashboard?error=access_denied",
+      );
     });
 
     it("defaults to English redirect when no locale is provided", async () => {
-      mockRequireAdmin.mockRejectedValue(new Error("Unauthorized: Admin access required"));
+      mockRequireAdmin.mockRejectedValue(
+        new Error("Unauthorized: Admin access required"),
+      );
 
       try {
         await callLayout(<div>Content</div>);
@@ -132,7 +150,9 @@ describe("AdminLayout", () => {
         // expected
       }
 
-      expect(mockRedirect).toHaveBeenCalledWith("/dashboard?error=access_denied");
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/dashboard?error=access_denied",
+      );
     });
   });
 });

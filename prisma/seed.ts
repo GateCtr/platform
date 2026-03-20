@@ -164,16 +164,34 @@ async function main() {
   // ── Roles ──────────────────────────────────────────────────────────────────
 
   const roleDefinitions: Array<{
-    name: "SUPER_ADMIN" | "ADMIN" | "MANAGER" | "DEVELOPER" | "VIEWER" | "SUPPORT";
+    name:
+      | "SUPER_ADMIN"
+      | "ADMIN"
+      | "MANAGER"
+      | "DEVELOPER"
+      | "VIEWER"
+      | "SUPPORT";
     displayName: string;
     description: string;
   }> = [
-    { name: "SUPER_ADMIN", displayName: "Super Admin", description: "Full system access" },
+    {
+      name: "SUPER_ADMIN",
+      displayName: "Super Admin",
+      description: "Full system access",
+    },
     { name: "ADMIN", displayName: "Admin", description: "Organization admin" },
     { name: "MANAGER", displayName: "Manager", description: "Team manager" },
-    { name: "DEVELOPER", displayName: "Developer", description: "Developer access" },
+    {
+      name: "DEVELOPER",
+      displayName: "Developer",
+      description: "Developer access",
+    },
     { name: "VIEWER", displayName: "Viewer", description: "Read-only access" },
-    { name: "SUPPORT", displayName: "Support", description: "Support team access" },
+    {
+      name: "SUPPORT",
+      displayName: "Support",
+      description: "Support team access",
+    },
   ];
 
   for (const role of roleDefinitions) {
@@ -259,14 +277,35 @@ async function main() {
     {
       roleName: "ADMIN",
       permKeys: [
-        "user:read", "user:create", "user:update",
-        "project:read", "project:create", "project:update", "project:delete",
-        "api_key:read", "api_key:create", "api_key:update", "api_key:delete",
-        "budget:read", "budget:create", "budget:update", "budget:delete",
-        "analytics:read", "analytics:export",
-        "webhook:read", "webhook:create", "webhook:update", "webhook:delete",
-        "team:read", "team:create", "team:update", "team:delete", "team:invite", "team:remove_member",
-        "billing:read", "billing:update",
+        "user:read",
+        "user:create",
+        "user:update",
+        "project:read",
+        "project:create",
+        "project:update",
+        "project:delete",
+        "api_key:read",
+        "api_key:create",
+        "api_key:update",
+        "api_key:delete",
+        "budget:read",
+        "budget:create",
+        "budget:update",
+        "budget:delete",
+        "analytics:read",
+        "analytics:export",
+        "webhook:read",
+        "webhook:create",
+        "webhook:update",
+        "webhook:delete",
+        "team:read",
+        "team:create",
+        "team:update",
+        "team:delete",
+        "team:invite",
+        "team:remove_member",
+        "billing:read",
+        "billing:update",
         "audit_log:read",
       ],
     },
@@ -274,36 +313,57 @@ async function main() {
       roleName: "MANAGER",
       permKeys: [
         "user:read",
-        "project:read", "project:create", "project:update",
-        "api_key:read", "api_key:create",
-        "budget:read", "budget:update",
+        "project:read",
+        "project:create",
+        "project:update",
+        "api_key:read",
+        "api_key:create",
+        "budget:read",
+        "budget:update",
         "analytics:read",
-        "webhook:read", "webhook:create", "webhook:update",
-        "team:read", "team:invite",
+        "webhook:read",
+        "webhook:create",
+        "webhook:update",
+        "team:read",
+        "team:invite",
         "billing:read",
       ],
     },
     {
       roleName: "DEVELOPER",
       permKeys: [
-        "project:read", "project:create", "project:update",
-        "api_key:read", "api_key:create",
+        "project:read",
+        "project:create",
+        "project:update",
+        "api_key:read",
+        "api_key:create",
         "budget:read",
         "analytics:read",
-        "webhook:read", "webhook:create",
+        "webhook:read",
+        "webhook:create",
         "team:read",
       ],
     },
     {
       roleName: "VIEWER",
       permKeys: [
-        "project:read", "api_key:read", "budget:read",
-        "analytics:read", "webhook:read", "team:read",
+        "project:read",
+        "api_key:read",
+        "budget:read",
+        "analytics:read",
+        "webhook:read",
+        "team:read",
       ],
     },
     {
       roleName: "SUPPORT",
-      permKeys: ["user:read", "project:read", "analytics:read", "audit_log:read", "system:read"],
+      permKeys: [
+        "user:read",
+        "project:read",
+        "analytics:read",
+        "audit_log:read",
+        "system:read",
+      ],
     },
   ];
 
@@ -312,7 +372,9 @@ async function main() {
     if (!role) continue;
     for (const key of permKeys) {
       await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: role.id, permissionId: p(key) } },
+        where: {
+          roleId_permissionId: { roleId: role.id, permissionId: p(key) },
+        },
         update: {},
         create: { roleId: role.id, permissionId: p(key) },
       });
@@ -324,17 +386,38 @@ async function main() {
   // ── LLM Provider Configs ───────────────────────────────────────────────────
 
   const providers = [
-    { provider: "openai", displayName: "OpenAI", baseUrl: "https://api.openai.com/v1" },
-    { provider: "anthropic", displayName: "Anthropic", baseUrl: "https://api.anthropic.com/v1" },
-    { provider: "mistral", displayName: "Mistral AI", baseUrl: "https://api.mistral.ai/v1" },
-    { provider: "gemini", displayName: "Google Gemini", baseUrl: "https://generativelanguage.googleapis.com/v1beta" },
+    {
+      provider: "openai",
+      displayName: "OpenAI",
+      baseUrl: "https://api.openai.com/v1",
+    },
+    {
+      provider: "anthropic",
+      displayName: "Anthropic",
+      baseUrl: "https://api.anthropic.com/v1",
+    },
+    {
+      provider: "mistral",
+      displayName: "Mistral AI",
+      baseUrl: "https://api.mistral.ai/v1",
+    },
+    {
+      provider: "gemini",
+      displayName: "Google Gemini",
+      baseUrl: "https://generativelanguage.googleapis.com/v1beta",
+    },
   ];
 
   for (const provider of providers) {
     await prisma.lLMProviderConfig.upsert({
       where: { provider: provider.provider },
       update: {},
-      create: { ...provider, defaultTimeout: 30000, maxRetries: 3, retryDelay: 1000 },
+      create: {
+        ...provider,
+        defaultTimeout: 30000,
+        maxRetries: 3,
+        retryDelay: 1000,
+      },
     });
   }
 

@@ -19,8 +19,6 @@ export function ClerkProvider({
       signUpUrl="/sign-up"
       signInFallbackRedirectUrl="/dashboard"
       signUpFallbackRedirectUrl="/onboarding"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/onboarding"
       afterSignOutUrl="/sign-in"
       appearance={{
         theme: shadcn,

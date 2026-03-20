@@ -8,13 +8,15 @@ import { quotaExceededResponse } from "@/lib/quota-response";
 export async function POST(req: NextRequest) {
   // ── Auth ────────────────────────────────────────────────────────────────────
   const { userId: clerkId } = await auth();
-  if (!clerkId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!clerkId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dbUser = await prisma.user.findUnique({
     where: { clerkId },
     select: { id: true },
   });
-  if (!dbUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!dbUser)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const userId = dbUser.id;
 
@@ -28,13 +30,15 @@ export async function POST(req: NextRequest) {
   if (!monthResult.allowed) return quotaExceededResponse(monthResult);
 
   // ── Placeholder — LLM routing logic goes here ───────────────────────────────
-  const body = await req.json() as { messages?: unknown[]; model?: string };
+  const body = (await req.json()) as { messages?: unknown[]; model?: string };
 
   return NextResponse.json({
     id: `chatcmpl_${Date.now()}`,
     object: "chat.completion",
     model: body.model ?? "gpt-4o",
-    choices: [{ message: { role: "assistant", content: "" }, finish_reason: "stop" }],
+    choices: [
+      { message: { role: "assistant", content: "" }, finish_reason: "stop" },
+    ],
     usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
     overage: "overage" in monthResult ? monthResult.overage : false,
   });

@@ -262,7 +262,10 @@ function UserMenu() {
                   {t("admin")}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="gap-2.5 mx-1 rounded-md text-muted-foreground">
+              <DropdownMenuItem
+                asChild
+                className="gap-2.5 mx-1 rounded-md text-muted-foreground"
+              >
                 <a href="/" target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="size-4" />
                   {t("viewSite")}

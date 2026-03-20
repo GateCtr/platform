@@ -29,49 +29,92 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("next-intl/server", () => ({
-  getTranslations: vi.fn().mockImplementation(({ namespace }: { namespace: string }) => {
-    const t = (key: string, params?: Record<string, unknown>) => {
-      if (key === "entries") return `${params?.count ?? "{count}"} total entries`;
-      if (key === "empty") return "auditLogs.empty";
-      return `${namespace}.${key}`;
-    };
-    t.raw = (key: string) => t(key);
-    return Promise.resolve(t);
-  }),
+  getTranslations: vi
+    .fn()
+    .mockImplementation(({ namespace }: { namespace: string }) => {
+      const t = (key: string, params?: Record<string, unknown>) => {
+        if (key === "entries")
+          return `${params?.count ?? "{count}"} total entries`;
+        if (key === "empty") return "auditLogs.empty";
+        return `${namespace}.${key}`;
+      };
+      t.raw = (key: string) => t(key);
+      return Promise.resolve(t);
+    }),
 }));
 
 // Stub heavy sub-components
-vi.mock("@/app/[locale]/(admin)/admin/audit-logs/_components/audit-filters", () => ({
-  AuditFilters: () => <div data-testid="audit-filters" />,
-}));
-vi.mock("@/app/[locale]/(admin)/admin/audit-logs/_components/audit-row-detail", () => ({
-  AuditRowDetail: ({ log }: { log: { resource: string; action: string; createdAt: string; userId: string | null } }) => (
-    <tr>
-      <td>{log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}</td>
-      <td>{log.userId ?? "—"}</td>
-      <td>{log.resource}</td>
-      <td>{log.action}</td>
-    </tr>
-  ),
-}));
-vi.mock("@/app/[locale]/(admin)/admin/audit-logs/_components/audit-pagination", () => ({
-  AuditPagination: () => <div data-testid="audit-pagination" />,
-}));
+vi.mock(
+  "@/app/[locale]/(admin)/admin/audit-logs/_components/audit-filters",
+  () => ({
+    AuditFilters: () => <div data-testid="audit-filters" />,
+  }),
+);
+vi.mock(
+  "@/app/[locale]/(admin)/admin/audit-logs/_components/audit-row-detail",
+  () => ({
+    AuditRowDetail: ({
+      log,
+    }: {
+      log: {
+        resource: string;
+        action: string;
+        createdAt: string;
+        userId: string | null;
+      };
+    }) => (
+      <tr>
+        <td>
+          {log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}
+        </td>
+        <td>{log.userId ?? "—"}</td>
+        <td>{log.resource}</td>
+        <td>{log.action}</td>
+      </tr>
+    ),
+  }),
+);
+vi.mock(
+  "@/app/[locale]/(admin)/admin/audit-logs/_components/audit-pagination",
+  () => ({
+    AuditPagination: () => <div data-testid="audit-pagination" />,
+  }),
+);
 
 vi.mock("@/components/ui/badge", () => ({
-  Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+  Badge: ({ children }: { children: React.ReactNode }) => (
+    <span>{children}</span>
+  ),
 }));
 vi.mock("@/components/ui/table", () => ({
-  Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,
-  TableBody: ({ children }: { children: React.ReactNode }) => <tbody>{children}</tbody>,
-  TableCell: ({ children, colSpan }: { children: React.ReactNode; colSpan?: number }) => <td colSpan={colSpan}>{children}</td>,
-  TableHead: ({ children }: { children: React.ReactNode }) => <th>{children}</th>,
-  TableHeader: ({ children }: { children: React.ReactNode }) => <thead>{children}</thead>,
-  TableRow: ({ children }: { children: React.ReactNode }) => <tr>{children}</tr>,
+  Table: ({ children }: { children: React.ReactNode }) => (
+    <table>{children}</table>
+  ),
+  TableBody: ({ children }: { children: React.ReactNode }) => (
+    <tbody>{children}</tbody>
+  ),
+  TableCell: ({
+    children,
+    colSpan,
+  }: {
+    children: React.ReactNode;
+    colSpan?: number;
+  }) => <td colSpan={colSpan}>{children}</td>,
+  TableHead: ({ children }: { children: React.ReactNode }) => (
+    <th>{children}</th>
+  ),
+  TableHeader: ({ children }: { children: React.ReactNode }) => (
+    <thead>{children}</thead>
+  ),
+  TableRow: ({ children }: { children: React.ReactNode }) => (
+    <tr>{children}</tr>
+  ),
 }));
 vi.mock("@/components/ui/card", () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  CardContent: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 // ── Imports (after mocks) ────────────────────────────────────────────────────
@@ -84,19 +127,40 @@ const mockCount = vi.mocked(prisma.auditLog.count);
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-function makeLog(overrides: Partial<{
-  id: string; userId: string | null; actorId: string | null;
-  resource: string; action: string; resourceId: string | null;
-  oldValue: null; newValue: null; ipAddress: string | null;
-  userAgent: string | null; success: boolean; error: string | null;
-  createdAt: Date; user: { id: string; email: string; name: string | null } | null;
-}> = {}) {
+function makeLog(
+  overrides: Partial<{
+    id: string;
+    userId: string | null;
+    actorId: string | null;
+    resource: string;
+    action: string;
+    resourceId: string | null;
+    oldValue: null;
+    newValue: null;
+    ipAddress: string | null;
+    userAgent: string | null;
+    success: boolean;
+    error: string | null;
+    createdAt: Date;
+    user: { id: string; email: string; name: string | null } | null;
+  }> = {},
+) {
   return {
-    id: "log-1", userId: "user-1", actorId: null,
-    resource: "user", action: "user.created", resourceId: null,
-    oldValue: null, newValue: null, ipAddress: null, userAgent: null,
-    success: true, error: null, createdAt: new Date("2024-06-01T12:00:00Z"),
-    user: null, ...overrides,
+    id: "log-1",
+    userId: "user-1",
+    actorId: null,
+    resource: "user",
+    action: "user.created",
+    resourceId: null,
+    oldValue: null,
+    newValue: null,
+    ipAddress: null,
+    userAgent: null,
+    success: true,
+    error: null,
+    createdAt: new Date("2024-06-01T12:00:00Z"),
+    user: null,
+    ...overrides,
   };
 }
 

@@ -16,11 +16,17 @@ export async function POST(request: NextRequest) {
     });
 
     if (!entry) {
-      return NextResponse.json({ error: "Invalid invite code" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Invalid invite code" },
+        { status: 404 },
+      );
     }
 
     if (entry.status === "JOINED") {
-      return NextResponse.json({ error: "Invite already used" }, { status: 409 });
+      return NextResponse.json(
+        { error: "Invite already used" },
+        { status: 409 },
+      );
     }
 
     if (entry.status !== "INVITED") {
@@ -46,6 +52,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
     console.error("Redeem error:", error);
-    return NextResponse.json({ error: "Failed to redeem invite" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to redeem invite" },
+      { status: 500 },
+    );
   }
 }

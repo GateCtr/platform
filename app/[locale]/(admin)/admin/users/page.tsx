@@ -18,7 +18,9 @@ export async function generateMetadata({
 
 export default async function AdminUsersPage() {
   const currentUser = await getCurrentUser();
-  const canWrite = currentUser ? await hasPermission(currentUser.id, "users:write") : false;
+  const canWrite = currentUser
+    ? await hasPermission(currentUser.id, "users:write")
+    : false;
 
   const users = await prisma.user.findMany({
     select: {
@@ -34,7 +36,9 @@ export default async function AdminUsersPage() {
       createdAt: true,
       lastLoginAt: true,
       authProvider: true,
-      userRoles: { select: { role: { select: { name: true, displayName: true } } } },
+      userRoles: {
+        select: { role: { select: { name: true, displayName: true } } },
+      },
       _count: { select: { projects: true } },
       dailyUsage: {
         select: { totalTokens: true },

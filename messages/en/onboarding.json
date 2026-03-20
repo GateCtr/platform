@@ -8,10 +8,22 @@
     "headline": "One gateway.\nEvery LLM.",
     "tagline": "Swap your endpoint. Keep your keys.\nGateCtr controls. You save.",
     "features": {
-      "optimizer": { "label": "-40% tokens", "sub": "Context Optimizer on every request." },
-      "firewall":  { "label": "Budget Firewall", "sub": "Hard caps. No surprise invoices." },
-      "router":    { "label": "Model Router", "sub": "Right model. Right cost. Automatic." },
-      "security":  { "label": "Your key stays yours", "sub": "AES-256. Never stored in plain text." }
+      "optimizer": {
+        "label": "-40% tokens",
+        "sub": "Context Optimizer on every request."
+      },
+      "firewall": {
+        "label": "Budget Firewall",
+        "sub": "Hard caps. No surprise invoices."
+      },
+      "router": {
+        "label": "Model Router",
+        "sub": "Right model. Right cost. Automatic."
+      },
+      "security": {
+        "label": "Your key stays yours",
+        "sub": "AES-256. Never stored in plain text."
+      }
     },
     "copyright": "© {year} GateCtr"
   },

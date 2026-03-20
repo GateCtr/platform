@@ -73,33 +73,68 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupKey: "groups.platform",
     items: [
-      { key: "sidebar.overview", href: "/admin/overview", permission: "analytics:read", icon: LayoutDashboard },
+      {
+        key: "sidebar.overview",
+        href: "/admin/overview",
+        permission: "analytics:read",
+        icon: LayoutDashboard,
+      },
     ],
   },
   {
     groupKey: "groups.users",
     items: [
-      { key: "sidebar.users", href: "/admin/users", permission: "users:read", icon: Users },
-      { key: "sidebar.waitlist", href: "/admin/waitlist", permission: "users:read", icon: ListOrdered },
+      {
+        key: "sidebar.users",
+        href: "/admin/users",
+        permission: "users:read",
+        icon: Users,
+      },
+      {
+        key: "sidebar.waitlist",
+        href: "/admin/waitlist",
+        permission: "users:read",
+        icon: ListOrdered,
+      },
     ],
   },
   {
     groupKey: "groups.revenue",
     items: [
-      { key: "sidebar.billing", href: "/admin/billing", permission: "billing:read", icon: CreditCard },
+      {
+        key: "sidebar.billing",
+        href: "/admin/billing",
+        permission: "billing:read",
+        icon: CreditCard,
+      },
     ],
   },
   {
     groupKey: "groups.security",
     items: [
-      { key: "sidebar.auditLogs", href: "/admin/audit-logs", permission: "audit:read", icon: ShieldCheck },
+      {
+        key: "sidebar.auditLogs",
+        href: "/admin/audit-logs",
+        permission: "audit:read",
+        icon: ShieldCheck,
+      },
     ],
   },
   {
     groupKey: "groups.system",
     items: [
-      { key: "sidebar.featureFlags", href: "/admin/feature-flags", permission: "system:read", icon: Flag },
-      { key: "sidebar.systemHealth", href: "/admin/system", permission: "system:read", icon: Activity },
+      {
+        key: "sidebar.featureFlags",
+        href: "/admin/feature-flags",
+        permission: "system:read",
+        icon: Flag,
+      },
+      {
+        key: "sidebar.systemHealth",
+        href: "/admin/system",
+        permission: "system:read",
+        icon: Activity,
+      },
     ],
   },
 ];
@@ -115,7 +150,12 @@ function AdminUserMenu() {
   const name = user?.fullName ?? user?.firstName ?? "Admin";
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const avatar = user?.imageUrl;
-  const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <DropdownMenu>
@@ -132,22 +172,33 @@ function AdminUserMenu() {
           </Avatar>
           <div className="flex flex-col gap-0.5 leading-none min-w-0">
             <span className="font-medium text-sm truncate">{name}</span>
-            <span className="text-[11px] text-sidebar-foreground/50 truncate">{email}</span>
+            <span className="text-[11px] text-sidebar-foreground/50 truncate">
+              {email}
+            </span>
           </div>
           <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-sidebar-foreground/40" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-64" align="start" side="top" sideOffset={8}>
+      <DropdownMenuContent
+        className="w-64"
+        align="start"
+        side="top"
+        sideOffset={8}
+      >
         {/* User header */}
         <div className="flex items-center gap-3 px-3 py-3 border-b border-border">
           <Avatar className="size-9 shrink-0 rounded-lg">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-xs font-semibold rounded-lg">{initials}</AvatarFallback>
+            <AvatarFallback className="text-xs font-semibold rounded-lg">
+              {initials}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-sm font-semibold truncate">{name}</span>
-            <span className="text-[11px] text-muted-foreground truncate">{email}</span>
+            <span className="text-[11px] text-muted-foreground truncate">
+              {email}
+            </span>
           </div>
         </div>
 
@@ -168,11 +219,13 @@ function AdminUserMenu() {
             {t("theme")}
           </p>
           <div className="flex items-center gap-1 p-0.5 rounded-md bg-muted">
-            {([
-              { value: "light", icon: Sun, label: t("themeLight") },
-              { value: "system", icon: Monitor, label: t("themeSystem") },
-              { value: "dark", icon: Moon, label: t("themeDark") },
-            ] as const).map(({ value, icon: Icon, label }) => (
+            {(
+              [
+                { value: "light", icon: Sun, label: t("themeLight") },
+                { value: "system", icon: Monitor, label: t("themeSystem") },
+                { value: "dark", icon: Moon, label: t("themeDark") },
+              ] as const
+            ).map(({ value, icon: Icon, label }) => (
               <button
                 key={value}
                 onClick={() => setTheme(value)}
@@ -227,7 +280,11 @@ export function AdminSidebar() {
       <SidebarHeader className="border-b border-sidebar-border pb-0">
         <div className="flex h-14 items-center px-3">
           <div className="group-data-[collapsible=icon]:hidden">
-            <Logo variant="full" iconClassName="w-6 h-6" textClassName="text-xl" />
+            <Logo
+              variant="full"
+              iconClassName="w-6 h-6"
+              textClassName="text-xl"
+            />
           </div>
           <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center w-full">
             <Logo variant="icon" iconClassName="w-6 h-6" />
@@ -266,11 +323,20 @@ export function AdminSidebar() {
                             tooltip={t(item.key as Parameters<typeof t>[0])}
                             className="gap-3 rounded-md h-9"
                           >
-                            <Link href={item.href as Parameters<typeof Link>[0]["href"]}>
+                            <Link
+                              href={
+                                item.href as Parameters<typeof Link>[0]["href"]
+                              }
+                            >
                               <Icon className="size-4 shrink-0" />
-                              <span>{t(item.key as Parameters<typeof t>[0])}</span>
+                              <span>
+                                {t(item.key as Parameters<typeof t>[0])}
+                              </span>
                               {item.badge && (
-                                <Badge variant="secondary" className="ml-auto text-xs px-1.5 py-0">
+                                <Badge
+                                  variant="secondary"
+                                  className="ml-auto text-xs px-1.5 py-0"
+                                >
                                   {item.badge}
                                 </Badge>
                               )}

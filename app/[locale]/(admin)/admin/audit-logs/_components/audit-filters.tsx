@@ -28,7 +28,11 @@ interface AuditFiltersProps {
   exportHref: string;
 }
 
-export function AuditFilters({ resources, labels, exportHref }: AuditFiltersProps) {
+export function AuditFilters({
+  resources,
+  labels,
+  exportHref,
+}: AuditFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -40,7 +44,8 @@ export function AuditFilters({ resources, labels, exportHref }: AuditFiltersProp
     status: searchParams.get("status") ?? "all",
   };
 
-  const hasFilters = current.search || current.resource !== "all" || current.status !== "all";
+  const hasFilters =
+    current.search || current.resource !== "all" || current.status !== "all";
 
   const update = useCallback(
     (key: string, value: string) => {
@@ -101,10 +106,7 @@ export function AuditFilters({ resources, labels, exportHref }: AuditFiltersProp
       </Select>
 
       {/* Status filter */}
-      <Select
-        value={current.status}
-        onValueChange={(v) => update("status", v)}
-      >
+      <Select value={current.status} onValueChange={(v) => update("status", v)}>
         <SelectTrigger className="h-8 w-[140px] text-xs">
           <SelectValue placeholder={labels.statusAll} />
         </SelectTrigger>

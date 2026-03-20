@@ -4,7 +4,13 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, AlertCircle, FolderOpen, Sparkles, ArrowRight } from "lucide-react";
+import {
+  Loader2,
+  AlertCircle,
+  FolderOpen,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,7 +41,10 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
   const tNav = useTranslations("onboarding.nav");
 
   const schema = z.object({
-    projectName: z.string().min(1, t("errors.required")).min(2, t("errors.minLength")),
+    projectName: z
+      .string()
+      .min(1, t("errors.required"))
+      .min(2, t("errors.minLength")),
   });
 
   const form = useForm<ProjectValues>({
@@ -50,9 +59,10 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
     fd.set("projectName", values.projectName);
     const res = await createFirstProject(fd);
     if (res?.error) {
-      const msg = res.error === "quota_exceeded"
-        ? t("errors.quotaExceeded")
-        : t("errors.failed");
+      const msg =
+        res.error === "quota_exceeded"
+          ? t("errors.quotaExceeded")
+          : t("errors.failed");
       form.setError("root", { message: msg });
       return;
     }
@@ -62,7 +72,6 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-
         {/* Visual hint card */}
         <div className="rounded-lg border border-dashed border-primary/30 bg-primary/3 p-4">
           <div className="flex items-start gap-3">
@@ -70,8 +79,12 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
               <FolderOpen className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="text-sm font-medium text-foreground">{t("projectName.hint")}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{t("projectName.hintSub")}</p>
+              <p className="text-sm font-medium text-foreground">
+                {t("projectName.hint")}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {t("projectName.hintSub")}
+              </p>
             </div>
           </div>
         </div>
@@ -81,7 +94,9 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
           name="projectName"
           render={({ field }) => (
             <FormItem>
-              <RequiredFormLabel required>{t("projectName.label")}</RequiredFormLabel>
+              <RequiredFormLabel required>
+                {t("projectName.label")}
+              </RequiredFormLabel>
               <FormControl>
                 <Input
                   placeholder={t("projectName.placeholder")}
@@ -98,16 +113,20 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
 
         {/* Quick suggestions */}
         <div className="space-y-1.5">
-          <p className="text-xs text-muted-foreground">{t("suggestions.label")}</p>
+          <p className="text-xs text-muted-foreground">
+            {t("suggestions.label")}
+          </p>
           <div className="flex flex-wrap gap-1.5">
             {EXAMPLE_NAMES.map((name) => (
               <button
                 key={name}
                 type="button"
-                onClick={() => form.setValue("projectName", name, { shouldValidate: true })}
+                onClick={() =>
+                  form.setValue("projectName", name, { shouldValidate: true })
+                }
                 className={cn(
                   "rounded-md border border-border bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground",
-                  "hover:border-primary/40 hover:bg-primary/5 hover:text-foreground transition-colors"
+                  "hover:border-primary/40 hover:bg-primary/5 hover:text-foreground transition-colors",
                 )}
               >
                 {name}
@@ -119,14 +138,25 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
         {form.formState.errors.root && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{form.formState.errors.root.message}</AlertDescription>
+            <AlertDescription>
+              {form.formState.errors.root.message}
+            </AlertDescription>
           </Alert>
         )}
 
         {/* Finish CTA — accent to signal this is the final step */}
-        <Button type="submit" variant="cta-accent" size="lg" className="w-full group" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          variant="cta-accent"
+          size="lg"
+          className="w-full group"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t("submitting")}</>
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {t("submitting")}
+            </>
           ) : (
             <>
               <Sparkles className="mr-2 h-4 w-4" />
@@ -137,14 +167,25 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
         </Button>
 
         <div className="flex gap-2">
-          <Button type="button" variant="cta-ghost" size="sm" className="flex-1" onClick={onBack}>
+          <Button
+            type="button"
+            variant="cta-ghost"
+            size="sm"
+            className="flex-1"
+            onClick={onBack}
+          >
             {tNav("back")}
           </Button>
-          <Button type="button" variant="cta-ghost" size="sm" className="flex-1" onClick={onSkip}>
+          <Button
+            type="button"
+            variant="cta-ghost"
+            size="sm"
+            className="flex-1"
+            onClick={onSkip}
+          >
             {t("skip")}
           </Button>
         </div>
-
       </form>
     </Form>
   );

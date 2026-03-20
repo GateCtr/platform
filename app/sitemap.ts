@@ -21,7 +21,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/features", changeFrequency: "monthly", priority: 0.9 },
     { path: "/pricing", changeFrequency: "monthly", priority: 0.9 },
     ...(waitlistEnabled
-      ? [{ path: "/waitlist", changeFrequency: "monthly" as const, priority: 0.8 }]
+      ? [
+          {
+            path: "/waitlist",
+            changeFrequency: "monthly" as const,
+            priority: 0.8,
+          },
+        ]
       : []),
   ];
 

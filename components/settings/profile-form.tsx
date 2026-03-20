@@ -133,9 +133,7 @@ export function ProfileForm({
           </div>
 
           {/* Error */}
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
 
           {/* Submit */}
           <div className="flex items-center gap-3">
@@ -155,8 +153,8 @@ export function ProfileForm({
           </div>
         </form>
       </section>
-
-      {/* ── Preferences ── */}      <section className="space-y-4">
+      {/* ── Preferences ── */}{" "}
+      <section className="space-y-4">
         <div>
           <h2 className="text-sm font-semibold">{t("sections.preferences")}</h2>
           <Separator className="mt-2" />
@@ -175,7 +173,7 @@ export function ProfileForm({
                   "px-3 py-1.5 rounded-md text-sm font-medium border transition-colors",
                   locale === l
                     ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/30"
+                    : "bg-transparent text-muted-foreground border-border hover:text-foreground hover:border-foreground/30",
                 )}
               >
                 {t(`fields.language.${l}`)}
@@ -190,7 +188,6 @@ export function ProfileForm({
           <ThemeSwitcher />
         </div>
       </section>
-
     </div>
   );
 }

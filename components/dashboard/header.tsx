@@ -54,10 +54,16 @@ function TokenUsagePill() {
 
   const { tokensUsed, tokensLimit, plan } = data;
   const upper = plan.toUpperCase();
-  const pct = tokensLimit ? Math.min(Math.round((tokensUsed / tokensLimit) * 100), 100) : 0;
+  const pct = tokensLimit
+    ? Math.min(Math.round((tokensUsed / tokensLimit) * 100), 100)
+    : 0;
 
   const color =
-    pct >= 90 ? "bg-error-500" : pct >= 70 ? "bg-warning-500" : "bg-secondary-500";
+    pct >= 90
+      ? "bg-error-500"
+      : pct >= 70
+        ? "bg-warning-500"
+        : "bg-secondary-500";
 
   const limitLabel =
     upper === "ENTERPRISE" || tokensLimit === null

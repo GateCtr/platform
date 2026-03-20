@@ -37,14 +37,24 @@ vi.mock("next-intl/server", () => ({
 
 // AdminUsersClient is a heavy client component — stub it to render the data
 vi.mock("@/components/admin/users/index", () => ({
-  AdminUsersClient: ({ users }: { users: { name: string | null; email: string; roles: { displayName: string }[] }[] }) => (
+  AdminUsersClient: ({
+    users,
+  }: {
+    users: {
+      name: string | null;
+      email: string;
+      roles: { displayName: string }[];
+    }[];
+  }) => (
     <table>
       <tbody>
         {users.map((u, i) => (
           <tr key={i}>
             <td>{u.name ?? "—"}</td>
             <td>{u.email}</td>
-            {u.roles.map((r, j) => <td key={j}>{r.displayName}</td>)}
+            {u.roles.map((r, j) => (
+              <td key={j}>{r.displayName}</td>
+            ))}
           </tr>
         ))}
       </tbody>
@@ -132,7 +142,9 @@ describe("AdminUsersPage", () => {
       mockGetCurrentUser.mockRejectedValue(
         new Error("Unauthorized: Admin access required"),
       );
-      mockRedirect.mockImplementation(() => { throw new Error("NEXT_REDIRECT"); });
+      mockRedirect.mockImplementation(() => {
+        throw new Error("NEXT_REDIRECT");
+      });
 
       try {
         await AdminUsersPage();

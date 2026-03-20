@@ -2,12 +2,24 @@
 
 import { useState } from "react";
 import {
-  CheckCircle2, XCircle, ChevronRight,
-  UserPlus, UserCog, UserX, ShieldCheck, ShieldOff,
-  Receipt, CreditCard, RefreshCw, XOctagon, CalendarX,
-  Users, UserCheck,
+  CheckCircle2,
+  XCircle,
+  ChevronRight,
+  UserPlus,
+  UserCog,
+  UserX,
+  ShieldCheck,
+  ShieldOff,
+  Receipt,
+  CreditCard,
+  RefreshCw,
+  XOctagon,
+  CalendarX,
+  Users,
+  UserCheck,
   Webhook,
-  ShieldAlert, LogIn,
+  ShieldAlert,
+  LogIn,
   HelpCircle,
 } from "lucide-react";
 import {
@@ -63,17 +75,23 @@ interface AuditRowDetailProps {
 // ─── Resource badge ───────────────────────────────────────────────────────────
 
 const RESOURCE_COLORS: Record<string, string> = {
-  billing: "bg-violet-500/10 text-violet-700 border-violet-500/25 dark:text-violet-400",
-  user:    "bg-primary/10 text-primary border-primary/25",
-  team:    "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
-  webhook: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
-  role:    "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  billing:
+    "bg-violet-500/10 text-violet-700 border-violet-500/25 dark:text-violet-400",
+  user: "bg-primary/10 text-primary border-primary/25",
+  team: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  webhook:
+    "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
+  role: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
 };
 
 function ResourceBadge({ resource }: { resource: string }) {
-  const cls = RESOURCE_COLORS[resource] ?? "bg-muted text-muted-foreground border-border";
+  const cls =
+    RESOURCE_COLORS[resource] ?? "bg-muted text-muted-foreground border-border";
   return (
-    <Badge variant="outline" className={`text-[10px] font-medium px-1.5 h-5 capitalize ${cls}`}>
+    <Badge
+      variant="outline"
+      className={`text-[10px] font-medium px-1.5 h-5 capitalize ${cls}`}
+    >
       {resource}
     </Badge>
   );
@@ -89,32 +107,116 @@ type ActionMeta = {
 
 const ACTION_MAP: Record<string, ActionMeta> = {
   // User
-  "user.created":   { label: "User created",   icon: UserPlus,   cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400" },
-  "user.updated":   { label: "User updated",   icon: UserCog,    cls: "bg-primary/10 text-primary border-primary/25" },
-  "user.deleted":   { label: "User deleted",   icon: UserX,      cls: "bg-destructive/10 text-destructive border-destructive/25" },
+  "user.created": {
+    label: "User created",
+    icon: UserPlus,
+    cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
+  },
+  "user.updated": {
+    label: "User updated",
+    icon: UserCog,
+    cls: "bg-primary/10 text-primary border-primary/25",
+  },
+  "user.deleted": {
+    label: "User deleted",
+    icon: UserX,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
   // Roles
-  "role.granted":   { label: "Role granted",   icon: ShieldCheck, cls: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400" },
-  "role.revoked":   { label: "Role revoked",   icon: ShieldOff,  cls: "bg-destructive/10 text-destructive border-destructive/25" },
+  "role.granted": {
+    label: "Role granted",
+    icon: ShieldCheck,
+    cls: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  },
+  "role.revoked": {
+    label: "Role revoked",
+    icon: ShieldOff,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
   // Billing
-  "billing.subscription_activated":              { label: "Subscription activated",    icon: CreditCard,  cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400" },
-  "billing.subscription_updated":                { label: "Subscription updated",      icon: RefreshCw,   cls: "bg-primary/10 text-primary border-primary/25" },
-  "billing.subscription_canceled":               { label: "Subscription canceled",     icon: XOctagon,    cls: "bg-destructive/10 text-destructive border-destructive/25" },
-  "billing.subscription_cancellation_scheduled": { label: "Cancellation scheduled",    icon: CalendarX,   cls: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400" },
-  "billing.coupon_created":                      { label: "Coupon created",            icon: Receipt,     cls: "bg-primary/10 text-primary border-primary/25" },
-  "billing.coupon_deleted":                      { label: "Coupon deleted",            icon: Receipt,     cls: "bg-destructive/10 text-destructive border-destructive/25" },
-  "billing.refund_issued":                       { label: "Refund issued",             icon: Receipt,     cls: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400" },
+  "billing.subscription_activated": {
+    label: "Subscription activated",
+    icon: CreditCard,
+    cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
+  },
+  "billing.subscription_updated": {
+    label: "Subscription updated",
+    icon: RefreshCw,
+    cls: "bg-primary/10 text-primary border-primary/25",
+  },
+  "billing.subscription_canceled": {
+    label: "Subscription canceled",
+    icon: XOctagon,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
+  "billing.subscription_cancellation_scheduled": {
+    label: "Cancellation scheduled",
+    icon: CalendarX,
+    cls: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  },
+  "billing.coupon_created": {
+    label: "Coupon created",
+    icon: Receipt,
+    cls: "bg-primary/10 text-primary border-primary/25",
+  },
+  "billing.coupon_deleted": {
+    label: "Coupon deleted",
+    icon: Receipt,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
+  "billing.refund_issued": {
+    label: "Refund issued",
+    icon: Receipt,
+    cls: "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  },
   // Team
-  "team.created":   { label: "Team created",   icon: Users,      cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400" },
-  "team.updated":   { label: "Team updated",   icon: Users,      cls: "bg-primary/10 text-primary border-primary/25" },
-  "team.deleted":   { label: "Team deleted",   icon: Users,      cls: "bg-destructive/10 text-destructive border-destructive/25" },
-  "team.member_added":   { label: "Member added",   icon: UserCheck, cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400" },
-  "team.member_removed": { label: "Member removed", icon: UserX,     cls: "bg-destructive/10 text-destructive border-destructive/25" },
+  "team.created": {
+    label: "Team created",
+    icon: Users,
+    cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
+  },
+  "team.updated": {
+    label: "Team updated",
+    icon: Users,
+    cls: "bg-primary/10 text-primary border-primary/25",
+  },
+  "team.deleted": {
+    label: "Team deleted",
+    icon: Users,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
+  "team.member_added": {
+    label: "Member added",
+    icon: UserCheck,
+    cls: "bg-secondary-500/10 text-secondary-700 border-secondary-500/25 dark:text-secondary-400",
+  },
+  "team.member_removed": {
+    label: "Member removed",
+    icon: UserX,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
   // Webhooks
-  "webhook.signature_failed": { label: "Webhook signature failed", icon: Webhook,       cls: "bg-destructive/10 text-destructive border-destructive/25" },
-  "webhook.delivery_failed":  { label: "Webhook delivery failed",  icon: Webhook,       cls: "bg-destructive/10 text-destructive border-destructive/25" },
+  "webhook.signature_failed": {
+    label: "Webhook signature failed",
+    icon: Webhook,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
+  "webhook.delivery_failed": {
+    label: "Webhook delivery failed",
+    icon: Webhook,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
   // Access
-  "access.denied":  { label: "Access denied",  icon: ShieldAlert, cls: "bg-destructive/10 text-destructive border-destructive/25" },
-  "auth.login":     { label: "Login",          icon: LogIn,       cls: "bg-muted text-muted-foreground border-border" },
+  "access.denied": {
+    label: "Access denied",
+    icon: ShieldAlert,
+    cls: "bg-destructive/10 text-destructive border-destructive/25",
+  },
+  "auth.login": {
+    label: "Login",
+    icon: LogIn,
+    cls: "bg-muted text-muted-foreground border-border",
+  },
 };
 
 function getActionMeta(action: string): ActionMeta {
@@ -124,7 +226,11 @@ function getActionMeta(action: string): ActionMeta {
     .replace(/\./g, " › ")
     .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
-  return { label, icon: HelpCircle, cls: "bg-muted text-muted-foreground border-border" };
+  return {
+    label,
+    icon: HelpCircle,
+    cls: "bg-muted text-muted-foreground border-border",
+  };
 }
 
 function ActionBadge({ action }: { action: string }) {
@@ -143,7 +249,13 @@ function ActionBadge({ action }: { action: string }) {
 
 // ─── Detail field ─────────────────────────────────────────────────────────────
 
-function DetailField({ label, value }: { label: string; value: React.ReactNode }) {
+function DetailField({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
   if (!value) return null;
   return (
     <div className="flex flex-col gap-0.5">
@@ -265,10 +377,7 @@ export function AuditRowDetail({ log, labels }: AuditRowDetailProps) {
               label={labels.timestamp}
               value={new Date(log.createdAt).toLocaleString()}
             />
-            <DetailField
-              label={labels.resource}
-              value={log.resource}
-            />
+            <DetailField label={labels.resource} value={log.resource} />
             <DetailField
               label={labels.action}
               value={<span className="font-mono text-xs">{log.action}</span>}
@@ -296,7 +405,9 @@ export function AuditRowDetail({ log, labels }: AuditRowDetailProps) {
                 <span className="text-[10px] uppercase tracking-wider text-destructive font-medium">
                   {labels.error}
                 </span>
-                <span className="text-sm text-destructive break-all">{log.error}</span>
+                <span className="text-sm text-destructive break-all">
+                  {log.error}
+                </span>
               </div>
             )}
             <JsonField label={labels.oldValue} value={log.oldValue} />

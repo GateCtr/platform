@@ -42,12 +42,16 @@ export default function OnboardingCompleteEmail({
           </Section>
 
           <Section style={contentSection}>
-            <Text style={greeting}>{name ? `${c.hi} ${name},` : c.hiDefault}</Text>
+            <Text style={greeting}>
+              {name ? `${c.hi} ${name},` : c.hiDefault}
+            </Text>
             <Heading style={h1}>{c.headline}</Heading>
             <Text style={text}>{c.body(workspaceName)}</Text>
 
             <Section style={ctaWrap}>
-              <Button href={dashboardUrl} style={button}>{c.cta}</Button>
+              <Button href={dashboardUrl} style={button}>
+                {c.cta}
+              </Button>
             </Section>
 
             <Hr style={divider} />
@@ -55,15 +59,17 @@ export default function OnboardingCompleteEmail({
             {/* Next steps */}
             <Text style={sectionLabel}>{c.nextStepsLabel}</Text>
             <Section style={stepsSection}>
-              {(hasProvider ? c.stepsWithProvider : c.stepsWithoutProvider).map((step, i) => (
-                <Section key={i} style={stepRow}>
-                  <Text style={stepNumber}>{i + 1}</Text>
-                  <Section style={stepContent}>
-                    <Text style={stepTitle}>{step.title}</Text>
-                    <Text style={stepDesc}>{step.desc}</Text>
+              {(hasProvider ? c.stepsWithProvider : c.stepsWithoutProvider).map(
+                (step, i) => (
+                  <Section key={i} style={stepRow}>
+                    <Text style={stepNumber}>{i + 1}</Text>
+                    <Section style={stepContent}>
+                      <Text style={stepTitle}>{step.title}</Text>
+                      <Text style={stepDesc}>{step.desc}</Text>
+                    </Section>
                   </Section>
-                </Section>
-              ))}
+                ),
+              )}
             </Section>
 
             <Hr style={divider} />
@@ -73,9 +79,14 @@ export default function OnboardingCompleteEmail({
           <Section style={footer}>
             <Text style={footerText}>GateCtr — {c.tagline}</Text>
             <Text style={footerText}>
-              <Link href="https://gatectr.com" style={footerLink}>gatectr.com</Link>
+              <Link href="https://gatectr.com" style={footerLink}>
+                gatectr.com
+              </Link>
               {" · "}
-              <Link href={`${appBase}/unsubscribe?email=${email}`} style={footerLink}>
+              <Link
+                href={`${appBase}/unsubscribe?email=${email}`}
+                style={footerLink}
+              >
                 {c.unsub}
               </Link>
             </Text>
@@ -87,7 +98,8 @@ export default function OnboardingCompleteEmail({
 }
 
 const contentEn = {
-  preview: (ws: string) => `${ws} is ready. Your first request is already optimized.`,
+  preview: (ws: string) =>
+    `${ws} is ready. Your first request is already optimized.`,
   hi: "Hi",
   hiDefault: "Hi,",
   headline: "Setup complete. GateCtr is live.",
@@ -96,14 +108,32 @@ const contentEn = {
   cta: "Open dashboard",
   nextStepsLabel: "What's next",
   stepsWithProvider: [
-    { title: "Make your first API call", desc: "Swap your endpoint URL. Keep your existing code. Done." },
-    { title: "Watch the dashboard", desc: "Every token, every cost — real-time." },
-    { title: "Set up a webhook", desc: "Get Slack or Teams alerts when you hit 80% of your budget." },
+    {
+      title: "Make your first API call",
+      desc: "Swap your endpoint URL. Keep your existing code. Done.",
+    },
+    {
+      title: "Watch the dashboard",
+      desc: "Every token, every cost — real-time.",
+    },
+    {
+      title: "Set up a webhook",
+      desc: "Get Slack or Teams alerts when you hit 80% of your budget.",
+    },
   ],
   stepsWithoutProvider: [
-    { title: "Connect a provider", desc: "Add your OpenAI, Anthropic, or Mistral key in Settings." },
-    { title: "Make your first API call", desc: "Swap your endpoint URL. Keep your existing code." },
-    { title: "Watch the dashboard", desc: "Every token, every cost — real-time." },
+    {
+      title: "Connect a provider",
+      desc: "Add your OpenAI, Anthropic, or Mistral key in Settings.",
+    },
+    {
+      title: "Make your first API call",
+      desc: "Swap your endpoint URL. Keep your existing code.",
+    },
+    {
+      title: "Watch the dashboard",
+      desc: "Every token, every cost — real-time.",
+    },
   ],
   hint: "Questions? Reply to this email — we read every one.",
   tagline: "One gateway. Every LLM.",
@@ -111,7 +141,8 @@ const contentEn = {
 };
 
 const contentFr = {
-  preview: (ws: string) => `${ws} est prêt. Votre première requête est déjà optimisée.`,
+  preview: (ws: string) =>
+    `${ws} est prêt. Votre première requête est déjà optimisée.`,
   hi: "Bonjour",
   hiDefault: "Bonjour,",
   headline: "Configuration terminée. GateCtr est actif.",
@@ -120,14 +151,32 @@ const contentFr = {
   cta: "Ouvrir le tableau de bord",
   nextStepsLabel: "Prochaines étapes",
   stepsWithProvider: [
-    { title: "Faites votre premier appel API", desc: "Changez l'URL d'endpoint. Gardez votre code. C'est tout." },
-    { title: "Observez le dashboard", desc: "Chaque token, chaque coût — en temps réel." },
-    { title: "Configurez un webhook", desc: "Recevez des alertes Slack ou Teams à 80% de votre budget." },
+    {
+      title: "Faites votre premier appel API",
+      desc: "Changez l'URL d'endpoint. Gardez votre code. C'est tout.",
+    },
+    {
+      title: "Observez le dashboard",
+      desc: "Chaque token, chaque coût — en temps réel.",
+    },
+    {
+      title: "Configurez un webhook",
+      desc: "Recevez des alertes Slack ou Teams à 80% de votre budget.",
+    },
   ],
   stepsWithoutProvider: [
-    { title: "Connectez un provider", desc: "Ajoutez votre clé OpenAI, Anthropic ou Mistral dans Paramètres." },
-    { title: "Faites votre premier appel API", desc: "Changez l'URL d'endpoint. Gardez votre code." },
-    { title: "Observez le dashboard", desc: "Chaque token, chaque coût — en temps réel." },
+    {
+      title: "Connectez un provider",
+      desc: "Ajoutez votre clé OpenAI, Anthropic ou Mistral dans Paramètres.",
+    },
+    {
+      title: "Faites votre premier appel API",
+      desc: "Changez l'URL d'endpoint. Gardez votre code.",
+    },
+    {
+      title: "Observez le dashboard",
+      desc: "Chaque token, chaque coût — en temps réel.",
+    },
   ],
   hint: "Des questions ? Répondez à cet email — nous lisons tout.",
   tagline: "Une passerelle. Tous les LLMs.",
@@ -138,7 +187,8 @@ const contentFr = {
 
 const main = {
   backgroundColor: "#f6f9fc",
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif',
 };
 const container = {
   backgroundColor: "#ffffff",
@@ -147,12 +197,31 @@ const container = {
   padding: "0 0 48px",
   borderRadius: "8px",
 };
-const headerSection = { padding: "32px 40px", borderBottom: "1px solid #e6ebf1" };
-const logo = { color: "#1B4F82", fontSize: "28px", fontWeight: "700", margin: "0" };
+const headerSection = {
+  padding: "32px 40px",
+  borderBottom: "1px solid #e6ebf1",
+};
+const logo = {
+  color: "#1B4F82",
+  fontSize: "28px",
+  fontWeight: "700",
+  margin: "0",
+};
 const contentSection = { padding: "40px 40px 0" };
 const greeting = { color: "#718096", fontSize: "15px", margin: "0 0 8px" };
-const h1 = { color: "#1a1a1a", fontSize: "24px", fontWeight: "700", lineHeight: "1.3", margin: "0 0 16px" };
-const text = { color: "#4a5568", fontSize: "15px", lineHeight: "1.7", margin: "0 0 24px" };
+const h1 = {
+  color: "#1a1a1a",
+  fontSize: "24px",
+  fontWeight: "700",
+  lineHeight: "1.3",
+  margin: "0 0 16px",
+};
+const text = {
+  color: "#4a5568",
+  fontSize: "15px",
+  lineHeight: "1.7",
+  margin: "0 0 24px",
+};
 const ctaWrap = { margin: "0 0 32px" };
 const button = {
   backgroundColor: "#1B4F82",
@@ -165,9 +234,20 @@ const button = {
   display: "inline-block",
 };
 const divider = { borderColor: "#e6ebf1", margin: "24px 0" };
-const sectionLabel = { color: "#a0aec0", fontSize: "11px", fontWeight: "600", letterSpacing: "0.08em", textTransform: "uppercase" as const, margin: "0 0 16px" };
+const sectionLabel = {
+  color: "#a0aec0",
+  fontSize: "11px",
+  fontWeight: "600",
+  letterSpacing: "0.08em",
+  textTransform: "uppercase" as const,
+  margin: "0 0 16px",
+};
 const stepsSection = { margin: "0 0 8px" };
-const stepRow = { display: "flex", alignItems: "flex-start", marginBottom: "16px" };
+const stepRow = {
+  display: "flex",
+  alignItems: "flex-start",
+  marginBottom: "16px",
+};
 const stepNumber = {
   backgroundColor: "#EBF4FF",
   color: "#1B4F82",
@@ -182,9 +262,28 @@ const stepNumber = {
   flexShrink: 0,
 };
 const stepContent = { flex: 1 };
-const stepTitle = { color: "#1a1a1a", fontSize: "14px", fontWeight: "600", margin: "0 0 2px" };
-const stepDesc = { color: "#718096", fontSize: "13px", lineHeight: "1.5", margin: "0" };
+const stepTitle = {
+  color: "#1a1a1a",
+  fontSize: "14px",
+  fontWeight: "600",
+  margin: "0 0 2px",
+};
+const stepDesc = {
+  color: "#718096",
+  fontSize: "13px",
+  lineHeight: "1.5",
+  margin: "0",
+};
 const hint = { color: "#a0aec0", fontSize: "13px", margin: "0" };
-const footer = { borderTop: "1px solid #e6ebf1", padding: "24px 40px", textAlign: "center" as const };
-const footerText = { color: "#a0aec0", fontSize: "12px", lineHeight: "1.6", margin: "0 0 4px" };
+const footer = {
+  borderTop: "1px solid #e6ebf1",
+  padding: "24px 40px",
+  textAlign: "center" as const,
+};
+const footerText = {
+  color: "#a0aec0",
+  fontSize: "12px",
+  lineHeight: "1.6",
+  margin: "0 0 4px",
+};
 const footerLink = { color: "#a0aec0", textDecoration: "underline" };

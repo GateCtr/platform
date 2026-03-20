@@ -15,7 +15,11 @@ export async function GET(request: NextRequest) {
 
   const where = {
     ...(resource ? { resource } : {}),
-    ...(status === "success" ? { success: true } : status === "failed" ? { success: false } : {}),
+    ...(status === "success"
+      ? { success: true }
+      : status === "failed"
+        ? { success: false }
+        : {}),
     ...(search
       ? {
           user: {
@@ -32,7 +36,8 @@ export async function GET(request: NextRequest) {
     include: { user: { select: { email: true, name: true } } },
   });
 
-  const header = "id,timestamp,user,resource,action,resourceId,ip,success,error";
+  const header =
+    "id,timestamp,user,resource,action,resourceId,ip,success,error";
   const rows = logs.map((l) =>
     [
       l.id,

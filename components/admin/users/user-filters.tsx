@@ -3,7 +3,11 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Search, Download } from "lucide-react";
 import type { StatusFilter, RoleFilter, PlanFilter } from "./types";
@@ -23,8 +27,16 @@ interface Props {
 }
 
 export function UserFilters({
-  search, statusFilter, roleFilter, planFilter,
-  onSearch, onStatus, onRole, onPlan, onExport, t,
+  search,
+  statusFilter,
+  roleFilter,
+  planFilter,
+  onSearch,
+  onStatus,
+  onRole,
+  onPlan,
+  onExport,
+  t,
 }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -37,8 +49,13 @@ export function UserFilters({
           className="h-8 pl-8 text-sm"
         />
       </div>
-      <Select value={statusFilter} onValueChange={(v) => onStatus(v as StatusFilter)}>
-        <SelectTrigger className="h-8 text-sm w-[130px]"><SelectValue /></SelectTrigger>
+      <Select
+        value={statusFilter}
+        onValueChange={(v) => onStatus(v as StatusFilter)}
+      >
+        <SelectTrigger className="h-8 text-sm w-[130px]">
+          <SelectValue />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">{t("filters.allStatuses")}</SelectItem>
           <SelectItem value="active">{t("status.active")}</SelectItem>
@@ -47,14 +64,22 @@ export function UserFilters({
         </SelectContent>
       </Select>
       <Select value={roleFilter} onValueChange={(v) => onRole(v as RoleFilter)}>
-        <SelectTrigger className="h-8 text-sm w-[130px]"><SelectValue /></SelectTrigger>
+        <SelectTrigger className="h-8 text-sm w-[130px]">
+          <SelectValue />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">{t("filters.allRoles")}</SelectItem>
-          {ALL_ROLES.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
+          {ALL_ROLES.map((r) => (
+            <SelectItem key={r} value={r}>
+              {r}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
       <Select value={planFilter} onValueChange={(v) => onPlan(v as PlanFilter)}>
-        <SelectTrigger className="h-8 text-sm w-[120px]"><SelectValue /></SelectTrigger>
+        <SelectTrigger className="h-8 text-sm w-[120px]">
+          <SelectValue />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">{t("filters.allPlans")}</SelectItem>
           <SelectItem value="FREE">Free</SelectItem>
@@ -63,7 +88,12 @@ export function UserFilters({
           <SelectItem value="ENTERPRISE">Enterprise</SelectItem>
         </SelectContent>
       </Select>
-      <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={onExport}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="h-8 gap-1.5"
+        onClick={onExport}
+      >
         <Download className="size-3.5" />
         <span className="hidden sm:inline">{t("filters.export")}</span>
       </Button>

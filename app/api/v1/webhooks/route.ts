@@ -8,20 +8,29 @@ import { randomBytes } from "crypto";
 
 export async function POST(req: NextRequest) {
   const { userId: clerkId } = await auth();
-  if (!clerkId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!clerkId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dbUser = await prisma.user.findUnique({
     where: { clerkId },
     select: { id: true },
   });
-  if (!dbUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
+  if (!dbUser)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   const quotaResult = await checkQuota(dbUser.id, "webhooks");
   if (!quotaResult.allowed) return quotaExceededResponse(quotaResult);
 
-  const body = await req.json() as { name?: string; url?: string; events?: string[] };
+  const body = (await req.json()) as {
+    name?: string;
+    url?: string;
+    events?: string[];
+  };
   if (!body.name || !body.url) {
-    return NextResponse.json({ error: "name and url are required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "name and url are required" },
+      { status: 400 },
+    );
   }
 
   const secret = `whsec_${randomBytes(24).toString("hex")}`;

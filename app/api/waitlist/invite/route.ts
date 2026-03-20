@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
     const { entryIds, expiryDays } = inviteSchema.parse(body);
 
     // ── Rate limit: 30 admin actions/min ─────────────────────────────────────
-    const { userId } = await import("@clerk/nextjs/server").then((m) => m.auth());
+    const { userId } = await import("@clerk/nextjs/server").then((m) =>
+      m.auth(),
+    );
     if (userId) {
       const rl = await rateLimit(userId, RATE_LIMITS.admin);
       if (!rl.allowed) return rateLimitResponse(rl);
@@ -75,9 +77,14 @@ export async function POST(request: NextRequest) {
         });
 
         // Send invite email (async, don't wait)
-        sendInviteEmail(entry.email, entry.name, inviteCode, expiresAt, expiryDays).catch(
-          (err) =>
-            console.error(`Failed to send invite to ${entry.email}:`, err),
+        sendInviteEmail(
+          entry.email,
+          entry.name,
+          inviteCode,
+          expiresAt,
+          expiryDays,
+        ).catch((err) =>
+          console.error(`Failed to send invite to ${entry.email}:`, err),
         );
 
         results.success.push(entryId);

@@ -18,7 +18,10 @@ export default function AuditLogsLoading() {
           ))}
         </div>
         {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="px-4 py-3 grid grid-cols-5 gap-4 border-t border-border items-center">
+          <div
+            key={i}
+            className="px-4 py-3 grid grid-cols-5 gap-4 border-t border-border items-center"
+          >
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-4 w-24 font-mono" />
             <Skeleton className="h-4 w-20" />

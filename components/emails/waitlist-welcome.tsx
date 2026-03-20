@@ -27,10 +27,11 @@ export default function WaitlistWelcomeEmail({
       <Preview>{`Position #${position} on the GateCtr waitlist. We'll email you when your spot opens.`}</Preview>
       <Body style={main}>
         <Container style={container}>
-
           {/* ── Logo ── */}
           <Section style={logoSection}>
-            <Text style={logoText}>Gate<span style={logoAccent}>Ctr</span></Text>
+            <Text style={logoText}>
+              Gate<span style={logoAccent}>Ctr</span>
+            </Text>
           </Section>
 
           <Hr style={divider} />
@@ -40,8 +41,8 @@ export default function WaitlistWelcomeEmail({
             <Text style={greeting}>Hi{name ? ` ${name}` : ""},</Text>
             <Text style={h1}>You&apos;re in. Position #{position}.</Text>
             <Text style={subtext}>
-              We&apos;ll email <strong>{email}</strong> when your spot opens.
-              No spam. One email.
+              We&apos;ll email <strong>{email}</strong> when your spot opens. No
+              spam. One email.
             </Text>
 
             {/* Position badge */}
@@ -58,7 +59,9 @@ export default function WaitlistWelcomeEmail({
             <Section style={featureRow}>
               <Text style={featureIcon}>💰</Text>
               <Text style={featureTitle}>Budget Firewall</Text>
-              <Text style={featureDesc}>Hard caps. Soft alerts. No surprise invoices.</Text>
+              <Text style={featureDesc}>
+                Hard caps. Soft alerts. No surprise invoices.
+              </Text>
             </Section>
 
             <Section style={featureRow}>
@@ -70,13 +73,17 @@ export default function WaitlistWelcomeEmail({
             <Section style={featureRow}>
               <Text style={featureIcon}>🎯</Text>
               <Text style={featureTitle}>Model Router</Text>
-              <Text style={featureDesc}>GateCtr picks the right LLM. You pay less.</Text>
+              <Text style={featureDesc}>
+                GateCtr picks the right LLM. You pay less.
+              </Text>
             </Section>
 
             <Section style={featureRow}>
               <Text style={featureIcon}>📊</Text>
               <Text style={featureTitle}>Usage Dashboard</Text>
-              <Text style={featureDesc}>Every token. Every cost. Real-time.</Text>
+              <Text style={featureDesc}>
+                Every token. Every cost. Real-time.
+              </Text>
             </Section>
           </Section>
 
@@ -86,10 +93,11 @@ export default function WaitlistWelcomeEmail({
           <Section style={footer}>
             <Text style={footerText}>GateCtr — One gateway. Every LLM.</Text>
             <Text style={footerText}>
-              <Link href="https://gatectr.com" style={footerLink}>gatectr.com</Link>
+              <Link href="https://gatectr.com" style={footerLink}>
+                gatectr.com
+              </Link>
             </Text>
           </Section>
-
         </Container>
       </Body>
     </Html>
@@ -100,7 +108,8 @@ export default function WaitlistWelcomeEmail({
 
 const main: React.CSSProperties = {
   backgroundColor: "#f4f7fb",
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 };
 
 const container: React.CSSProperties = {

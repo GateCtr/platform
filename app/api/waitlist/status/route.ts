@@ -5,7 +5,10 @@ export async function GET(request: NextRequest) {
   const email = request.nextUrl.searchParams.get("email");
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: "Valid email required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Valid email required" },
+      { status: 400 },
+    );
   }
 
   const entry = await prisma.waitlistEntry.findUnique({

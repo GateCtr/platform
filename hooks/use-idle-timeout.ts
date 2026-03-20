@@ -2,7 +2,14 @@
 
 import { useEffect, useRef, useCallback } from "react";
 
-const ACTIVITY_EVENTS = ["mousedown", "mousemove", "keydown", "scroll", "touchstart", "click"] as const;
+const ACTIVITY_EVENTS = [
+  "mousedown",
+  "mousemove",
+  "keydown",
+  "scroll",
+  "touchstart",
+  "click",
+] as const;
 
 interface UseIdleTimeoutOptions {
   /** Time in ms before showing the warning dialog (default: 13 min) */
@@ -34,22 +41,29 @@ export function useIdleTimeout({
   }, [clearTimers, onIdle, onActivity, idleMs]);
 
   // Expose a way to start the warning countdown separately
-  const startWarningCountdown = useCallback((onExpire: () => void) => {
-    if (warningTimer.current) clearTimeout(warningTimer.current);
-    warningTimer.current = setTimeout(onExpire, warningMs);
-  }, [warningMs]);
+  const startWarningCountdown = useCallback(
+    (onExpire: () => void) => {
+      if (warningTimer.current) clearTimeout(warningTimer.current);
+      warningTimer.current = setTimeout(onExpire, warningMs);
+    },
+    [warningMs],
+  );
 
   const cancelWarning = useCallback(() => {
     if (warningTimer.current) clearTimeout(warningTimer.current);
   }, []);
 
   useEffect(() => {
-    ACTIVITY_EVENTS.forEach((e) => window.addEventListener(e, resetTimers, { passive: true }));
+    ACTIVITY_EVENTS.forEach((e) =>
+      window.addEventListener(e, resetTimers, { passive: true }),
+    );
     resetTimers(); // start on mount
 
     return () => {
       clearTimers();
-      ACTIVITY_EVENTS.forEach((e) => window.removeEventListener(e, resetTimers));
+      ACTIVITY_EVENTS.forEach((e) =>
+        window.removeEventListener(e, resetTimers),
+      );
     };
   }, [resetTimers, clearTimers]);
 

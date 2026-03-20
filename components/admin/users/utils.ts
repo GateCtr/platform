@@ -9,13 +9,20 @@ export function formatRelative(dateStr: string, locale: string): string {
   const diffDays = Math.floor(diffHours / 24);
 
   if (diffMins < 1) return locale === "fr" ? "À l'instant" : "Just now";
-  if (diffMins < 60) return locale === "fr" ? `Il y a ${diffMins}m` : `${diffMins}m ago`;
-  if (diffHours < 24) return locale === "fr" ? `Il y a ${diffHours}h` : `${diffHours}h ago`;
-  if (diffDays < 7) return locale === "fr" ? `Il y a ${diffDays}j` : `${diffDays}d ago`;
+  if (diffMins < 60)
+    return locale === "fr" ? `Il y a ${diffMins}m` : `${diffMins}m ago`;
+  if (diffHours < 24)
+    return locale === "fr" ? `Il y a ${diffHours}h` : `${diffHours}h ago`;
+  if (diffDays < 7)
+    return locale === "fr" ? `Il y a ${diffDays}j` : `${diffDays}d ago`;
   return date.toLocaleDateString(locale);
 }
 
-export function sortUsers(users: UserRow[], field: SortField, dir: SortDir): UserRow[] {
+export function sortUsers(
+  users: UserRow[],
+  field: SortField,
+  dir: SortDir,
+): UserRow[] {
   return [...users].sort((a, b) => {
     let cmp = 0;
     switch (field) {
@@ -31,8 +38,9 @@ export function sortUsers(users: UserRow[], field: SortField, dir: SortDir): Use
         cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         break;
       case "lastLoginAt":
-        cmp = (a.lastLoginAt ? new Date(a.lastLoginAt).getTime() : 0)
-            - (b.lastLoginAt ? new Date(b.lastLoginAt).getTime() : 0);
+        cmp =
+          (a.lastLoginAt ? new Date(a.lastLoginAt).getTime() : 0) -
+          (b.lastLoginAt ? new Date(b.lastLoginAt).getTime() : 0);
         break;
       case "tokenUsage":
         cmp = a.tokenUsage - b.tokenUsage;
@@ -43,7 +51,17 @@ export function sortUsers(users: UserRow[], field: SortField, dir: SortDir): Use
 }
 
 export function exportCsv(users: UserRow[]) {
-  const headers = ["Name", "Email", "Plan", "Status", "Roles", "Tokens (30d)", "Projects", "Joined", "Last Login"];
+  const headers = [
+    "Name",
+    "Email",
+    "Plan",
+    "Status",
+    "Roles",
+    "Tokens (30d)",
+    "Projects",
+    "Joined",
+    "Last Login",
+  ];
   const rows = users.map((u) => [
     u.name ?? "",
     u.email,
@@ -56,7 +74,9 @@ export function exportCsv(users: UserRow[]) {
     u.lastLoginAt ? new Date(u.lastLoginAt).toISOString().split("T")[0] : "",
   ]);
 
-  const csv = [headers, ...rows].map((r) => r.map((v) => `"${v}"`).join(",")).join("\n");
+  const csv = [headers, ...rows]
+    .map((r) => r.map((v) => `"${v}"`).join(","))
+    .join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");

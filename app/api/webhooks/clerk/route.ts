@@ -149,7 +149,14 @@ export async function POST(req: Request) {
 async function handleUserCreated(evt: WebhookEvent, req: Request) {
   if (evt.type !== "user.created") return;
 
-  const { id, email_addresses, first_name, last_name, image_url, external_accounts } = evt.data;
+  const {
+    id,
+    email_addresses,
+    first_name,
+    last_name,
+    image_url,
+    external_accounts,
+  } = evt.data;
 
   const email = email_addresses[0]?.email_address;
   if (!email) {
@@ -209,8 +216,8 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
   // This ensures the JWT always has the key explicitly set, so the middleware
   // can distinguish "not done yet" (false) from "stale JWT" (undefined).
   try {
-    const { createClerkClient } = await import("@clerk/backend");
-    const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    const { clerkClient } = await import("@clerk/nextjs/server");
+    const clerk = await clerkClient();
     await clerk.users.updateUser(id, {
       publicMetadata: { onboardingComplete: false },
     });
@@ -279,7 +286,14 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
 async function handleUserUpdated(evt: WebhookEvent) {
   if (evt.type !== "user.updated") return;
 
-  const { id, email_addresses, first_name, last_name, image_url, external_accounts } = evt.data;
+  const {
+    id,
+    email_addresses,
+    first_name,
+    last_name,
+    image_url,
+    external_accounts,
+  } = evt.data;
 
   const email = email_addresses[0]?.email_address;
   if (!email) {
@@ -299,9 +313,12 @@ async function handleUserUpdated(evt: WebhookEvent) {
   }
 
   // Re-derive authProvider in case user linked a new OAuth account
-  const authProvider = external_accounts && external_accounts.length > 0
-    ? (external_accounts[0] as { provider?: string }).provider?.replace("oauth_", "").toLowerCase() ?? "email"
-    : existingUser.authProvider ?? "email";
+  const authProvider =
+    external_accounts && external_accounts.length > 0
+      ? ((external_accounts[0] as { provider?: string }).provider
+          ?.replace("oauth_", "")
+          .toLowerCase() ?? "email")
+      : (existingUser.authProvider ?? "email");
 
   // Update user in database
   const updatedUser = await prisma.user.update({
@@ -391,8 +408,8 @@ async function handleSessionCreated(evt: WebhookEvent) {
   // Fetch latest external_accounts from Clerk to get current auth provider
   let authProvider: string | undefined;
   try {
-    const { createClerkClient } = await import("@clerk/backend");
-    const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    const { clerkClient } = await import("@clerk/nextjs/server");
+    const clerk = await clerkClient();
     const clerkUser = await clerk.users.getUser(clerkId);
     const ext = clerkUser.externalAccounts?.[0];
     if (ext) {

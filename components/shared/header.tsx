@@ -61,7 +61,8 @@ function DesktopActions() {
   const t = useTranslations("common.nav");
   const { isSignedIn, isLoaded } = useAuth();
 
-  if (!isLoaded) return <div className="hidden md:flex items-center gap-1 w-48" />;
+  if (!isLoaded)
+    return <div className="hidden md:flex items-center gap-1 w-48" />;
 
   return (
     <div className="hidden md:flex items-center gap-1">
@@ -143,12 +144,22 @@ function MobileSheet() {
             </Button>
           ) : (
             <>
-              <Button variant="cta-secondary" size="sm" asChild className="w-full">
+              <Button
+                variant="cta-secondary"
+                size="sm"
+                asChild
+                className="w-full"
+              >
                 <SheetClose asChild>
                   <a href={appUrl("/sign-in")}>{t("signIn")}</a>
                 </SheetClose>
               </Button>
-              <Button variant="cta-primary" size="sm" asChild className="w-full">
+              <Button
+                variant="cta-primary"
+                size="sm"
+                asChild
+                className="w-full"
+              >
                 <SheetClose asChild>
                   <a href={appUrl("/sign-up")}>{t("signUp")}</a>
                 </SheetClose>

@@ -46,7 +46,8 @@ export async function createWorkspace(formData: FormData) {
   if (!userId) return { error: "not_authenticated" };
 
   const workspaceName = formData.get("workspaceName")?.toString().trim();
-  if (!workspaceName || workspaceName.length < 2) return { error: "name_required" };
+  if (!workspaceName || workspaceName.length < 2)
+    return { error: "name_required" };
 
   const usageType = formData.get("usageType")?.toString() ?? "solo";
 
@@ -118,7 +119,13 @@ export async function connectProvider(formData: FormData) {
 
     await prisma.lLMProviderKey.upsert({
       where: { userId_provider_name: { userId: dbUser.id, provider, name } },
-      create: { userId: dbUser.id, provider, name, encryptedApiKey, isActive: true },
+      create: {
+        userId: dbUser.id,
+        provider,
+        name,
+        encryptedApiKey,
+        isActive: true,
+      },
       update: { encryptedApiKey, isActive: true },
     });
 
@@ -145,8 +152,14 @@ export async function setupBudget(formData: FormData) {
   const { userId } = await auth();
   if (!userId) return { error: "not_authenticated" };
 
-  const monthlyTokens = parseInt(formData.get("monthlyTokenLimit")?.toString() ?? "0", 10);
-  const alertThreshold = parseInt(formData.get("alertThreshold")?.toString() ?? "80", 10);
+  const monthlyTokens = parseInt(
+    formData.get("monthlyTokenLimit")?.toString() ?? "0",
+    10,
+  );
+  const alertThreshold = parseInt(
+    formData.get("alertThreshold")?.toString() ?? "80",
+    10,
+  );
   const hardStop = formData.get("hardStop") === "true";
 
   try {
@@ -241,9 +254,11 @@ export async function finalizeOnboarding(formData: FormData) {
     const meta = (dbUser.metadata as Record<string, unknown>) ?? {};
 
     // Check if provider was connected
-    const hasProvider = await prisma.lLMProviderKey.count({
-      where: { userId: dbUser.id, isActive: true },
-    }).then((c) => c > 0);
+    const hasProvider = await prisma.lLMProviderKey
+      .count({
+        where: { userId: dbUser.id, isActive: true },
+      })
+      .then((c) => c > 0);
 
     // Get workspace name for email
     const team = await prisma.team.findFirst({
@@ -261,7 +276,8 @@ export async function finalizeOnboarding(formData: FormData) {
     // Sync to Clerk — read-then-merge
     const client = await clerkClient();
     const clerkUser = await client.users.getUser(userId);
-    const existingMeta = (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
+    const existingMeta =
+      (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
     await client.users.updateUser(userId, {
       publicMetadata: { ...existingMeta, onboardingComplete: true },
     });

@@ -30,15 +30,17 @@ export default async function DashboardLayout({
               nextPlan={upsell.nextPlan}
             />
           )}
-          {upsell.show && upsell.percentUsed >= 80 && upsell.percentUsed < 100 && (
-            <UpsellBanner
-              quotaType={upsell.quotaType}
-              percentUsed={upsell.percentUsed}
-              currentLimit={upsell.currentLimit}
-              nextPlanLimit={upsell.nextPlanLimit}
-              nextPlan={upsell.nextPlan}
-            />
-          )}
+          {upsell.show &&
+            upsell.percentUsed >= 80 &&
+            upsell.percentUsed < 100 && (
+              <UpsellBanner
+                quotaType={upsell.quotaType}
+                percentUsed={upsell.percentUsed}
+                currentLimit={upsell.currentLimit}
+                nextPlanLimit={upsell.nextPlanLimit}
+                nextPlan={upsell.nextPlan}
+              />
+            )}
           {children}
         </div>
       </SidebarInset>

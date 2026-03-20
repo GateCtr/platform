@@ -19,13 +19,27 @@ interface Props {
   locale: string;
 }
 
-export function UserCards({ users, canWrite, onView, onRemoveRole, onConfirm, onBanOpen, t, locale }: Props) {
+export function UserCards({
+  users,
+  canWrite,
+  onView,
+  onRemoveRole,
+  onConfirm,
+  onBanOpen,
+  t,
+  locale,
+}: Props) {
   if (users.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-2 md:hidden">
       {users.map((user) => {
-        const initials = (user.name ?? user.email).split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+        const initials = (user.name ?? user.email)
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
         return (
           <div
             key={user.id}
@@ -34,17 +48,25 @@ export function UserCards({ users, canWrite, onView, onRemoveRole, onConfirm, on
           >
             <Avatar className="size-9 rounded-lg shrink-0">
               <AvatarImage src={user.avatarUrl ?? undefined} />
-              <AvatarFallback className="text-[11px] font-semibold rounded-lg">{initials}</AvatarFallback>
+              <AvatarFallback className="text-[11px] font-semibold rounded-lg">
+                {initials}
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0 flex flex-col gap-1.5">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="text-sm font-medium truncate">{user.name ?? "—"}</p>
-                  <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
+                  <p className="text-sm font-medium truncate">
+                    {user.name ?? "—"}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground truncate">
+                    {user.email}
+                  </p>
                 </div>
                 <div onClick={(e) => e.stopPropagation()}>
                   <ActionsMenu
-                    user={user} canWrite={canWrite} t={t}
+                    user={user}
+                    canWrite={canWrite}
+                    t={t}
                     onView={() => onView(user)}
                     onRemoveRole={() => onRemoveRole(user)}
                     onConfirm={(type) => onConfirm(type, user)}
@@ -54,14 +76,26 @@ export function UserCards({ users, canWrite, onView, onRemoveRole, onConfirm, on
               </div>
               <div className="flex flex-wrap gap-1">
                 <StatusBadge user={user} t={t} />
-                <Badge variant="outline" className={`text-[10px] h-5 px-1.5 ${PLAN_STYLE[user.plan]}`}>{user.plan}</Badge>
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] h-5 px-1.5 ${PLAN_STYLE[user.plan]}`}
+                >
+                  {user.plan}
+                </Badge>
                 {user.roles.map((r) => (
-                  <Badge key={r.name} variant="outline" className={`text-[10px] h-5 px-1.5 ${ROLE_STYLE[r.name] ?? ROLE_STYLE.VIEWER}`}>{r.displayName}</Badge>
+                  <Badge
+                    key={r.name}
+                    variant="outline"
+                    className={`text-[10px] h-5 px-1.5 ${ROLE_STYLE[r.name] ?? ROLE_STYLE.VIEWER}`}
+                  >
+                    {r.displayName}
+                  </Badge>
                 ))}
               </div>
               {user.lastLoginAt && (
                 <p className="text-[10px] text-muted-foreground/70">
-                  {t("table.lastLogin")}: {formatRelative(user.lastLoginAt, locale)}
+                  {t("table.lastLogin")}:{" "}
+                  {formatRelative(user.lastLoginAt, locale)}
                 </p>
               )}
             </div>

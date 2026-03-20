@@ -11,7 +11,10 @@ export default function WaitlistLoading() {
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-lg border border-border p-5 flex items-center justify-between gap-4">
+          <div
+            key={i}
+            className="rounded-lg border border-border p-5 flex items-center justify-between gap-4"
+          >
             <div className="flex flex-col gap-2">
               <Skeleton className="h-3 w-16" />
               <Skeleton className="h-8 w-12" />
@@ -38,7 +41,10 @@ export default function WaitlistLoading() {
           ))}
         </div>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="px-4 py-3 grid grid-cols-6 gap-4 border-t border-border items-center">
+          <div
+            key={i}
+            className="px-4 py-3 grid grid-cols-6 gap-4 border-t border-border items-center"
+          >
             <Skeleton className="h-4 w-4 rounded" />
             <Skeleton className="h-5 w-10 rounded-full" />
             <div className="flex items-center gap-2.5">

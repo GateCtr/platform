@@ -8,10 +8,22 @@
     "headline": "Une passerelle.\nTous les LLMs.",
     "tagline": "Un seul endpoint. Vos clés restent les vôtres.\nGateCtr contrôle. Vous économisez.",
     "features": {
-      "optimizer": { "label": "-40% de tokens", "sub": "Context Optimizer sur chaque requête." },
-      "firewall":  { "label": "Budget Firewall", "sub": "Limites strictes. Zéro facture surprise." },
-      "router":    { "label": "Model Router", "sub": "Bon modèle. Bon coût. Automatique." },
-      "security":  { "label": "Votre clé reste la vôtre", "sub": "AES-256. Jamais stockée en clair." }
+      "optimizer": {
+        "label": "-40% de tokens",
+        "sub": "Context Optimizer sur chaque requête."
+      },
+      "firewall": {
+        "label": "Budget Firewall",
+        "sub": "Limites strictes. Zéro facture surprise."
+      },
+      "router": {
+        "label": "Model Router",
+        "sub": "Bon modèle. Bon coût. Automatique."
+      },
+      "security": {
+        "label": "Votre clé reste la vôtre",
+        "sub": "AES-256. Jamais stockée en clair."
+      }
     },
     "copyright": "© {year} GateCtr"
   },

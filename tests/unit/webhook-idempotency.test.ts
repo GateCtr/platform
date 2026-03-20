@@ -161,74 +161,111 @@ describe("Property 4: Webhook idempotency", () => {
     process.env.STRIPE_WEBHOOK_SECRET = "whsec_test_secret";
   });
 
-  it(
-    "returns 200 on duplicate event without calling any DB write (≥100 iterations)",
-    async () => {
-      const { POST } = await import("@/app/api/webhooks/stripe/route");
+  it("returns 200 on duplicate event without calling any DB write (≥100 iterations)", async () => {
+    const { POST } = await import("@/app/api/webhooks/stripe/route");
 
-      await fc.assert(
-        fc.asyncProperty(
-          // Generate arbitrary event IDs
-          fc.string({ minLength: 5, maxLength: 64 }).filter((s) => s.trim().length > 0),
-          async (eventId) => {
-            vi.clearAllMocks();
+    await fc.assert(
+      fc.asyncProperty(
+        // Generate arbitrary event IDs
+        fc
+          .string({ minLength: 5, maxLength: 64 })
+          .filter((s) => s.trim().length > 0),
+        async (eventId) => {
+          vi.clearAllMocks();
 
-            const event = makeCheckoutEvent(eventId);
-            const rawBody = JSON.stringify(event);
+          const event = makeCheckoutEvent(eventId);
+          const rawBody = JSON.stringify(event);
 
-            // constructEvent always succeeds
-            mockConstructEvent.mockReturnValue(event);
+          // constructEvent always succeeds
+          mockConstructEvent.mockReturnValue(event);
 
-            // First call: stripeEvent.create succeeds
-            mockStripeEventCreate.mockResolvedValueOnce({ id: eventId, processed: false });
-            // stripe.subscriptions.retrieve needed by handleCheckoutCompleted
-            const { stripe: stripeMock } = await import("@/lib/stripe");
-            vi.mocked(stripeMock.subscriptions.retrieve).mockResolvedValue({
-              id: "sub_test_123",
-              items: { data: [{ id: "si_1", price: { id: "price_pro", recurring: { usage_type: "licensed" } } }] },
-              cancel_at_period_end: false,
-              current_period_start: 1700000000,
-              current_period_end: 1702592000,
-              trial_end: null,
-              status: "active",
-            } as never);
-            mockUserFindUnique.mockResolvedValue({ id: "user_test_123", email: "test@example.com", locale: "en", plan: "FREE", clerkId: "user_test_123" });
-            mockPlanFindUnique.mockResolvedValue({ id: "plan-pro", name: "PRO" });
-            mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) => Promise.all(ops));
-            mockSubscriptionUpsert.mockResolvedValue({ userId: "user_test_123", status: "ACTIVE" });
-            mockUserUpdate.mockResolvedValue({ id: "user_test_123", plan: "PRO" });
-            mockPlanFindFirst.mockResolvedValue({ name: "PRO" });
-            mockStripeEventUpdate.mockResolvedValue({ id: eventId, processed: true });
+          // First call: stripeEvent.create succeeds
+          mockStripeEventCreate.mockResolvedValueOnce({
+            id: eventId,
+            processed: false,
+          });
+          // stripe.subscriptions.retrieve needed by handleCheckoutCompleted
+          const { stripe: stripeMock } = await import("@/lib/stripe");
+          vi.mocked(stripeMock.subscriptions.retrieve).mockResolvedValue({
+            id: "sub_test_123",
+            items: {
+              data: [
+                {
+                  id: "si_1",
+                  price: {
+                    id: "price_pro",
+                    recurring: { usage_type: "licensed" },
+                  },
+                },
+              ],
+            },
+            cancel_at_period_end: false,
+            current_period_start: 1700000000,
+            current_period_end: 1702592000,
+            trial_end: null,
+            status: "active",
+          } as never);
+          mockUserFindUnique.mockResolvedValue({
+            id: "user_test_123",
+            email: "test@example.com",
+            locale: "en",
+            plan: "FREE",
+            clerkId: "user_test_123",
+          });
+          mockPlanFindUnique.mockResolvedValue({ id: "plan-pro", name: "PRO" });
+          mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+            Promise.all(ops),
+          );
+          mockSubscriptionUpsert.mockResolvedValue({
+            userId: "user_test_123",
+            status: "ACTIVE",
+          });
+          mockUserUpdate.mockResolvedValue({
+            id: "user_test_123",
+            plan: "PRO",
+          });
+          mockPlanFindFirst.mockResolvedValue({ name: "PRO" });
+          mockStripeEventUpdate.mockResolvedValue({
+            id: eventId,
+            processed: true,
+          });
 
-            const req1 = makeWebhookRequest(rawBody, "valid-sig");
-            const res1 = await POST(req1);
-            expect(res1.status).toBe(200);
+          const req1 = makeWebhookRequest(rawBody, "valid-sig");
+          const res1 = await POST(req1);
+          expect(res1.status).toBe(200);
 
-            // Capture DB write counts after first call
-            const upsertCountAfterFirst = mockSubscriptionUpsert.mock.calls.length;
-            const userUpdateCountAfterFirst = mockUserUpdate.mock.calls.length;
-            const stripeEventUpdateCountAfterFirst = mockStripeEventUpdate.mock.calls.length;
+          // Capture DB write counts after first call
+          const upsertCountAfterFirst =
+            mockSubscriptionUpsert.mock.calls.length;
+          const userUpdateCountAfterFirst = mockUserUpdate.mock.calls.length;
+          const stripeEventUpdateCountAfterFirst =
+            mockStripeEventUpdate.mock.calls.length;
 
-            // Second call (duplicate): stripeEvent.create throws P2002
-            mockConstructEvent.mockReturnValue(event);
-            mockStripeEventCreate.mockRejectedValueOnce(makePrismaUniqueError());
+          // Second call (duplicate): stripeEvent.create throws P2002
+          mockConstructEvent.mockReturnValue(event);
+          mockStripeEventCreate.mockRejectedValueOnce(makePrismaUniqueError());
 
-            const req2 = makeWebhookRequest(rawBody, "valid-sig");
-            const res2 = await POST(req2);
+          const req2 = makeWebhookRequest(rawBody, "valid-sig");
+          const res2 = await POST(req2);
 
-            // Must return 200 silently
-            expect(res2.status).toBe(200);
+          // Must return 200 silently
+          expect(res2.status).toBe(200);
 
-            // No additional DB writes must have occurred
-            expect(mockSubscriptionUpsert.mock.calls.length).toBe(upsertCountAfterFirst);
-            expect(mockUserUpdate.mock.calls.length).toBe(userUpdateCountAfterFirst);
-            expect(mockStripeEventUpdate.mock.calls.length).toBe(stripeEventUpdateCountAfterFirst);
-          },
-        ),
-        { numRuns: 100 },
-      );
-    },
-  );
+          // No additional DB writes must have occurred
+          expect(mockSubscriptionUpsert.mock.calls.length).toBe(
+            upsertCountAfterFirst,
+          );
+          expect(mockUserUpdate.mock.calls.length).toBe(
+            userUpdateCountAfterFirst,
+          );
+          expect(mockStripeEventUpdate.mock.calls.length).toBe(
+            stripeEventUpdateCountAfterFirst,
+          );
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
 
   it("returns 200 on duplicate regardless of event type", async () => {
     const { POST } = await import("@/app/api/webhooks/stripe/route");
@@ -283,10 +320,16 @@ describe("Property 4: Webhook idempotency", () => {
       user: { id: "user_test_123", email: "test@example.com", plan: "PRO" },
     });
     mockPlanFindUnique.mockResolvedValue({ id: "plan-free", name: "FREE" });
-    mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) => Promise.all(ops));
+    mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+      Promise.all(ops),
+    );
     mockSubscriptionUpdate.mockResolvedValue({ status: "CANCELED" });
     mockUserUpdate.mockResolvedValue({ plan: "FREE" });
-    mockUserFindUnique.mockResolvedValue({ id: "user_test_123", email: "test@example.com", locale: "en" });
+    mockUserFindUnique.mockResolvedValue({
+      id: "user_test_123",
+      email: "test@example.com",
+      locale: "en",
+    });
     mockPlanFindFirst.mockResolvedValue({ name: "FREE" });
     mockStripeEventUpdate.mockResolvedValue({ id: eventId, processed: true });
 
@@ -303,62 +346,84 @@ describe("Property 4: Webhook idempotency", () => {
     );
   });
 
-  it(
-    "DB state is identical after first and second delivery for any event ID (≥100 iterations)",
-    async () => {
-      const { POST } = await import("@/app/api/webhooks/stripe/route");
+  it("DB state is identical after first and second delivery for any event ID (≥100 iterations)", async () => {
+    const { POST } = await import("@/app/api/webhooks/stripe/route");
 
-      await fc.assert(
-        fc.asyncProperty(
-          fc.string({ minLength: 5, maxLength: 64 }).filter((s) => s.trim().length > 0),
-          async (eventId) => {
-            vi.clearAllMocks();
+    await fc.assert(
+      fc.asyncProperty(
+        fc
+          .string({ minLength: 5, maxLength: 64 })
+          .filter((s) => s.trim().length > 0),
+        async (eventId) => {
+          vi.clearAllMocks();
 
-            const event = makeDeletedEvent(eventId);
-            const rawBody = JSON.stringify(event);
+          const event = makeDeletedEvent(eventId);
+          const rawBody = JSON.stringify(event);
 
-            mockConstructEvent.mockReturnValue(event);
+          mockConstructEvent.mockReturnValue(event);
 
-            // First delivery
-            mockStripeEventCreate.mockResolvedValueOnce({ id: eventId, processed: false });
-            mockSubscriptionFindUnique.mockResolvedValue({
-              id: "sub-db-id",
-              userId: "user_test_123",
-              stripeSubscriptionId: "sub_test_123",
-              status: "ACTIVE",
-              user: { id: "user_test_123", email: "test@example.com", plan: "PRO" },
-            });
-            mockPlanFindUnique.mockResolvedValue({ id: "plan-free", name: "FREE" });
-            mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) => Promise.all(ops));
-            mockSubscriptionUpdate.mockResolvedValue({ status: "CANCELED" });
-            mockUserUpdate.mockResolvedValue({ plan: "FREE" });
-            mockUserFindUnique.mockResolvedValue({ id: "user_test_123", email: "test@example.com", locale: "en" });
-            mockPlanFindFirst.mockResolvedValue({ name: "FREE" });
-            mockStripeEventUpdate.mockResolvedValue({ id: eventId, processed: true });
+          // First delivery
+          mockStripeEventCreate.mockResolvedValueOnce({
+            id: eventId,
+            processed: false,
+          });
+          mockSubscriptionFindUnique.mockResolvedValue({
+            id: "sub-db-id",
+            userId: "user_test_123",
+            stripeSubscriptionId: "sub_test_123",
+            status: "ACTIVE",
+            user: {
+              id: "user_test_123",
+              email: "test@example.com",
+              plan: "PRO",
+            },
+          });
+          mockPlanFindUnique.mockResolvedValue({
+            id: "plan-free",
+            name: "FREE",
+          });
+          mockTransaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+            Promise.all(ops),
+          );
+          mockSubscriptionUpdate.mockResolvedValue({ status: "CANCELED" });
+          mockUserUpdate.mockResolvedValue({ plan: "FREE" });
+          mockUserFindUnique.mockResolvedValue({
+            id: "user_test_123",
+            email: "test@example.com",
+            locale: "en",
+          });
+          mockPlanFindFirst.mockResolvedValue({ name: "FREE" });
+          mockStripeEventUpdate.mockResolvedValue({
+            id: eventId,
+            processed: true,
+          });
 
-            await POST(makeWebhookRequest(rawBody, "valid-sig"));
+          await POST(makeWebhookRequest(rawBody, "valid-sig"));
 
-            // Snapshot DB call counts after first delivery
-            const snapshot = {
-              subscriptionUpdate: mockSubscriptionUpdate.mock.calls.length,
-              userUpdate: mockUserUpdate.mock.calls.length,
-              stripeEventUpdate: mockStripeEventUpdate.mock.calls.length,
-            };
+          // Snapshot DB call counts after first delivery
+          const snapshot = {
+            subscriptionUpdate: mockSubscriptionUpdate.mock.calls.length,
+            userUpdate: mockUserUpdate.mock.calls.length,
+            stripeEventUpdate: mockStripeEventUpdate.mock.calls.length,
+          };
 
-            // Second delivery (duplicate)
-            mockConstructEvent.mockReturnValue(event);
-            mockStripeEventCreate.mockRejectedValueOnce(makePrismaUniqueError());
+          // Second delivery (duplicate)
+          mockConstructEvent.mockReturnValue(event);
+          mockStripeEventCreate.mockRejectedValueOnce(makePrismaUniqueError());
 
-            await POST(makeWebhookRequest(rawBody, "valid-sig"));
+          await POST(makeWebhookRequest(rawBody, "valid-sig"));
 
-            // Counts must not have changed
-            expect(mockSubscriptionUpdate.mock.calls.length).toBe(snapshot.subscriptionUpdate);
-            expect(mockUserUpdate.mock.calls.length).toBe(snapshot.userUpdate);
-            expect(mockStripeEventUpdate.mock.calls.length).toBe(snapshot.stripeEventUpdate);
-          },
-        ),
-        { numRuns: 100 },
-      );
-    },
-  );
+          // Counts must not have changed
+          expect(mockSubscriptionUpdate.mock.calls.length).toBe(
+            snapshot.subscriptionUpdate,
+          );
+          expect(mockUserUpdate.mock.calls.length).toBe(snapshot.userUpdate);
+          expect(mockStripeEventUpdate.mock.calls.length).toBe(
+            snapshot.stripeEventUpdate,
+          );
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
 });

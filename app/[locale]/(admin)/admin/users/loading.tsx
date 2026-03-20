@@ -18,7 +18,10 @@ export default function UsersLoading() {
           ))}
         </div>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="px-4 py-3 grid grid-cols-4 gap-4 border-t border-border items-center">
+          <div
+            key={i}
+            className="px-4 py-3 grid grid-cols-4 gap-4 border-t border-border items-center"
+          >
             <div className="flex items-center gap-3">
               <Skeleton className="size-8 rounded-lg shrink-0" />
               <div className="flex flex-col gap-1.5">

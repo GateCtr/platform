@@ -33,14 +33,19 @@ async function getDbUser(clerkId: string) {
 }
 
 /** Fetch primary email + name from Clerk */
-async function getClerkContact(clerkId: string): Promise<{ email: string; name: string | null; locale: "en" | "fr" }> {
+async function getClerkContact(
+  clerkId: string,
+): Promise<{ email: string; name: string | null; locale: "en" | "fr" }> {
   const client = await clerkClient();
   const clerkUser = await client.users.getUser(clerkId);
   const email = clerkUser.emailAddresses[0]?.emailAddress ?? "";
   const name = clerkUser.firstName
     ? `${clerkUser.firstName}${clerkUser.lastName ? ` ${clerkUser.lastName}` : ""}`
     : null;
-  const locale = ((clerkUser.publicMetadata as Record<string, unknown>)?.locale as "en" | "fr") ?? "en";
+  const locale =
+    ((clerkUser.publicMetadata as Record<string, unknown>)?.locale as
+      | "en"
+      | "fr") ?? "en";
   return { email, name, locale };
 }
 
@@ -55,23 +60,36 @@ export async function setRole(formData: FormData) {
     if (!clerkId || !roleName) return { error: "Missing required fields" };
 
     const user = await getDbUser(clerkId);
-    const roleRecord = await prisma.role.findUnique({ where: { name: roleName } });
+    const roleRecord = await prisma.role.findUnique({
+      where: { name: roleName },
+    });
     if (!roleRecord) return { error: "Role not found" };
 
     await prisma.$transaction([
       prisma.userRole.deleteMany({ where: { userId: user.id } }),
-      prisma.userRole.create({ data: { userId: user.id, roleId: roleRecord.id } }),
+      prisma.userRole.create({
+        data: { userId: user.id, roleId: roleRecord.id },
+      }),
     ]);
 
     const client = await clerkClient();
     const clerkUser = await client.users.getUser(clerkId);
-    const existing = (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
+    const existing =
+      (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
     await client.users.updateUser(clerkId, {
       publicMetadata: { ...existing, role: roleName },
     });
 
     await invalidatePermissionCache(user.id);
-    await logAudit({ userId: user.id, actorId, resource: "user", action: "role.granted", resourceId: user.id, newValue: { role: roleName }, success: true });
+    await logAudit({
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "role.granted",
+      resourceId: user.id,
+      newValue: { role: roleName },
+      success: true,
+    });
     return { success: true };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unknown error" };
@@ -88,23 +106,36 @@ export async function removeRole(formData: FormData) {
     if (!clerkId) return { error: "Missing clerkId" };
 
     const user = await getDbUser(clerkId);
-    const developerRole = await prisma.role.findUnique({ where: { name: "DEVELOPER" } });
+    const developerRole = await prisma.role.findUnique({
+      where: { name: "DEVELOPER" },
+    });
     if (!developerRole) return { error: "DEVELOPER role not found" };
 
     await prisma.$transaction([
       prisma.userRole.deleteMany({ where: { userId: user.id } }),
-      prisma.userRole.create({ data: { userId: user.id, roleId: developerRole.id } }),
+      prisma.userRole.create({
+        data: { userId: user.id, roleId: developerRole.id },
+      }),
     ]);
 
     const client = await clerkClient();
     const clerkUser = await client.users.getUser(clerkId);
-    const existing = (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
+    const existing =
+      (clerkUser.publicMetadata as Record<string, unknown>) ?? {};
     await client.users.updateUser(clerkId, {
       publicMetadata: { ...existing, role: "DEVELOPER" },
     });
 
     await invalidatePermissionCache(user.id);
-    await logAudit({ userId: user.id, actorId, resource: "user", action: "role.revoked", resourceId: user.id, newValue: { role: "DEVELOPER" }, success: true });
+    await logAudit({
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "role.revoked",
+      resourceId: user.id,
+      newValue: { role: "DEVELOPER" },
+      success: true,
+    });
     return { success: true };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unknown error" };
@@ -123,13 +154,23 @@ export async function suspendUser(formData: FormData) {
     const user = await getDbUser(clerkId);
     const { email, name, locale } = await getClerkContact(clerkId);
 
-    await prisma.user.update({ where: { id: user.id }, data: { isActive: false } });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isActive: false },
+    });
 
     const client = await clerkClient();
     await client.users.banUser(clerkId);
 
     await invalidatePermissionCache(user.id);
-    await logAudit({ userId: user.id, actorId, resource: "user", action: "user.suspended", resourceId: user.id, success: true });
+    await logAudit({
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "user.suspended",
+      resourceId: user.id,
+      success: true,
+    });
 
     if (email) await sendUserSuspendedEmail(email, name, locale);
 
@@ -149,13 +190,23 @@ export async function reactivateUser(formData: FormData) {
     const user = await getDbUser(clerkId);
     const { email, name, locale } = await getClerkContact(clerkId);
 
-    await prisma.user.update({ where: { id: user.id }, data: { isActive: true, isBanned: false, bannedReason: null } });
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isActive: true, isBanned: false, bannedReason: null },
+    });
 
     const client = await clerkClient();
     await client.users.unbanUser(clerkId);
 
     await invalidatePermissionCache(user.id);
-    await logAudit({ userId: user.id, actorId, resource: "user", action: "user.reactivated", resourceId: user.id, success: true });
+    await logAudit({
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "user.reactivated",
+      resourceId: user.id,
+      success: true,
+    });
 
     if (email) await sendUserReactivatedEmail(email, name, locale);
 
@@ -172,7 +223,8 @@ export async function banUser(formData: FormData) {
     await validateCsrf();
     const actorId = await assertAdmin();
     const clerkId = formData.get("clerkId") as string;
-    const reason = (formData.get("reason") as string) || "Violation of terms of service";
+    const reason =
+      (formData.get("reason") as string) || "Violation of terms of service";
     if (!clerkId) return { error: "Missing clerkId" };
 
     const user = await getDbUser(clerkId);
@@ -187,7 +239,15 @@ export async function banUser(formData: FormData) {
     await client.users.banUser(clerkId);
 
     await invalidatePermissionCache(user.id);
-    await logAudit({ userId: user.id, actorId, resource: "user", action: "user.banned", resourceId: user.id, newValue: { reason }, success: true });
+    await logAudit({
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "user.banned",
+      resourceId: user.id,
+      newValue: { reason },
+      success: true,
+    });
 
     if (email) await sendUserBannedEmail(email, name, reason, locale);
 
@@ -210,10 +270,22 @@ export async function forceSignOut(formData: FormData) {
     const client = await clerkClient();
 
     // Revoke all active sessions
-    const { data: sessions } = await client.sessions.getSessionList({ userId: clerkId, status: "active" });
-    await Promise.all(sessions.map((s: { id: string }) => client.sessions.revokeSession(s.id)));
+    const { data: sessions } = await client.sessions.getSessionList({
+      userId: clerkId,
+      status: "active",
+    });
+    await Promise.all(
+      sessions.map((s: { id: string }) => client.sessions.revokeSession(s.id)),
+    );
 
-    await logAudit({ userId: user.id, actorId, resource: "user", action: "user.sessions_revoked", resourceId: user.id, success: true });
+    await logAudit({
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "user.sessions_revoked",
+      resourceId: user.id,
+      success: true,
+    });
     return { success: true };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unknown error" };
@@ -241,7 +313,13 @@ export async function deleteUser(formData: FormData) {
 
     await prisma.user.delete({ where: { id: user.id } });
 
-    await logAudit({ actorId, resource: "user", action: "user.deleted", resourceId: user.id, success: true });
+    await logAudit({
+      actorId,
+      resource: "user",
+      action: "user.deleted",
+      resourceId: user.id,
+      success: true,
+    });
     return { success: true };
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Unknown error" };
@@ -269,8 +347,14 @@ export async function changePlan(formData: FormData) {
     });
 
     await logAudit({
-      userId: user.id, actorId, resource: "user", action: "user.plan_changed",
-      resourceId: user.id, oldValue: { plan: oldPlan }, newValue: { plan }, success: true,
+      userId: user.id,
+      actorId,
+      resource: "user",
+      action: "user.plan_changed",
+      resourceId: user.id,
+      oldValue: { plan: oldPlan },
+      newValue: { plan },
+      success: true,
     });
     return { success: true };
   } catch (err) {

@@ -4,7 +4,13 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Building2, Users, Briefcase, CheckCircle2 } from "lucide-react";
+import {
+  Loader2,
+  Building2,
+  Users,
+  Briefcase,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,9 +36,14 @@ const USAGE_OPTIONS: {
   labelKey: string;
   descKey: string;
 }[] = [
-  { value: "solo",       icon: Briefcase, labelKey: "solo",       descKey: "soloDesc" },
-  { value: "team",       icon: Users,     labelKey: "team",       descKey: "teamDesc" },
-  { value: "enterprise", icon: Building2, labelKey: "enterprise", descKey: "enterpriseDesc" },
+  { value: "solo", icon: Briefcase, labelKey: "solo", descKey: "soloDesc" },
+  { value: "team", icon: Users, labelKey: "team", descKey: "teamDesc" },
+  {
+    value: "enterprise",
+    icon: Building2,
+    labelKey: "enterprise",
+    descKey: "enterpriseDesc",
+  },
 ];
 
 interface WorkspaceStepProps {
@@ -43,7 +54,10 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
   const t = useTranslations("onboarding.workspace");
 
   const schema = z.object({
-    workspaceName: z.string().min(1, t("errors.required")).min(2, t("errors.minLength")),
+    workspaceName: z
+      .string()
+      .min(1, t("errors.required"))
+      .min(2, t("errors.minLength")),
     usageType: z.enum(["solo", "team", "enterprise"]),
   });
 
@@ -74,7 +88,9 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
           name="workspaceName"
           render={({ field }) => (
             <FormItem>
-              <RequiredFormLabel required>{t("workspaceName.label")}</RequiredFormLabel>
+              <RequiredFormLabel required>
+                {t("workspaceName.label")}
+              </RequiredFormLabel>
               <FormControl>
                 <Input
                   placeholder={t("workspaceName.placeholder")}
@@ -96,41 +112,54 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
             <FormItem>
               <RequiredFormLabel>{t("usageType.label")}</RequiredFormLabel>
               <div className="grid grid-cols-3 gap-2 pt-1">
-                {USAGE_OPTIONS.map(({ value, icon: Icon, labelKey, descKey }) => {
-                  const selected = field.value === value;
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => field.onChange(value)}
-                      className={cn(
-                        "relative flex flex-col items-center gap-2 rounded-lg border p-3 text-sm transition-all duration-200",
-                        selected
-                          ? "border-primary bg-primary/5 shadow-sm"
-                          : "border-border text-muted-foreground hover:border-primary/40 hover:bg-accent/30"
-                      )}
-                    >
-                      {selected && (
-                        <CheckCircle2 className="absolute top-2 right-2 h-3.5 w-3.5 text-primary" />
-                      )}
-                      <div className={cn(
-                        "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
-                        selected ? "bg-primary/10" : "bg-muted"
-                      )}>
-                        <Icon className={cn("h-4.5 w-4.5", selected ? "text-primary" : "text-muted-foreground")} />
-                      </div>
-                      <span className={cn(
-                        "font-medium text-xs leading-tight text-center",
-                        selected ? "text-primary" : "text-foreground"
-                      )}>
-                        {t(`usageType.${labelKey}`)}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground text-center leading-tight">
-                        {t(`usageType.${descKey}`)}
-                      </span>
-                    </button>
-                  );
-                })}
+                {USAGE_OPTIONS.map(
+                  ({ value, icon: Icon, labelKey, descKey }) => {
+                    const selected = field.value === value;
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => field.onChange(value)}
+                        className={cn(
+                          "relative flex flex-col items-center gap-2 rounded-lg border p-3 text-sm transition-all duration-200",
+                          selected
+                            ? "border-primary bg-primary/5 shadow-sm"
+                            : "border-border text-muted-foreground hover:border-primary/40 hover:bg-accent/30",
+                        )}
+                      >
+                        {selected && (
+                          <CheckCircle2 className="absolute top-2 right-2 h-3.5 w-3.5 text-primary" />
+                        )}
+                        <div
+                          className={cn(
+                            "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
+                            selected ? "bg-primary/10" : "bg-muted",
+                          )}
+                        >
+                          <Icon
+                            className={cn(
+                              "h-4.5 w-4.5",
+                              selected
+                                ? "text-primary"
+                                : "text-muted-foreground",
+                            )}
+                          />
+                        </div>
+                        <span
+                          className={cn(
+                            "font-medium text-xs leading-tight text-center",
+                            selected ? "text-primary" : "text-foreground",
+                          )}
+                        >
+                          {t(`usageType.${labelKey}`)}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight">
+                          {t(`usageType.${descKey}`)}
+                        </span>
+                      </button>
+                    );
+                  },
+                )}
               </div>
               <FormMessage />
             </FormItem>
@@ -140,11 +169,19 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
         {form.formState.errors.root && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{form.formState.errors.root.message}</AlertDescription>
+            <AlertDescription>
+              {form.formState.errors.root.message}
+            </AlertDescription>
           </Alert>
         )}
 
-        <Button type="submit" variant="cta-primary" size="lg" className="w-full" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          variant="cta-primary"
+          size="lg"
+          className="w-full"
+          disabled={isSubmitting}
+        >
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {t("submit")}
         </Button>

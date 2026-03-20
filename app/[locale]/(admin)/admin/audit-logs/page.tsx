@@ -21,7 +21,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "adminAuditLogs.metadata" });
+  const t = await getTranslations({
+    locale,
+    namespace: "adminAuditLogs.metadata",
+  });
   return { title: t("title"), description: t("description") };
 }
 
@@ -77,7 +80,10 @@ async function fetchLogs({
         .map((l) => l.actorId as string),
     ),
   ];
-  const actorMap = new Map<string, { id: string; email: string; name: string | null }>();
+  const actorMap = new Map<
+    string,
+    { id: string; email: string; name: string | null }
+  >();
   if (orphanActorIds.length > 0) {
     const actors = await prisma.user.findMany({
       where: { id: { in: orphanActorIds } },
@@ -160,7 +166,9 @@ export default async function AuditLogsPage({
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t("title")}
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <Badge variant="outline" className="text-xs tabular-nums">
@@ -190,11 +198,17 @@ export default async function AuditLogsPage({
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/40 hover:bg-muted/40">
-                <TableHead className="w-[160px]">{t("table.timestamp")}</TableHead>
+                <TableHead className="w-[160px]">
+                  {t("table.timestamp")}
+                </TableHead>
                 <TableHead className="w-[180px]">{t("table.user")}</TableHead>
-                <TableHead className="w-[120px]">{t("table.resource")}</TableHead>
+                <TableHead className="w-[120px]">
+                  {t("table.resource")}
+                </TableHead>
                 <TableHead>{t("table.action")}</TableHead>
-                <TableHead className="text-right w-[100px]">{t("table.status")}</TableHead>
+                <TableHead className="text-right w-[100px]">
+                  {t("table.status")}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

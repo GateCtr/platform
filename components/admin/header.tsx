@@ -50,13 +50,13 @@ import type { RoleName } from "@/lib/permissions";
 // ─── Route → label key ────────────────────────────────────────────────────────
 
 const ADMIN_ROUTES: Record<string, string> = {
-  "/admin/overview":      "sidebar.overview",
-  "/admin/users":         "sidebar.users",
-  "/admin/waitlist":      "sidebar.waitlist",
-  "/admin/billing":       "sidebar.billing",
-  "/admin/audit-logs":    "sidebar.auditLogs",
+  "/admin/overview": "sidebar.overview",
+  "/admin/users": "sidebar.users",
+  "/admin/waitlist": "sidebar.waitlist",
+  "/admin/billing": "sidebar.billing",
+  "/admin/audit-logs": "sidebar.auditLogs",
   "/admin/feature-flags": "sidebar.featureFlags",
-  "/admin/system":        "sidebar.systemHealth",
+  "/admin/system": "sidebar.systemHealth",
 };
 
 function useAdminBreadcrumb() {
@@ -72,16 +72,23 @@ function useAdminBreadcrumb() {
 // ─── Role styling ─────────────────────────────────────────────────────────────
 
 const ROLE_PRIORITY: RoleName[] = [
-  "SUPER_ADMIN", "ADMIN", "MANAGER", "SUPPORT", "DEVELOPER", "VIEWER",
+  "SUPER_ADMIN",
+  "ADMIN",
+  "MANAGER",
+  "SUPPORT",
+  "DEVELOPER",
+  "VIEWER",
 ];
 
 const ROLE_STYLE: Record<RoleName, string> = {
   SUPER_ADMIN: "bg-primary/10 text-primary border-primary/25",
-  ADMIN:       "bg-violet-500/10 text-violet-600 border-violet-500/25 dark:text-violet-400",
-  MANAGER:     "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
-  SUPPORT:     "bg-sky-500/10 text-sky-700 border-sky-500/25 dark:text-sky-400",
-  DEVELOPER:   "bg-muted text-muted-foreground border-border",
-  VIEWER:      "bg-muted text-muted-foreground border-border",
+  ADMIN:
+    "bg-violet-500/10 text-violet-600 border-violet-500/25 dark:text-violet-400",
+  MANAGER:
+    "bg-amber-500/10 text-amber-700 border-amber-500/25 dark:text-amber-400",
+  SUPPORT: "bg-sky-500/10 text-sky-700 border-sky-500/25 dark:text-sky-400",
+  DEVELOPER: "bg-muted text-muted-foreground border-border",
+  VIEWER: "bg-muted text-muted-foreground border-border",
 };
 
 // ─── Search trigger ───────────────────────────────────────────────────────────
@@ -122,11 +129,18 @@ function AdminUserMenu({ displayRole }: { displayRole: RoleName | null }) {
     return <Skeleton className="size-8 rounded-full" />;
   }
 
-  const name    = user?.fullName ?? user?.firstName ?? "Admin";
-  const email   = user?.primaryEmailAddress?.emailAddress ?? "";
-  const avatar  = user?.imageUrl;
-  const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
-  const roleLabel = displayRole ? t(`roles.${displayRole}` as Parameters<typeof t>[0]) : null;
+  const name = user?.fullName ?? user?.firstName ?? "Admin";
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
+  const avatar = user?.imageUrl;
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+  const roleLabel = displayRole
+    ? t(`roles.${displayRole}` as Parameters<typeof t>[0])
+    : null;
 
   return (
     <DropdownMenu>
@@ -138,7 +152,9 @@ function AdminUserMenu({ displayRole }: { displayRole: RoleName | null }) {
         >
           <Avatar className="size-6 rounded-full shrink-0">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-[10px] font-bold">{initials}</AvatarFallback>
+            <AvatarFallback className="text-[10px] font-bold">
+              {initials}
+            </AvatarFallback>
           </Avatar>
           <span className="hidden md:block text-sm font-medium max-w-[120px] truncate">
             {name}
@@ -152,11 +168,15 @@ function AdminUserMenu({ displayRole }: { displayRole: RoleName | null }) {
         <div className="flex items-center gap-3 px-3 py-3">
           <Avatar className="size-10 rounded-lg shrink-0">
             <AvatarImage src={avatar} alt={name} />
-            <AvatarFallback className="text-sm font-bold rounded-lg">{initials}</AvatarFallback>
+            <AvatarFallback className="text-sm font-bold rounded-lg">
+              {initials}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-sm font-semibold truncate">{name}</span>
-            <span className="text-[11px] text-muted-foreground truncate">{email}</span>
+            <span className="text-[11px] text-muted-foreground truncate">
+              {email}
+            </span>
             {roleLabel && (
               <Badge
                 variant="outline"
@@ -225,7 +245,6 @@ export function AdminHeader() {
   return (
     <TooltipProvider delayDuration={300}>
       <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background/95 backdrop-blur-sm px-4 sticky top-0 z-10">
-
         {/* Mobile sidebar trigger — opens sheet drawer on small screens */}
         <div className="md:hidden">
           <SidebarTrigger />
@@ -237,7 +256,10 @@ export function AdminHeader() {
             <BreadcrumbItem className="hidden sm:flex items-center gap-1.5">
               <ShieldAlert className="size-3.5 text-muted-foreground/50 shrink-0" />
               <BreadcrumbLink asChild>
-                <Link href="/admin/overview" className="text-muted-foreground/70 hover:text-foreground text-sm">
+                <Link
+                  href="/admin/overview"
+                  className="text-muted-foreground/70 hover:text-foreground text-sm"
+                >
                   Admin
                 </Link>
               </BreadcrumbLink>
@@ -258,11 +280,13 @@ export function AdminHeader() {
 
         {/* Right side */}
         <div className="ml-auto flex items-center gap-1">
-
           {/* Search */}
           <SearchTrigger />
 
-          <Separator orientation="vertical" className="h-5 mx-1 hidden md:block shrink-0" />
+          <Separator
+            orientation="vertical"
+            className="h-5 mx-1 hidden md:block shrink-0"
+          />
 
           {/* Role badge */}
           {rolesLoading ? (
@@ -277,7 +301,10 @@ export function AdminHeader() {
             </Badge>
           ) : null}
 
-          <Separator orientation="vertical" className="h-5 mx-1 hidden sm:block shrink-0" />
+          <Separator
+            orientation="vertical"
+            className="h-5 mx-1 hidden sm:block shrink-0"
+          />
 
           {/* Notifications */}
           <Tooltip>
@@ -292,7 +319,9 @@ export function AdminHeader() {
                 <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-secondary-500" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">{t("header.notifications")}</TooltipContent>
+            <TooltipContent side="bottom">
+              {t("header.notifications")}
+            </TooltipContent>
           </Tooltip>
 
           <LanguageSwitcher />

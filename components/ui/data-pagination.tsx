@@ -48,7 +48,9 @@ interface DataPaginationServerProps {
   compact?: boolean;
 }
 
-type DataPaginationProps = DataPaginationClientProps | DataPaginationServerProps;
+type DataPaginationProps =
+  | DataPaginationClientProps
+  | DataPaginationServerProps;
 
 // ─── Page range builder ───────────────────────────────────────────────────────
 
@@ -58,13 +60,20 @@ function buildPageRange(current: number, total: number): (number | null)[] {
   const pages: (number | null)[] = [];
   const seen = new Set<number>();
   const addPage = (p: number) => {
-    if (!seen.has(p)) { seen.add(p); pages.push(p); }
+    if (!seen.has(p)) {
+      seen.add(p);
+      pages.push(p);
+    }
   };
 
   addPage(1);
   if (current > 3) pages.push(null);
 
-  for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) {
+  for (
+    let p = Math.max(2, current - 1);
+    p <= Math.min(total - 1, current + 1);
+    p++
+  ) {
     addPage(p);
   }
 
@@ -93,9 +102,7 @@ export function DataPagination({
   const range = buildPageRange(page, totalPages);
 
   const linkProps = (p: number) =>
-    buildHref
-      ? { href: buildHref(p) }
-      : { onClick: () => onPageChange!(p) };
+    buildHref ? { href: buildHref(p) } : { onClick: () => onPageChange!(p) };
 
   const prevProps = buildHref
     ? { href: buildHref(page - 1) }
@@ -120,7 +127,11 @@ export function DataPagination({
             ariaLabel={labels.goPrevious}
             {...prevProps}
             aria-disabled={page <= 1}
-            className={page <= 1 ? "pointer-events-none opacity-40 h-7 px-2 text-xs" : "cursor-pointer h-7 px-2 text-xs"}
+            className={
+              page <= 1
+                ? "pointer-events-none opacity-40 h-7 px-2 text-xs"
+                : "cursor-pointer h-7 px-2 text-xs"
+            }
           />
           <span className="text-xs text-muted-foreground tabular-nums px-1">
             {page} / {totalPages}
@@ -130,7 +141,11 @@ export function DataPagination({
             ariaLabel={labels.goNext}
             {...nextProps}
             aria-disabled={page >= totalPages}
-            className={page >= totalPages ? "pointer-events-none opacity-40 h-7 px-2 text-xs" : "cursor-pointer h-7 px-2 text-xs"}
+            className={
+              page >= totalPages
+                ? "pointer-events-none opacity-40 h-7 px-2 text-xs"
+                : "cursor-pointer h-7 px-2 text-xs"
+            }
           />
         </div>
       </div>
@@ -156,7 +171,9 @@ export function DataPagination({
               ariaLabel={labels.goPrevious}
               {...prevProps}
               aria-disabled={page <= 1}
-              className={page <= 1 ? "pointer-events-none opacity-40" : "cursor-pointer"}
+              className={
+                page <= 1 ? "pointer-events-none opacity-40" : "cursor-pointer"
+              }
             />
           </PaginationItem>
 
@@ -175,7 +192,7 @@ export function DataPagination({
                   {p}
                 </PaginationLink>
               </PaginationItem>
-            )
+            ),
           )}
 
           <PaginationItem>
@@ -184,7 +201,11 @@ export function DataPagination({
               ariaLabel={labels.goNext}
               {...nextProps}
               aria-disabled={page >= totalPages}
-              className={page >= totalPages ? "pointer-events-none opacity-40" : "cursor-pointer"}
+              className={
+                page >= totalPages
+                  ? "pointer-events-none opacity-40"
+                  : "cursor-pointer"
+              }
             />
           </PaginationItem>
         </PaginationContent>

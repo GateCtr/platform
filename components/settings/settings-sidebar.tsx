@@ -61,14 +61,16 @@ function MobileNav({ clean }: { clean: string }) {
   const t = useTranslations("settings");
   const router = useRouter();
   const current = ALL_ITEMS.find(
-    (item) => clean === item.href || clean.startsWith(item.href + "/")
+    (item) => clean === item.href || clean.startsWith(item.href + "/"),
   );
 
   return (
     <div className="md:hidden border-b border-border bg-background px-4 py-3">
       <Select
         value={current?.href ?? "/settings/profile"}
-        onValueChange={(href) => router.push(href as Parameters<typeof router.push>[0])}
+        onValueChange={(href) =>
+          router.push(href as Parameters<typeof router.push>[0])
+        }
       >
         <SelectTrigger className="w-full">
           <SelectValue />
@@ -115,7 +117,7 @@ function DesktopNav({ clean }: { clean: string }) {
                     "flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm transition-colors",
                     isActive
                       ? "bg-accent text-accent-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                   )}
                 >
                   <Icon className="size-4 shrink-0" />
