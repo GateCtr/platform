@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@/components/clerk-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryProvider } from "@/components/query-provider";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -49,6 +50,21 @@ export const metadata: Metadata = {
     description:
       "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
     type: "website",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "GateCtr — One gateway. Every LLM.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GateCtr - Control Your LLM Costs",
+    description:
+      "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
+    images: ["/api/og"],
   },
 };
 
@@ -95,6 +111,7 @@ export default async function RootLayout({
             </ReactQueryProvider>
           </ClerkProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
