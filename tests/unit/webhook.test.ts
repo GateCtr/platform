@@ -31,8 +31,18 @@ vi.mock("@/lib/prisma", () => ({
     role: { findUnique: vi.fn() },
     userRole: { create: vi.fn() },
     emailLog: { create: vi.fn() },
+    waitlistEntry: { findUnique: vi.fn(), update: vi.fn() },
     $transaction: vi.fn(),
   },
+}));
+
+vi.mock("@clerk/nextjs/server", () => ({
+  clerkClient: vi.fn().mockResolvedValue({
+    users: {
+      updateUser: vi.fn().mockResolvedValue({}),
+      getUser: vi.fn().mockResolvedValue({ publicMetadata: {} }),
+    },
+  }),
 }));
 
 vi.mock("@/lib/audit", () => ({

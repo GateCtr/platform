@@ -1,5 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Separate repos — excluded from this repo's tracking
+/docs/
+/examples/
+/sdk-node/
+/sdk-python/
+
 # dependencies
 /node_modules
 /.pnp
@@ -46,3 +52,6 @@ next-env.d.ts
 
 # test reports
 playwright-report
+
+# Sentry Config File
+.env.sentry-build-plugin

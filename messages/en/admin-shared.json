@@ -1,0 +1,44 @@
+{
+  "sidebar": {
+    "overview": "Overview",
+    "users": "Users",
+    "plans": "Plans",
+    "featureFlags": "Feature Flags",
+    "auditLogs": "Audit Logs",
+    "systemHealth": "System Health",
+    "waitlist": "Waitlist",
+    "billing": "Billing"
+  },
+  "groups": {
+    "platform": "Platform",
+    "users": "Users",
+    "revenue": "Revenue",
+    "security": "Security",
+    "system": "System"
+  },
+  "header": {
+    "backToApp": "Back to app",
+    "notifications": "Notifications",
+    "docs": "Docs",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "search": "Search...",
+    "navigation": "Navigate",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeSystem": "System",
+    "themeDark": "Dark"
+  },
+  "roles": {
+    "SUPER_ADMIN": "Super Admin",
+    "ADMIN": "Admin",
+    "MANAGER": "Manager",
+    "DEVELOPER": "Developer",
+    "VIEWER": "Viewer",
+    "SUPPORT": "Support"
+  },
+  "errors": {
+    "accessDenied": "Access denied: Admin privileges required",
+    "insufficientPermissions": "You don't have permission to view this page"
+  }
+}

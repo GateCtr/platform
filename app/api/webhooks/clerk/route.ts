@@ -96,6 +96,10 @@ export async function POST(req: Request) {
         await handleUserDeleted(evt);
         break;
 
+      case "session.created":
+        await handleSessionCreated(evt);
+        break;
+
       default:
         console.log(`Unhandled event type: ${eventType}`);
     }
@@ -145,7 +149,14 @@ export async function POST(req: Request) {
 async function handleUserCreated(evt: WebhookEvent, req: Request) {
   if (evt.type !== "user.created") return;
 
-  const { id, email_addresses, first_name, last_name, image_url } = evt.data;
+  const {
+    id,
+    email_addresses,
+    first_name,
+    last_name,
+    image_url,
+    external_accounts,
+  } = evt.data;
 
   const email = email_addresses[0]?.email_address;
   if (!email) {
@@ -165,6 +176,10 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
   }
 
   // Create user in database — no system role assigned, plan is the access control
+  const authProvider = (external_accounts?.[0]?.provider ?? "email")
+    .replace("oauth_", "")
+    .toLowerCase();
+
   const user = await prisma.user.create({
     data: {
       clerkId: id,
@@ -173,8 +188,43 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
       avatarUrl: image_url || null,
       plan: "FREE",
       isActive: true,
+      authProvider,
     },
   });
+
+  // Auto-redeem waitlist invite if the user was on the waitlist
+  // We match by email — no need to validate the invite code client-side
+  try {
+    const waitlistEntry = await prisma.waitlistEntry.findUnique({
+      where: { email },
+      select: { id: true, status: true },
+    });
+
+    if (waitlistEntry && waitlistEntry.status === "INVITED") {
+      await prisma.waitlistEntry.update({
+        where: { id: waitlistEntry.id },
+        data: { status: "JOINED", joinedAt: new Date() },
+      });
+      console.log(`Waitlist entry redeemed for ${email}`);
+    }
+  } catch (err) {
+    // Non-fatal — user is already created, don't block
+    console.error("Failed to redeem waitlist entry:", err);
+  }
+
+  // Set onboardingComplete: false in Clerk publicMetadata immediately.
+  // This ensures the JWT always has the key explicitly set, so the middleware
+  // can distinguish "not done yet" (false) from "stale JWT" (undefined).
+  try {
+    const { clerkClient } = await import("@clerk/nextjs/server");
+    const clerk = await clerkClient();
+    await clerk.users.updateUser(id, {
+      publicMetadata: { onboardingComplete: false },
+    });
+  } catch (err) {
+    // Non-fatal — onboarding gate will still work via DB fallback
+    console.error("Failed to set onboardingComplete in Clerk metadata:", err);
+  }
 
   // Log audit entry for user creation
   await logAudit({
@@ -236,7 +286,14 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
 async function handleUserUpdated(evt: WebhookEvent) {
   if (evt.type !== "user.updated") return;
 
-  const { id, email_addresses, first_name, last_name, image_url } = evt.data;
+  const {
+    id,
+    email_addresses,
+    first_name,
+    last_name,
+    image_url,
+    external_accounts,
+  } = evt.data;
 
   const email = email_addresses[0]?.email_address;
   if (!email) {
@@ -255,6 +312,14 @@ async function handleUserUpdated(evt: WebhookEvent) {
     return;
   }
 
+  // Re-derive authProvider in case user linked a new OAuth account
+  const authProvider =
+    external_accounts && external_accounts.length > 0
+      ? ((external_accounts[0] as { provider?: string }).provider
+          ?.replace("oauth_", "")
+          .toLowerCase() ?? "email")
+      : (existingUser.authProvider ?? "email");
+
   // Update user in database
   const updatedUser = await prisma.user.update({
     where: { clerkId: id },
@@ -262,6 +327,7 @@ async function handleUserUpdated(evt: WebhookEvent) {
       email,
       name,
       avatarUrl: image_url || null,
+      authProvider,
     },
   });
 
@@ -327,4 +393,37 @@ async function handleUserDeleted(evt: WebhookEvent) {
   });
 
   console.log(`User soft deleted: ${deletedUser.email} (${deletedUser.id})`);
+}
+
+/**
+ * Handle session.created event
+ * - Update lastLoginAt on the user
+ * - Sync authProvider from Clerk in case user switched OAuth method
+ */
+async function handleSessionCreated(evt: WebhookEvent) {
+  if (evt.type !== "session.created") return;
+  const clerkId = evt.data.user_id;
+  if (!clerkId) return;
+
+  // Fetch latest external_accounts from Clerk to get current auth provider
+  let authProvider: string | undefined;
+  try {
+    const { clerkClient } = await import("@clerk/nextjs/server");
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(clerkId);
+    const ext = clerkUser.externalAccounts?.[0];
+    if (ext) {
+      authProvider = ext.provider?.replace("oauth_", "").toLowerCase();
+    }
+  } catch {
+    // Non-fatal — lastLoginAt will still be updated
+  }
+
+  await prisma.user.updateMany({
+    where: { clerkId },
+    data: {
+      lastLoginAt: new Date(),
+      ...(authProvider ? { authProvider } : {}),
+    },
+  });
 }

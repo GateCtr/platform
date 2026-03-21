@@ -27,6 +27,8 @@
     "plan": "plan",
     "loading": "Chargement…",
     "profile": "Profil",
+    "admin": "Espace admin",
+    "viewSite": "Voir le site",
     "signOut": "Se déconnecter",
     "theme": "Thème"
   }

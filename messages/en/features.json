@@ -63,7 +63,7 @@
         "id": "rbac",
         "plan": "Team",
         "title": "RBAC & Audit Logs",
-        "tagline": "Admin, Manager, Dev, Viewer. 90 days history.",
+        "tagline": "Granular access control. Full audit trail. Compliance-ready.",
         "description": "Role-based access for teams. Full audit trail. Compliance-ready. Every request logged for 90 days.",
         "metric": "90 days",
         "metricLabel": "audit retention"

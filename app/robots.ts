@@ -1,40 +1,44 @@
 import type { MetadataRoute } from "next";
 import { getSeoContext, type SeoContext } from "@/lib/seo";
 
-export function generateRobots(context: SeoContext): MetadataRoute.Robots {
-  // App subdomain: disallow all, no sitemap
-  if (context.isAppSubdomain) {
+const PRIVATE_PATHS = [
+  "/dashboard",
+  "/fr/dashboard",
+  "/admin",
+  "/fr/admin",
+  "/api/",
+  "/onboarding",
+  "/fr/onboarding",
+  "/sign-in",
+  "/fr/sign-in",
+  "/sign-up",
+  "/fr/sign-up",
+];
+
+/**
+ * Testable named export — accepts a SeoContext directly.
+ * App subdomains disallow everything; marketing hosts expose sitemap.
+ */
+export function generateRobots(ctx: SeoContext): MetadataRoute.Robots {
+  if (ctx.isAppSubdomain) {
     return {
       rules: [{ userAgent: "*", disallow: "/" }],
     };
   }
 
-  // Marketing subdomain: allow public pages, disallow private routes
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/dashboard",
-          "/fr/dashboard",
-          "/admin",
-          "/fr/admin",
-          "/api",
-          "/onboarding",
-          "/fr/onboarding",
-          "/sign-in",
-          "/fr/sign-in",
-          "/sign-up",
-          "/fr/sign-up",
-        ],
+        disallow: PRIVATE_PATHS,
       },
     ],
-    sitemap: `${context.marketingUrl}/sitemap.xml`,
+    sitemap: `${ctx.marketingUrl}/sitemap.xml`,
   };
 }
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  const context = await getSeoContext();
-  return generateRobots(context);
+  const ctx = await getSeoContext();
+  return generateRobots(ctx);
 }

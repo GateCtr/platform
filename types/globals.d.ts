@@ -21,13 +21,20 @@ export type PermissionName =
 
 declare global {
   interface CustomJwtSessionClaims {
-    publicMetadata: {
+    // Legacy shape — kept for backward compat if publicMetadata is ever used directly
+    publicMetadata?: {
       onboardingComplete?: boolean;
       role?: RoleName;
       orgName?: string;
       usageType?: string;
-      useCase?: string;
-      teamSize?: string;
+    };
+    // Shape set via Clerk Dashboard → Sessions → Customize session token:
+    // { "metadata": "{{user.public_metadata}}" }
+    metadata?: {
+      onboardingComplete?: boolean;
+      role?: RoleName;
+      orgName?: string;
+      usageType?: string;
     };
   }
 }

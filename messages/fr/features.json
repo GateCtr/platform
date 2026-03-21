@@ -63,7 +63,7 @@
         "id": "rbac",
         "plan": "Team",
         "title": "RBAC & Audit Logs",
-        "tagline": "Admin, Manager, Dev, Viewer. 90 jours d'historique.",
+        "tagline": "Contrôle d'accès granulaire. Audit trail complet. Prêt pour la conformité.",
         "description": "Accès basé sur les rôles pour les équipes. Audit trail complet. Prêt pour la conformité. Chaque requête journalisée 90 jours.",
         "metric": "90 jours",
         "metricLabel": "rétention audit"

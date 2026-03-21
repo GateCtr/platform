@@ -45,8 +45,23 @@ import {
   Sun,
   Moon,
   Monitor,
+  ShieldAlert,
+  ExternalLink,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useQuery } from "@tanstack/react-query";
+import type { RoleName } from "@/lib/permissions";
+
+const SYSTEM_ROLES: RoleName[] = ["SUPER_ADMIN", "ADMIN", "MANAGER", "SUPPORT"];
+
+function useIsSystemUser() {
+  const { data } = useQuery<{ roles: RoleName[] }>({
+    queryKey: ["user-roles"],
+    queryFn: () => fetch("/api/auth/roles").then((r) => r.json()),
+    staleTime: 5 * 60 * 1000,
+  });
+  return data?.roles?.some((r) => SYSTEM_ROLES.includes(r)) ?? false;
+}
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
 
@@ -172,6 +187,7 @@ function UserMenu() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { theme, setTheme } = useTheme();
+  const isSystemUser = useIsSystemUser();
 
   const name = user?.fullName ?? user?.firstName ?? "User";
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
@@ -233,11 +249,30 @@ function UserMenu() {
         {/* Navigation items */}
         <div className="py-1">
           <DropdownMenuItem asChild className="gap-2.5 mx-1 rounded-md">
-            <Link href="/settings">
+            <Link href="/settings/profile">
               <UserRound className="size-4 text-muted-foreground" />
               {t("profile")}
             </Link>
           </DropdownMenuItem>
+          {isSystemUser && (
+            <>
+              <DropdownMenuItem asChild className="gap-2.5 mx-1 rounded-md">
+                <Link href="/admin/waitlist">
+                  <ShieldAlert className="size-4 text-muted-foreground" />
+                  {t("admin")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                asChild
+                className="gap-2.5 mx-1 rounded-md text-muted-foreground"
+              >
+                <a href="/" target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="size-4" />
+                  {t("viewSite")}
+                </a>
+              </DropdownMenuItem>
+            </>
+          )}
         </div>
 
         <DropdownMenuSeparator />

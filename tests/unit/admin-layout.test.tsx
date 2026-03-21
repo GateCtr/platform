@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import AdminLayout from "@/components/admin/layout";
+import AdminLayout from "@/app/[locale]/(admin)/layout";
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -25,11 +25,37 @@ vi.mock("@/components/admin/sidebar", () => ({
   AdminSidebar: () => <nav data-testid="admin-sidebar">Sidebar</nav>,
 }));
 
+vi.mock("@/components/admin/header", () => ({
+  AdminHeader: () => <header data-testid="admin-header" />,
+}));
+
+vi.mock("@/components/idle-timeout-dialog", () => ({
+  IdleTimeoutDialog: () => null,
+}));
+
+vi.mock("@/components/ui/sidebar", () => ({
+  SidebarProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarInset: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
+
 import { requireAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 const mockRequireAdmin = vi.mocked(requireAdmin);
 const mockRedirect = vi.mocked(redirect);
+
+// ─── Helper ───────────────────────────────────────────────────────────────────
+
+function callLayout(children: React.ReactNode, locale = "en") {
+  return AdminLayout({
+    children,
+    params: Promise.resolve({ locale }),
+  });
+}
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -42,7 +68,7 @@ describe("AdminLayout", () => {
     it("renders children when requireAdmin() resolves", async () => {
       mockRequireAdmin.mockResolvedValue(undefined);
 
-      render(await AdminLayout({ children: <span>Admin page content</span> }));
+      render(await callLayout(<span>Admin page content</span>));
 
       expect(screen.getByText("Admin page content")).toBeInTheDocument();
     });
@@ -50,7 +76,7 @@ describe("AdminLayout", () => {
     it("renders the AdminSidebar when requireAdmin() resolves", async () => {
       mockRequireAdmin.mockResolvedValue(undefined);
 
-      render(await AdminLayout({ children: <div>Content</div> }));
+      render(await callLayout(<div>Content</div>));
 
       expect(screen.getByTestId("admin-sidebar")).toBeInTheDocument();
     });
@@ -58,7 +84,7 @@ describe("AdminLayout", () => {
     it("does not call redirect when requireAdmin() resolves", async () => {
       mockRequireAdmin.mockResolvedValue(undefined);
 
-      render(await AdminLayout({ children: <div>Content</div> }));
+      render(await callLayout(<div>Content</div>));
 
       expect(mockRedirect).not.toHaveBeenCalled();
     });
@@ -66,7 +92,6 @@ describe("AdminLayout", () => {
 
   describe("non-admin user", () => {
     beforeEach(() => {
-      // In real Next.js, redirect() throws a special NEXT_REDIRECT error to halt execution
       mockRedirect.mockImplementation(() => {
         throw new Error("NEXT_REDIRECT");
       });
@@ -78,7 +103,7 @@ describe("AdminLayout", () => {
       );
 
       try {
-        await AdminLayout({ children: <div>Content</div> });
+        await callLayout(<div>Content</div>);
       } catch {
         // expected
       }
@@ -93,9 +118,9 @@ describe("AdminLayout", () => {
         new Error("Unauthorized: Admin access required"),
       );
 
-      await expect(
-        AdminLayout({ children: <span>Admin page content</span> }),
-      ).rejects.toThrow("NEXT_REDIRECT");
+      await expect(callLayout(<span>Admin page content</span>)).rejects.toThrow(
+        "NEXT_REDIRECT",
+      );
     });
 
     it("redirects to /fr/dashboard?error=access_denied for French locale", async () => {
@@ -104,7 +129,7 @@ describe("AdminLayout", () => {
       );
 
       try {
-        await AdminLayout({ children: <div>Content</div>, locale: "fr" });
+        await callLayout(<div>Content</div>, "fr");
       } catch {
         // expected
       }
@@ -120,7 +145,7 @@ describe("AdminLayout", () => {
       );
 
       try {
-        await AdminLayout({ children: <div>Content</div> });
+        await callLayout(<div>Content</div>);
       } catch {
         // expected
       }

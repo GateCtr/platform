@@ -11,7 +11,8 @@
     "docs": "Docs",
     "changelog": "Changelog",
     "signIn": "Sign in",
-    "signUp": "Start free"
+    "signUp": "Start free",
+    "dashboard": "Dashboard"
   },
   "footer": {
     "product": "Product",
@@ -51,5 +52,19 @@
     "invalid": "Invalid value.",
     "network": "Network error. Try again.",
     "unknown": "Something went wrong. Try again."
+  },
+  "idle": {
+    "title": "Still there?",
+    "description": "You've been inactive. You'll be signed out in {countdown}.",
+    "staySignedIn": "Stay signed in",
+    "signOut": "Sign out"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "morePages": "More pages",
+    "goPrevious": "Go to previous page",
+    "goNext": "Go to next page",
+    "showing": "Showing {from}–{to} of {total}"
   }
 }

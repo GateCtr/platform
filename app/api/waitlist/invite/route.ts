@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { prisma } from "@/lib/prisma";
 import { sendInviteEmail } from "@/lib/resend";
 import { isAdmin } from "@/lib/auth";
+import { rateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 
 const inviteSchema = z.object({
   entryIds: z.array(z.string()).min(1, "At least one entry must be selected"),
@@ -24,6 +25,15 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { entryIds, expiryDays } = inviteSchema.parse(body);
+
+    // ── Rate limit: 30 admin actions/min ─────────────────────────────────────
+    const { userId } = await import("@clerk/nextjs/server").then((m) =>
+      m.auth(),
+    );
+    if (userId) {
+      const rl = await rateLimit(userId, RATE_LIMITS.admin);
+      if (!rl.allowed) return rateLimitResponse(rl);
+    }
 
     const results = {
       success: [] as string[],
@@ -67,9 +77,14 @@ export async function POST(request: NextRequest) {
         });
 
         // Send invite email (async, don't wait)
-        sendInviteEmail(entry.email, entry.name, inviteCode, expiresAt).catch(
-          (err) =>
-            console.error(`Failed to send invite to ${entry.email}:`, err),
+        sendInviteEmail(
+          entry.email,
+          entry.name,
+          inviteCode,
+          expiresAt,
+          expiryDays,
+        ).catch((err) =>
+          console.error(`Failed to send invite to ${entry.email}:`, err),
         );
 
         results.success.push(entryId);

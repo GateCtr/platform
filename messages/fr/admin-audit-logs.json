@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "title": "Journaux d'audit",
+    "description": "Historique des événements de sécurité et d'accès"
+  },
+  "title": "Journaux d'audit",
+  "subtitle": "Historique des événements de sécurité et d'accès",
+  "entries": "{count} entrées",
+  "table": {
+    "timestamp": "Horodatage",
+    "user": "Utilisateur",
+    "resource": "Ressource",
+    "action": "Action",
+    "status": "Statut"
+  },
+  "status": {
+    "success": "Succès",
+    "failed": "Échec",
+    "all": "Tous les statuts"
+  },
+  "filters": {
+    "search": "Rechercher un email...",
+    "resource": "Toutes les ressources",
+    "status": "Tous les statuts",
+    "clearAll": "Effacer les filtres",
+    "export": "Exporter CSV"
+  },
+  "detail": {
+    "title": "Détail de l'événement",
+    "id": "ID événement",
+    "timestamp": "Horodatage",
+    "user": "Utilisateur",
+    "actor": "Acteur",
+    "resource": "Ressource",
+    "action": "Action",
+    "resourceId": "ID ressource",
+    "ip": "Adresse IP",
+    "userAgent": "User agent",
+    "error": "Erreur",
+    "oldValue": "Avant",
+    "newValue": "Après",
+    "noData": "Aucune donnée supplémentaire"
+  },
+  "empty": "Aucune entrée de journal d'audit trouvée",
+  "emptyFiltered": "Aucune entrée ne correspond aux filtres actuels"
+}

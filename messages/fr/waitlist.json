@@ -39,13 +39,33 @@
         "dev": "Personnel / dev"
       }
     },
+    "referralCode": {
+      "label": "Code de parrainage (optionnel)",
+      "placeholder": "ex. abc12345"
+    },
     "submit": "Demander l'accès",
     "submitting": "Envoi..."
   },
   "success": {
     "title": "C'est noté.",
     "message": "Position #{position}. Vous recevrez un email dès que votre place est disponible.",
-    "cta": "Retour à l'accueil"
+    "cta": "Retour à l'accueil",
+    "referral": {
+      "title": "Montez dans la liste",
+      "description": "Partagez votre lien. Chaque inscription vous fait avancer.",
+      "copy": "Copier",
+      "copied": "Copié"
+    }
+  },
+  "statusCheck": {
+    "title": "Déjà inscrit ?",
+    "cta": "Vérifier",
+    "notFound": "Email introuvable.",
+    "error": "Vérification échouée. Réessayez.",
+    "position": "Position",
+    "status": "Statut",
+    "referrals": "Parrainages",
+    "referralCount": "{count} inscription(s)"
   },
   "errors": {
     "duplicate": "Déjà enregistré.",
@@ -65,6 +85,10 @@
     "router": {
       "title": "Model Router",
       "description": "GateCtr choisit le bon LLM. Vous payez moins."
+    },
+    "analytics": {
+      "title": "Usage Dashboard",
+      "description": "Chaque token. Chaque coût. En temps réel."
     }
   }
 }

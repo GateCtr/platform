@@ -1,0 +1,73 @@
+{
+  "page": {
+    "title": "Profil",
+    "description": "Votre nom et vos préférences d'affichage."
+  },
+  "sections": {
+    "identity": "Identité",
+    "preferences": "Préférences",
+    "dangerZone": "Zone de danger"
+  },
+  "fields": {
+    "name": {
+      "label": "Nom complet",
+      "placeholder": "Votre nom",
+      "description": "Affiché dans le dashboard et dans les emails."
+    },
+    "email": {
+      "label": "Email",
+      "description": "Géré par votre fournisseur d'authentification. Modifiez-le dans les paramètres de votre compte."
+    },
+    "authProvider": {
+      "label": "Méthode de connexion",
+      "email": "Email",
+      "google": "Google",
+      "github": "GitHub",
+      "microsoft": "Microsoft",
+      "apple": "Apple"
+    },
+    "language": {
+      "label": "Langue",
+      "en": "English",
+      "fr": "Français"
+    },
+    "theme": {
+      "label": "Thème",
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    }
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Enregistré",
+    "deleteAccount": "Supprimer le compte"
+  },
+  "success": {
+    "updated": "Profil mis à jour."
+  },
+  "errors": {
+    "name_required": "Le nom est requis.",
+    "name_too_short": "Le nom doit contenir au moins 2 caractères.",
+    "failed": "Échec de la mise à jour. Réessayez.",
+    "unknown": "Une erreur est survenue."
+  },
+  "deleteAccount": {
+    "title": "Supprimer votre compte",
+    "description": "Cela supprimera définitivement :",
+    "consequences": [
+      "Votre compte et votre profil",
+      "Tous vos projets et clés API",
+      "Tout l'historique d'utilisation et les analytics",
+      "Votre abonnement actif (sans remboursement)"
+    ],
+    "confirmLabel": "Pour confirmer, saisissez votre adresse email :",
+    "confirmPlaceholder": "votre@email.com",
+    "confirmMismatch": "L'email ne correspond pas.",
+    "trigger": "Supprimer le compte",
+    "confirm": "Supprimer définitivement mon compte",
+    "cancel": "Annuler",
+    "deleting": "Suppression…"
+  }
+}

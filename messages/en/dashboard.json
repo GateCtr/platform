@@ -27,6 +27,8 @@
     "plan": "plan",
     "loading": "Loading…",
     "profile": "Profile",
+    "admin": "Admin panel",
+    "viewSite": "View site",
     "signOut": "Sign out",
     "theme": "Theme"
   }

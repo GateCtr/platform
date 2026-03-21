@@ -2,48 +2,54 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OnboardingLoading() {
   return (
-    <div className="w-full max-w-lg rounded-xl border border-border p-6 space-y-6">
-      {/* Card header */}
-      <div className="text-center space-y-2">
-        <Skeleton className="h-7 w-48 mx-auto" />
-        <Skeleton className="h-5 w-64 mx-auto" />
-      </div>
-
-      {/* Section label */}
-      <Skeleton className="h-3 w-32" />
-
-      {/* Org name field */}
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-36" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-4 w-56" />
-      </div>
-
-      {/* Two selects side by side */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-28" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-        <div className="space-y-2">
+    <div className="w-full max-w-md space-y-8">
+      {/* Progress bar */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="flex gap-1.5">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-1.5 flex-1 rounded-full" />
+          ))}
         </div>
       </div>
 
-      <Skeleton className="h-px w-full" />
+      {/* Card */}
+      <div className="rounded-xl border border-border bg-card shadow-lg overflow-hidden">
+        {/* Card header */}
+        <div className="border-b border-border px-6 py-5 space-y-2">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-4 w-32" />
+        </div>
 
-      {/* Section label */}
-      <Skeleton className="h-3 w-24" />
-
-      {/* Use case select */}
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-32" />
-        <Skeleton className="h-10 w-full" />
+        {/* Card body */}
+        <div className="px-6 py-6 space-y-5">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-11 w-full" />
+            <Skeleton className="h-3 w-48" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-40" />
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} className="h-20 rounded-lg" />
+              ))}
+            </div>
+          </div>
+          <Skeleton className="h-11 w-full rounded-lg" />
+        </div>
       </div>
 
-      {/* Submit button */}
-      <Skeleton className="h-11 w-full" />
+      {/* Dots */}
+      <div className="flex justify-center gap-2">
+        <Skeleton className="h-2 w-6 rounded-full" />
+        {[0, 1, 2].map((i) => (
+          <Skeleton key={i} className="h-2 w-2 rounded-full" />
+        ))}
+      </div>
     </div>
   );
 }

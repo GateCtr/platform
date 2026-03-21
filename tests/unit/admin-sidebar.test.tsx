@@ -29,6 +29,99 @@ vi.mock("@/i18n/routing", () => ({
   ),
 }));
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/admin/users",
+}));
+
+vi.mock("@clerk/nextjs", () => ({
+  useUser: () => ({ user: null }),
+  useClerk: () => ({ signOut: vi.fn() }),
+}));
+
+vi.mock("next-themes", () => ({
+  useTheme: () => ({ theme: "light", setTheme: vi.fn() }),
+}));
+
+vi.mock("@/components/ui/sidebar", () => ({
+  Sidebar: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarContent: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarFooter: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarGroup: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarGroupContent: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarGroupLabel: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarHeader: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SidebarMenu: ({ children }: { children: React.ReactNode }) => (
+    <ul>{children}</ul>
+  ),
+  SidebarMenuButton: ({
+    children,
+    asChild,
+  }: {
+    children: React.ReactNode;
+    asChild?: boolean;
+  }) => (asChild ? <>{children}</> : <button>{children}</button>),
+  SidebarMenuItem: ({ children }: { children: React.ReactNode }) => (
+    <li>{children}</li>
+  ),
+  SidebarSeparator: () => <hr />,
+  SidebarTrigger: () => <button />,
+  useSidebar: () => ({ state: "expanded", open: true }),
+}));
+
+vi.mock("@/components/ui/dropdown-menu", () => ({
+  DropdownMenu: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DropdownMenuContent: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DropdownMenuItem: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  DropdownMenuSeparator: () => <hr />,
+  DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
+
+vi.mock("@/components/ui/avatar", () => ({
+  Avatar: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  AvatarFallback: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  AvatarImage: () => null,
+}));
+
+vi.mock("@/components/ui/skeleton", () => ({
+  Skeleton: () => <div data-testid="skeleton" />,
+}));
+
+vi.mock("@/components/ui/badge", () => ({
+  Badge: ({ children }: { children: React.ReactNode }) => (
+    <span>{children}</span>
+  ),
+}));
+
+vi.mock("@/components/shared/logo", () => ({
+  Logo: () => <div>Logo</div>,
+}));
+
 import { usePermissions } from "@/hooks/use-permissions";
 
 const mockUsePermissions = vi.mocked(usePermissions);
@@ -70,9 +163,11 @@ describe("AdminSidebar", () => {
     it("renders nothing while permissions are loading", () => {
       mockPermissions([], true);
 
-      const { container } = render(<AdminSidebar />);
+      render(<AdminSidebar />);
 
-      expect(container.firstChild).toBeNull();
+      // While loading, skeletons are shown instead of nav items
+      expect(screen.queryByText("sidebar.users")).not.toBeInTheDocument();
+      expect(screen.queryByText("sidebar.plans")).not.toBeInTheDocument();
     });
   });
 
@@ -83,7 +178,7 @@ describe("AdminSidebar", () => {
       render(<AdminSidebar />);
 
       expect(screen.getByText("sidebar.users")).toBeInTheDocument();
-      expect(screen.getByText("sidebar.plans")).toBeInTheDocument();
+      expect(screen.getByText("sidebar.billing")).toBeInTheDocument();
       expect(screen.getByText("sidebar.featureFlags")).toBeInTheDocument();
       expect(screen.getByText("sidebar.auditLogs")).toBeInTheDocument();
       expect(screen.getByText("sidebar.systemHealth")).toBeInTheDocument();
@@ -99,8 +194,8 @@ describe("AdminSidebar", () => {
         screen.getByRole("link", { name: "sidebar.users" }),
       ).toHaveAttribute("href", "/admin/users");
       expect(
-        screen.getByRole("link", { name: "sidebar.plans" }),
-      ).toHaveAttribute("href", "/admin/plans");
+        screen.getByRole("link", { name: "sidebar.billing" }),
+      ).toHaveAttribute("href", "/admin/billing");
       expect(
         screen.getByRole("link", { name: "sidebar.featureFlags" }),
       ).toHaveAttribute("href", "/admin/feature-flags");
@@ -117,13 +212,13 @@ describe("AdminSidebar", () => {
   });
 
   describe("MANAGER – sees analytics, users, billing items", () => {
-    it("renders Users, Plans, and Waitlist (users:read + billing:read)", () => {
+    it("renders Users, billing, and Waitlist (users:read + billing:read)", () => {
       mockPermissions(MANAGER_PERMISSIONS);
 
       render(<AdminSidebar />);
 
       expect(screen.getByText("sidebar.users")).toBeInTheDocument();
-      expect(screen.getByText("sidebar.plans")).toBeInTheDocument();
+      expect(screen.getByText("sidebar.billing")).toBeInTheDocument();
       expect(screen.getByText("sidebar.waitlist")).toBeInTheDocument();
     });
 
@@ -238,7 +333,7 @@ describe("AdminSidebar", () => {
 
       render(<AdminSidebar />);
 
-      expect(screen.getByText("sidebar.plans")).toBeInTheDocument();
+      expect(screen.getByText("sidebar.billing")).toBeInTheDocument();
       expect(screen.queryByText("sidebar.users")).not.toBeInTheDocument();
     });
   });

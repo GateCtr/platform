@@ -1,0 +1,65 @@
+{
+  "page": {
+    "title": "Security",
+    "description": "Manage your password, connected accounts, active sessions, and account deletion."
+  },
+  "sections": {
+    "connectedAccounts": "Connected accounts",
+    "password": "Password",
+    "twoFactor": "Two-factor authentication",
+    "activeSessions": "Active sessions",
+    "activityLog": "Recent activity",
+    "dangerZone": "Danger zone"
+  },
+  "connectedAccounts": {
+    "description": "Sign in with any connected account. Your primary email stays the same.",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "connected": "Connected",
+    "cannotDisconnect": "You need at least one sign-in method.",
+    "providers": {
+      "google": "Google",
+      "github": "GitHub",
+      "gitlab": "GitLab"
+    }
+  },
+  "password": {
+    "currentLabel": "Current password",
+    "newLabel": "New password",
+    "setLabel": "Set a password",
+    "hint": "Minimum 8 characters.",
+    "update": "Update password",
+    "set": "Set password",
+    "saving": "Saving…",
+    "saved": "Password updated",
+    "errorTooShort": "Password must be at least 8 characters.",
+    "errorFailed": "Failed to update password. Check your current password and try again."
+  },
+  "twoFactor": {
+    "disabled": "Disabled",
+    "comingSoon": "Two-factor authentication is coming soon.",
+    "comingSoonBadge": "Coming soon"
+  },
+  "sessions": {
+    "current": "Current session",
+    "lastActive": "Last active",
+    "revoke": "Revoke",
+    "revokeAll": "Revoke all other sessions",
+    "revoking": "Revoking…",
+    "noOtherSessions": "No other active sessions.",
+    "unknown": "Unknown device"
+  },
+  "activityLog": {
+    "description": "All devices currently signed in to your account.",
+    "empty": "No recent activity."
+  },
+  "dangerZone": {
+    "deleteTitle": "Delete your account",
+    "deleteDescription": "Permanently deletes your account, projects, API keys, and all data. This cannot be undone."
+  },
+  "errors": {
+    "disconnectFailed": "Failed to disconnect. Try again.",
+    "connectFailed": "Failed to connect. Try again.",
+    "revokeFailed": "Failed to revoke session. Try again."
+  }
+}

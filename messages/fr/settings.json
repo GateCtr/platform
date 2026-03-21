@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "profile": "Profil",
+    "workspace": "Workspace",
+    "team": "Équipe",
+    "providers": "Providers LLM",
+    "apiKeys": "Clés API",
+    "budget": "Budget",
+    "notifications": "Notifications",
+    "security": "Sécurité",
+    "billing": "Facturation"
+  },
+  "navGroups": {
+    "account": "Compte",
+    "workspace": "Workspace",
+    "platform": "Plateforme"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Votre nom, avatar et préférences de compte."
+  },
+  "workspace": {
+    "title": "Workspace",
+    "description": "Nom, slug et type d'usage du workspace."
+  },
+  "team": {
+    "title": "Équipe",
+    "description": "Membres, rôles et invitations.",
+    "planRequired": "Plan Team requis",
+    "planRequiredDescription": "Passez au plan Team pour gérer les membres et les rôles."
+  },
+  "providers": {
+    "title": "Providers LLM",
+    "description": "Vos clés API pour OpenAI, Anthropic, Mistral, Gemini. Chiffrées. Les vôtres."
+  },
+  "apiKeys": {
+    "title": "Clés API",
+    "description": "Clés SDK GateCtr. Contrôlez l'accès par projet."
+  },
+  "budget": {
+    "title": "Budget",
+    "description": "Limites de tokens globales et seuils d'alerte."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Canaux d'alerte et seuils.",
+    "planRequired": "Plan Pro requis",
+    "planRequiredDescription": "Passez au plan Pro pour configurer les canaux de notification."
+  },
+  "security": {
+    "title": "Sécurité",
+    "description": "Sessions actives et paramètres d'authentification."
+  },
+  "billing": {
+    "title": "Facturation",
+    "description": "Plan, usage et factures."
+  }
+}

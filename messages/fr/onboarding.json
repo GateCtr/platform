@@ -3,48 +3,134 @@
     "title": "Configuration",
     "description": "30 secondes. Votre espace est prêt."
   },
-  "page": {
-    "title": "30 secondes pour votre première économie.",
-    "subtitle": "Dites-nous comment vous utilisez les LLMs. On s'occupe du reste."
+  "panel": {
+    "eyebrow": "Configuration",
+    "headline": "Une passerelle.\nTous les LLMs.",
+    "tagline": "Un seul endpoint. Vos clés restent les vôtres.\nGateCtr contrôle. Vous économisez.",
+    "features": {
+      "optimizer": {
+        "label": "-40% de tokens",
+        "sub": "Context Optimizer sur chaque requête."
+      },
+      "firewall": {
+        "label": "Budget Firewall",
+        "sub": "Limites strictes. Zéro facture surprise."
+      },
+      "router": {
+        "label": "Model Router",
+        "sub": "Bon modèle. Bon coût. Automatique."
+      },
+      "security": {
+        "label": "Votre clé reste la vôtre",
+        "sub": "AES-256. Jamais stockée en clair."
+      }
+    },
+    "copyright": "© {year} GateCtr"
   },
-  "section": {
-    "organization": "Votre espace de travail",
-    "usage": "Votre cas d'usage"
+  "progress": {
+    "step": "Étape {current} sur {total}",
+    "workspace": "Espace",
+    "provider": "LLM",
+    "budget": "Budget",
+    "project": "Projet"
   },
-  "form": {
-    "orgName": {
+  "nav": {
+    "back": "Retour"
+  },
+  "workspace": {
+    "title": "Créez votre espace.",
+    "subtitle": "30 secondes.",
+    "workspaceName": {
       "label": "Nom de l'espace",
       "placeholder": "Acme SAS",
       "hint": "Identifie votre espace dans GateCtr."
     },
     "usageType": {
-      "label": "Type d'usage",
-      "personal": "Personnel",
+      "label": "Comment allez-vous utiliser GateCtr ?",
+      "solo": "Solo",
+      "soloDesc": "Juste moi",
       "team": "Équipe",
-      "enterprise": "Entreprise"
+      "teamDesc": "2–20 personnes",
+      "enterprise": "Entreprise",
+      "enterpriseDesc": "20+ personnes"
     },
-    "useCase": {
-      "label": "Cas d'usage principal",
-      "chatbot": "Chatbot",
-      "analytics": "Analyse",
-      "content": "Génération de contenu",
-      "code": "Assistance au code",
-      "other": "Autre",
-      "hint": "Personnalise les paramètres par défaut."
-    },
-    "teamSize": {
-      "label": "Taille de l'équipe",
-      "solo": "Juste moi",
-      "small": "2–10",
-      "medium": "11–50",
-      "large": "50+"
-    },
-    "submit": "Créer l'espace",
-    "submitting": "Enregistrement..."
+    "submit": "Continuer",
+    "errors": {
+      "required": "Nom requis.",
+      "minLength": "2 caractères minimum.",
+      "failed": "Échec. Réessayez."
+    }
   },
-  "errors": {
-    "orgName": "Nom requis.",
-    "orgNameMin": "2 caractères minimum.",
-    "failed": "Échec. Réessayez."
+  "provider": {
+    "title": "Connectez votre premier LLM.",
+    "subtitle": "Votre clé reste la vôtre.",
+    "providerLabel": "Fournisseur",
+    "keyLabel": "Clé API",
+    "keyPlaceholder": "sk-...",
+    "keyHint": "Chiffrée AES-256. Jamais stockée en clair.",
+    "nameLabel": "Nom de la clé",
+    "namePlaceholder": "Défaut",
+    "whereToFind": "Où trouver ma clé ?",
+    "skipWarning": "Sans clé fournisseur, GateCtr ne peut pas router vos requêtes.",
+    "submit": "Connecter",
+    "connecting": "Connexion...",
+    "skip": "Configurer plus tard",
+    "errors": {
+      "providerRequired": "Sélectionnez un fournisseur.",
+      "keyRequired": "Clé API requise.",
+      "failed": "Connexion échouée. Réessayez."
+    }
+  },
+  "budget": {
+    "title": "Définissez votre budget.",
+    "subtitle": "Zéro facture surprise.",
+    "monthlyLimit": {
+      "label": "Limite mensuelle de tokens",
+      "unit": "tokens / mois",
+      "hint": "Votre plan {plan} inclut {limit} tokens/mois."
+    },
+    "alertThreshold": {
+      "label": "Alerte à {pct}% d'utilisation"
+    },
+    "hardStop": {
+      "label": "Bloquer les requêtes si la limite est atteinte",
+      "hint": "Désactivez pour recevoir uniquement des alertes."
+    },
+    "summary": {
+      "label": "Résumé budget",
+      "limit": "Limite",
+      "alert": "Alerte",
+      "block": "Bloquer",
+      "notify": "Notifier",
+      "onLimit": "À la limite"
+    },
+    "submit": "Continuer",
+    "submitting": "Enregistrement...",
+    "errors": {
+      "failed": "Échec de l'enregistrement. Réessayez."
+    }
+  },
+  "project": {
+    "title": "Créez votre premier projet.",
+    "subtitle": "Un projet. Un endpoint.",
+    "projectName": {
+      "label": "Nom du projet",
+      "placeholder": "Mon API",
+      "hint": "Regroupe vos appels LLM et données d'usage.",
+      "hintSub": "Vous pouvez créer d'autres projets depuis le dashboard.",
+      "description": "Identifie ce projet dans votre dashboard et vos appels API."
+    },
+    "suggestions": {
+      "label": "Suggestions rapides"
+    },
+    "submit": "Terminer la configuration",
+    "submitting": "Création...",
+    "skip": "Passer pour l'instant",
+    "errors": {
+      "required": "Nom du projet requis.",
+      "minLength": "2 caractères minimum.",
+      "quotaExceeded": "Limite de projets atteinte. Passez à un plan supérieur.",
+      "failed": "Échec de la création. Réessayez."
+    }
   }
 }

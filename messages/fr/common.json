@@ -11,7 +11,8 @@
     "docs": "Docs",
     "changelog": "Changelog",
     "signIn": "Connexion",
-    "signUp": "Démarrer"
+    "signUp": "Démarrer",
+    "dashboard": "Dashboard"
   },
   "footer": {
     "product": "Produit",
@@ -51,5 +52,19 @@
     "invalid": "Valeur invalide.",
     "network": "Erreur réseau. Réessayez.",
     "unknown": "Une erreur est survenue. Réessayez."
+  },
+  "idle": {
+    "title": "Toujours là ?",
+    "description": "Vous êtes inactif. Déconnexion dans {countdown}.",
+    "staySignedIn": "Rester connecté",
+    "signOut": "Se déconnecter"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "morePages": "Plus de pages",
+    "goPrevious": "Page précédente",
+    "goNext": "Page suivante",
+    "showing": "{from}–{to} sur {total}"
   }
 }

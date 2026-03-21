@@ -63,7 +63,7 @@ GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provi
 | Abonnement mensuel    | Accès plateforme selon plan choisi                                | Tous segments |
 | Usage-based add-on    | Facturation par tranche de 10M tokens routés au-delà du plan      | Pro & Team    |
 | Savings sharing       | Option premium : % des économies tokens réalisées via l'optimizer | Enterprise    |
-| Seats supplémentaires | €15/user/mois pour les membres additionnels                       | Team          |
+| Seats supplémentaires | €15/user/mois pour les membres au-delà des 3 inclus | Team          |
 | Onboarding premium    | Session de setup et intégration par notre équipe technique        | Enterprise    |
 
 ## Règles pour le copy lié au pricing
