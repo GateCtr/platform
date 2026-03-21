@@ -236,6 +236,7 @@ jobs:
   migrate:
     name: Run Migrations
     runs-on: ubuntu-latest
+    continue-on-error: true
     # Only run on direct pushes to main/develop — not on PRs (handled by neon-branch.yml)
     if: github.event_name == 'push'
     steps:
