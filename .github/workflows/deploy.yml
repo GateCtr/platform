@@ -132,6 +132,7 @@ jobs:
         run: pnpm prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
+          PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK: "1"
 
       - name: Deploy to Vercel (Production)
         id: vercel-deploy
