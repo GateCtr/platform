@@ -106,7 +106,7 @@ jobs:
       - name: Run database migrations
         run: pnpm prisma migrate deploy
         env:
-          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_MAIN }}
+          DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
 
       - name: Deploy to Vercel (Production)
         id: vercel-deploy
@@ -127,7 +127,7 @@ jobs:
         uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_ORG: ""
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
