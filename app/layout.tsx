@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProvider } from "@/components/clerk-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryProvider } from "@/components/query-provider";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -110,6 +111,7 @@ export default async function RootLayout({
             </ReactQueryProvider>
           </ClerkProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
