@@ -104,11 +104,17 @@ export default clerkMiddleware(
       (pathname.startsWith("/dashboard") ||
         pathname.startsWith("/onboarding") ||
         pathname.startsWith("/admin") ||
+        pathname.startsWith("/sign-in") ||
+        pathname.startsWith("/sign-up") ||
         pathname.startsWith("/fr/dashboard") ||
         pathname.startsWith("/fr/onboarding") ||
-        pathname.startsWith("/fr/admin"))
+        pathname.startsWith("/fr/admin") ||
+        pathname.startsWith("/fr/sign-in") ||
+        pathname.startsWith("/fr/sign-up"))
     ) {
-      return secure(NextResponse.redirect(new URL("/", req.url)));
+      const appBase =
+        process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com";
+      return secure(NextResponse.redirect(new URL(pathname, appBase)));
     }
 
     // ── API routes ────────────────────────────────────────────────────────────
