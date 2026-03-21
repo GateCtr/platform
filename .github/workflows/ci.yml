@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
   PNPM_VERSION: '10'
   # Prevents prisma generate from running during pnpm install (postinstall)
   # prisma generate is called explicitly in each job that needs it
@@ -89,7 +89,7 @@ jobs:
         run: pnpm test -- --coverage
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ./coverage/coverage-final.json
           flags: unittests
