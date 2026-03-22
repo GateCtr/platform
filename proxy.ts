@@ -43,7 +43,7 @@ const isPublicRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(["/((?:fr)/)?admin(.*)"]);
 
 // Onboarding route — authenticated users who haven't completed onboarding land here
-const isOnboardingRoute = createRouteMatcher(["/((?:fr)/)?onboarding"]);
+const isOnboardingRoute = createRouteMatcher(["/onboarding", "/fr/onboarding"]);
 
 /** Allowed redirect hosts — prevents open-redirect attacks (Req 8.6, 17.5) */
 const ALLOWED_REDIRECT_HOSTS = new Set([
