@@ -114,6 +114,11 @@ export default clerkMiddleware(
 
     // gatectr.com (marketing) → redirect app routes to app.gatectr.com
     if (!isAppSubdomain) {
+      // OG image and static assets must be served from marketing domain — never redirect
+      if (pathname === "/opengraph-image") {
+        return secure(NextResponse.next());
+      }
+
       const appRoutes = [
         "/dashboard",
         "/fr/dashboard",
@@ -181,11 +186,16 @@ export default clerkMiddleware(
     }
 
     // ── Auth pages — redirect authenticated users to dashboard ──────────────
-    // Exclude sso-callback — Clerk needs to finish processing OAuth before redirect
+    // Exclude sso-callback and clerk handshake — Clerk needs to finish processing before redirect
     const isSsoCallback = pathname.includes("/sso-callback");
+    const isClerkHandshake =
+      req.nextUrl.searchParams.has("__clerk_handshake") ||
+      req.nextUrl.searchParams.has("__clerk_hs_reason") ||
+      req.headers.get("x-clerk-auth-status") === "handshake";
     if (
       userId &&
       !isSsoCallback &&
+      !isClerkHandshake &&
       (pathname.includes("/sign-in") || pathname.includes("/sign-up"))
     ) {
       const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
@@ -210,7 +220,10 @@ export default clerkMiddleware(
     }
 
     // ── Onboarding gate ───────────────────────────────────────────────────────
-    if (userId && !isPublicRoute(req)) {
+    // Never run onboarding gate on auth pages or during Clerk handshake
+    const isAuthPage =
+      pathname.includes("/sign-in") || pathname.includes("/sign-up");
+    if (userId && !isPublicRoute(req) && !isAuthPage && !isClerkHandshake) {
       const meta = (sessionClaims?.metadata ??
         sessionClaims?.publicMetadata) as Record<string, unknown> | undefined;
 
@@ -239,7 +252,7 @@ export default clerkMiddleware(
         return secure(NextResponse.redirect(new URL(dashboardPath, req.url)));
       }
 
-      if (onboardingNotDone && !isOnboardingRoute(req)) {
+      if (onboardingNotDone && !isOnboardingRoute(req) && !isClerkHandshake) {
         const onboardingPath =
           locale === "fr" ? "/fr/onboarding" : "/onboarding";
         return secure(NextResponse.redirect(new URL(onboardingPath, req.url)));
@@ -287,7 +300,7 @@ export default clerkMiddleware(
 
 export const config = {
   matcher: [
-    "/((?!_next|_vercel|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|xml|txt)).*)",
+    "/((?!_next|_vercel|opengraph-image|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|xml|txt)).*)",
     "/(api|trpc|__clerk)(.*)",
   ],
 };
