@@ -6,6 +6,7 @@
     "providers": "LLM Providers",
     "apiKeys": "API Keys",
     "budget": "Budget",
+    "webhooks": "Webhooks",
     "notifications": "Notifications",
     "security": "Security",
     "billing": "Billing"
@@ -40,6 +41,10 @@
   "budget": {
     "title": "Budget",
     "description": "Global token limits and alert thresholds."
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "description": "Push events to Slack, Teams, or any URL."
   },
   "notifications": {
     "title": "Notifications",

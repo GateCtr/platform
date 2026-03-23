@@ -1,0 +1,40 @@
+{
+  "greetingMorning": "Good morning.",
+  "greetingAfternoon": "Good afternoon.",
+  "greetingEvening": "Good evening.",
+  "viewAnalytics": "View analytics",
+  "stats": {
+    "tokensToday": "Tokens today",
+    "requestsToday": "Requests today",
+    "costToday": "Cost today",
+    "tokensMonth": "Tokens this month",
+    "saved": "saved"
+  },
+  "budget": {
+    "title": "Budget Firewall",
+    "adjust": "Adjust",
+    "monthlyTokens": "Monthly token usage"
+  },
+  "projects": {
+    "title": "Projects",
+    "viewAll": "View all",
+    "empty": "No projects yet. Create your first one.",
+    "requests": "req"
+  },
+  "activity": {
+    "title": "Recent activity",
+    "viewAll": "View all",
+    "empty": "No requests yet. Make your first API call."
+  },
+  "empty": {
+    "setupTitle": "Get started",
+    "title": "Your workspace is ready.",
+    "subtitle": "Connect a provider to start routing requests.",
+    "connectProvider": "Connect a provider",
+    "connectProviderDesc": "Add your OpenAI, Anthropic or Mistral key.",
+    "createProject": "Create a project",
+    "createProjectDesc": "Organize requests and set per-project budgets.",
+    "setBudget": "Set your budget",
+    "setBudgetDesc": "Hard caps. No surprise invoices."
+  }
+}

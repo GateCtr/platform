@@ -1,0 +1,102 @@
+{
+  "page": {
+    "title": "Projets",
+    "subtitle": "Organisez vos requêtes LLM par projet. Chaque projet dispose de sa propre clé API, budget et analytics.",
+    "create": "Nouveau projet",
+    "emptyTitle": "Aucun projet",
+    "empty": "Créez votre premier projet pour commencer à router des requêtes et suivre l'utilisation.",
+    "teamScope": "Projets du workspace"
+  },
+  "detail": {
+    "notFound": "Projet introuvable.",
+    "back": "Retour aux projets",
+    "inactive": "Inactif",
+    "slug": "Slug",
+    "created": "Créé le",
+    "updated": "Modifié le",
+    "description": "Description",
+    "noDescription": "Aucune description.",
+    "stats": {
+      "title": "Utilisation (30 derniers jours)",
+      "requests": "Requêtes",
+      "tokens": "Tokens",
+      "cost": "Coût"
+    },
+    "apiKeys": {
+      "title": "Clés API",
+      "empty": "Aucune clé API liée à ce projet.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "prefix": "Préfixe",
+      "lastUsed": "Dernière utilisation",
+      "never": "Jamais",
+      "manage": "Gérer les clés"
+    },
+    "budget": {
+      "title": "Budget",
+      "noBudget": "Aucun budget configuré.",
+      "tokensDay": "Tokens / jour",
+      "tokensMonth": "Tokens / mois",
+      "costDay": "Coût / jour",
+      "costMonth": "Coût / mois",
+      "unlimited": "Illimité",
+      "configure": "Configurer le budget"
+    },
+    "actions": {
+      "edit": "Modifier",
+      "deactivate": "Désactiver",
+      "activate": "Activer",
+      "delete": "Supprimer le projet",
+      "confirmDelete": "Supprimer ce projet ?",
+      "confirmDeleteDesc": "Cette action supprimera définitivement le projet et toutes ses données associées.",
+      "confirmDeleteBtn": "Supprimer",
+      "cancel": "Annuler"
+    }
+  },
+  "quota": {
+    "label": "{used} sur {max} projets",
+    "limitReached": "Limite de projets atteinte ({max}). Passez à un plan supérieur pour en créer davantage."
+  },
+  "stats": {
+    "total": "Total",
+    "active": "Actifs",
+    "inactive": "Inactifs"
+  },
+  "form": {
+    "createTitle": "Nouveau projet",
+    "editTitle": "Modifier le projet",
+    "name": "Nom",
+    "namePlaceholder": "Mon app LLM",
+    "nameMin": "Le nom doit contenir au moins 2 caractères.",
+    "nameMax": "Le nom ne peut pas dépasser 64 caractères.",
+    "slug": "Slug",
+    "slugPlaceholder": "mon-app-llm",
+    "slugHint": "Utilisé dans les appels API pour identifier ce projet.",
+    "slugInvalid": "Le slug ne peut contenir que des lettres minuscules, chiffres et tirets.",
+    "slugMin": "Le slug doit contenir au moins 2 caractères.",
+    "description": "Description",
+    "descriptionPlaceholder": "Description optionnelle",
+    "color": "Couleur",
+    "create": "Créer le projet",
+    "save": "Enregistrer",
+    "creating": "Création...",
+    "saving": "Enregistrement...",
+    "genericError": "Une erreur est survenue. Réessayez.",
+    "slugTaken": "Ce slug est déjà utilisé."
+  },
+  "row": {
+    "edit": "Modifier",
+    "view": "Voir le détail",
+    "delete": "Supprimer",
+    "activate": "Activer",
+    "deactivate": "Désactiver",
+    "inactive": "Inactif",
+    "active": "Actif",
+    "slug": "Slug",
+    "created": "Créé le",
+    "confirmDelete": "Supprimer \"{name}\" ?",
+    "confirmDeleteDesc": "Cette action supprimera définitivement le projet et toutes ses données associées. Impossible d'annuler.",
+    "confirmDeleteBtn": "Supprimer le projet",
+    "cancel": "Annuler"
+  }
+}

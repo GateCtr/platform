@@ -1,0 +1,80 @@
+{
+  "page": {
+    "title": "Notifications",
+    "description": "Alert rules and delivery channels."
+  },
+  "sections": {
+    "rules": "Alert rules",
+    "add": "New rule"
+  },
+  "fields": {
+    "name": {
+      "label": "Rule name",
+      "placeholders": {
+        "budget_threshold": "Budget 80%",
+        "token_limit": "Token limit 90%",
+        "error_rate": "Error rate spike",
+        "latency": "High latency alert"
+      }
+    },
+    "alertType": {
+      "label": "Alert type",
+      "budget_threshold": "Budget threshold",
+      "token_limit": "Token limit",
+      "error_rate": "Error rate",
+      "latency": "Latency"
+    },
+    "threshold": {
+      "label": "Threshold (%)",
+      "placeholder": "80"
+    },
+    "channels": {
+      "label": "Channels",
+      "email": "Email",
+      "webhook": "Webhook",
+      "slack": "Slack"
+    },
+    "webhookUrl": {
+      "label": "Webhook URL",
+      "placeholder": "https://hooks.slack.com/..."
+    }
+  },
+  "actions": {
+    "add": "Add rule",
+    "adding": "Adding...",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "empty": {
+    "title": "No alert rules.",
+    "description": "Add a rule to get notified when your budget or token usage hits a threshold."
+  },
+  "planGate": {
+    "title": "Pro plan required",
+    "description": "Upgrade to Pro to configure alert rules and delivery channels.",
+    "cta": "Upgrade to Pro"
+  },
+  "success": {
+    "added": "Rule added.",
+    "deleted": "Rule deleted."
+  },
+  "errors": {
+    "name_required": "Rule name is required.",
+    "channel_required": "Select at least one channel.",
+    "invalid_url": "Enter a valid URL.",
+    "threshold_range": "Threshold must be between 1 and 100.",
+    "internal_error": "Something went wrong. Try again."
+  },
+  "deleteDialog": {
+    "title": "Delete this rule?",
+    "description": "You won't receive alerts from \"{name}\" anymore.",
+    "cancel": "Cancel",
+    "confirm": "Delete"
+  },
+  "alertTypes": {
+    "budget_threshold": "Budget threshold",
+    "token_limit": "Token limit",
+    "error_rate": "Error rate",
+    "latency": "Latency"
+  }
+}

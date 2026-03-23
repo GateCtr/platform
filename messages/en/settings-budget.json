@@ -1,0 +1,65 @@
+{
+  "page": {
+    "title": "Budget",
+    "description": "Hard caps. Soft alerts. No surprise invoices."
+  },
+  "scope": {
+    "label": "Configure budget for",
+    "global": "Global workspace",
+    "globalDescription": "Applied to all requests across all projects.",
+    "projectDescription": "Applied to requests for this project only.",
+    "placeholder": "Select a scope"
+  },
+  "list": {
+    "title": "Configured budgets",
+    "noLimit": "No limit set",
+    "tokensUnit": "tokens/mo"
+  },
+  "sections": {
+    "global": "Limits",
+    "globalDescription": "Leave blank for no limit.",
+    "behavior": "Behavior"
+  },
+  "tokens": {
+    "perDay": "Daily token limit",
+    "perDayDescription": "Block or alert when daily usage exceeds this.",
+    "perMonth": "Monthly token limit",
+    "perMonthDescription": "Block or alert when monthly usage exceeds this.",
+    "placeholder": "No limit",
+    "unit": "tokens"
+  },
+  "cost": {
+    "perDay": "Daily cost limit (USD)",
+    "perDayDescription": "Block or alert when daily spend exceeds this.",
+    "perMonth": "Monthly cost limit (USD)",
+    "perMonthDescription": "Block or alert when monthly spend exceeds this.",
+    "placeholder": "No limit",
+    "unit": "$"
+  },
+  "alert": {
+    "threshold": "Alert threshold",
+    "thresholdDescription": "Send an alert when usage reaches this percentage of the limit.",
+    "pct": "{pct}% of limit"
+  },
+  "hardStop": {
+    "label": "Hard stop",
+    "description": "Block all requests when the limit is reached. Disable to receive alerts only.",
+    "on": "Requests blocked at limit",
+    "off": "Alert only — requests continue"
+  },
+  "planLimit": {
+    "note": "Your {plan} plan includes {limit} tokens/month.",
+    "upgrade": "Upgrade"
+  },
+  "save": "Save budget",
+  "saving": "Saving...",
+  "saved": "Budget saved.",
+  "errors": {
+    "invalid_value": "Enter a positive number or leave blank for no limit.",
+    "day_exceeds_month_tokens": "Daily limit cannot exceed monthly limit.",
+    "day_exceeds_month_cost": "Daily cost limit cannot exceed monthly cost limit.",
+    "exceeds_plan_limit": "Exceeds your plan limit of {limit} tokens/month.",
+    "internal_error": "Something went wrong. Try again.",
+    "project_exceeds_global": "This limit exceeds your global workspace budget. The global cap will trigger first — set a lower value."
+  }
+}

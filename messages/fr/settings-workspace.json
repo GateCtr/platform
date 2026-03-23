@@ -1,0 +1,49 @@
+{
+  "page": {
+    "title": "Workspace",
+    "description": "Nom, slug et type d'usage du workspace."
+  },
+  "sections": {
+    "identity": "Identité"
+  },
+  "fields": {
+    "name": {
+      "label": "Nom du workspace",
+      "placeholder": "Mon workspace",
+      "description": "Affiché dans votre dashboard et pour votre équipe."
+    },
+    "slug": {
+      "label": "Slug",
+      "description": "Utilisé dans les URLs. Minuscules et tirets uniquement.",
+      "taken": "Ce slug est déjà utilisé."
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "À quoi sert ce workspace…",
+      "description": "Optionnel. Visible par les membres de l'équipe."
+    },
+    "avatarUrl": {
+      "label": "Logo",
+      "upload": "Téléverser un logo",
+      "uploading": "Envoi…",
+      "description": "PNG, JPG, WebP ou SVG. Max 2 Mo."
+    },
+    "usageType": {
+      "label": "Type d'usage",
+      "solo": "Solo",
+      "team": "Équipe",
+      "enterprise": "Entreprise"
+    }
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "saved": "Enregistré."
+  },
+  "errors": {
+    "name_required": "Le nom du workspace est requis.",
+    "slug_taken": "Ce slug est déjà utilisé. Choisissez-en un autre.",
+    "internal_error": "Une erreur est survenue. Réessayez.",
+    "upload_failed": "Échec de l'envoi. Réessayez."
+  }
+}
