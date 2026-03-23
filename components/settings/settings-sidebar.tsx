@@ -23,6 +23,7 @@ import {
   Bell,
   Lock,
   CreditCard,
+  Zap,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -46,6 +47,7 @@ const NAV_ITEMS = [
       { key: "providers", href: "/settings/providers", icon: Cpu },
       { key: "apiKeys", href: "/settings/api-keys", icon: KeySquare },
       { key: "budget", href: "/settings/budget", icon: ShieldCheck },
+      { key: "webhooks", href: "/settings/webhooks", icon: Zap },
       { key: "notifications", href: "/settings/notifications", icon: Bell },
       { key: "billing", href: "/settings/billing", icon: CreditCard },
     ],
