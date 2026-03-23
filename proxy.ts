@@ -103,6 +103,15 @@ export default clerkMiddleware(
     }
 
     // ── Subdomain routing ─────────────────────────────────────────────────────
+    // status.gatectr.com → /status page
+    if (host === "status.gatectr.com") {
+      const statusPath = "/en/status";
+      if (pathname !== statusPath) {
+        return secure(NextResponse.rewrite(new URL(statusPath, req.url)));
+      }
+      return secure(intlMiddleware(req));
+    }
+
     // gatectr.com (marketing) → redirect app routes to app.gatectr.com
     if (!isAppSubdomain) {
       const appRoutes = [
