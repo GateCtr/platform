@@ -189,7 +189,7 @@ export async function checkQuota(
       const limit = limits.maxWebhooks;
       if (limit === null) return { allowed: true };
       const current = await prisma.webhook.count({
-        where: { userId, isActive: true },
+        where: { userId },
       });
       if (current < limit) return { allowed: true };
       return { allowed: false, quota: type, limit, current };
