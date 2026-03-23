@@ -1,24 +1,49 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { computeOverallStatus } from "@/lib/health-utils";
 
 const SERVICES = ["app", "database", "redis", "queue", "stripe"] as const;
 
+const ALLOWED_ORIGINS = new Set([
+  "https://gatectr.com",
+  "https://status.gatectr.com",
+  "https://app.gatectr.com",
+  ...(process.env.NEXT_PUBLIC_MARKETING_URL
+    ? [process.env.NEXT_PUBLIC_MARKETING_URL]
+    : []),
+  ...(process.env.NEXT_PUBLIC_APP_URL ? [process.env.NEXT_PUBLIC_APP_URL] : []),
+]);
+
+function corsHeaders(origin: string | null) {
+  const allowed =
+    origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://gatectr.com";
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
+
 function requestId() {
   return randomBytes(8).toString("hex");
 }
 
+// ─── OPTIONS /api/v1/system/health — CORS preflight ──────────────────────────
+
+export async function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get("origin");
+  return new NextResponse(null, { status: 204, headers: corsHeaders(origin) });
+}
+
 // ─── GET /api/v1/system/health — no auth required ────────────────────────────
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const origin = req.headers.get("origin");
   const rid = requestId();
   const headers = {
     "X-GateCtr-Request-Id": rid,
-    // Allow status.gatectr.com to call this endpoint cross-origin
-    "Access-Control-Allow-Origin":
-      process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
-    "Access-Control-Allow-Methods": "GET",
+    ...corsHeaders(origin),
   };
 
   try {
