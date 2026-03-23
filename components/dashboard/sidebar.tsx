@@ -28,13 +28,11 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useActiveTeam } from "@/hooks/use-active-team";
+import { CreateWorkspaceModal } from "@/components/dashboard/create-workspace-modal";
 import {
   LayoutDashboard,
   LineChart,
   Boxes,
-  KeySquare,
-  ShieldCheck,
-  Zap,
   Receipt,
   SlidersHorizontal,
   ChevronsUpDown,
@@ -50,6 +48,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import type { RoleName } from "@/lib/permissions";
 
 const SYSTEM_ROLES: RoleName[] = ["SUPER_ADMIN", "ADMIN", "MANAGER", "SUPPORT"];
@@ -69,9 +68,6 @@ const MAIN_NAV = [
   { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
   { key: "analytics", href: "/analytics", icon: LineChart },
   { key: "projects", href: "/projects", icon: Boxes },
-  { key: "apiKeys", href: "/api-keys", icon: KeySquare },
-  { key: "budget", href: "/budget", icon: ShieldCheck },
-  { key: "webhooks", href: "/webhooks", icon: Zap },
 ] as const;
 
 const SECONDARY_NAV = [
@@ -84,99 +80,127 @@ const SECONDARY_NAV = [
 function TeamSwitcher() {
   const t = useTranslations("dashboard.sidebar");
   const { activeTeam, isLoading, teams, switchTeam } = useActiveTeam();
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const orgName = activeTeam?.name ?? "…";
   const planLabel = activeTeam?.plan?.toLowerCase() ?? "free";
   const initials = orgName === "…" ? "…" : orgName.slice(0, 2).toUpperCase();
+  const userPlan = activeTeam?.plan?.toUpperCase() ?? "FREE";
+  const avatarUrl = activeTeam?.avatarUrl ?? null;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <SidebarMenuButton
-          size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-foreground hover:bg-sidebar-accent"
-        >
-          {/* Workspace avatar */}
-          <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold shrink-0 select-none">
-            {isLoading ? "…" : initials}
-          </div>
-          <div className="flex flex-col gap-0.5 leading-none min-w-0">
-            <span className="font-semibold text-sm truncate text-sidebar-foreground">
-              {isLoading ? t("loading") : orgName}
-            </span>
-            <span className="text-[11px] text-sidebar-foreground/50 truncate capitalize">
-              {planLabel} {t("plan")}
-            </span>
-          </div>
-          <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-sidebar-foreground/40" />
-        </SidebarMenuButton>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent
-        className="w-64"
-        align="start"
-        side="bottom"
-        sideOffset={8}
-      >
-        {/* Section label */}
-        <div className="px-3 pt-2.5 pb-1">
-          <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-            {t("workspaces")}
-          </p>
-        </div>
-
-        {/* Team list */}
-        <div className="px-1 pb-1">
-          {teams.map((team) => {
-            const isActive = activeTeam?.id === team.id;
-            const teamInitials = team.name.slice(0, 2).toUpperCase();
-            return (
-              <DropdownMenuItem
-                key={team.id}
-                onClick={() => switchTeam(team.id)}
-                className="gap-2.5 rounded-md px-2 py-2 cursor-pointer"
-              >
-                <div
-                  className={[
-                    "flex size-7 items-center justify-center rounded-md text-[11px] font-bold shrink-0",
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground",
-                  ].join(" ")}
-                >
-                  {teamInitials}
-                </div>
-                <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                  <span className="text-sm font-medium truncate">
-                    {team.name}
-                  </span>
-                  {isActive && activeTeam?.plan && (
-                    <span className="text-[10px] text-muted-foreground capitalize">
-                      {activeTeam.plan.toLowerCase()} {t("plan")}
-                    </span>
-                  )}
-                </div>
-                {isActive && (
-                  <Check className="size-3.5 text-primary shrink-0" />
-                )}
-              </DropdownMenuItem>
-            );
-          })}
-        </div>
-
-        <DropdownMenuSeparator />
-
-        {/* New workspace */}
-        <div className="px-1 py-1">
-          <DropdownMenuItem className="gap-2.5 rounded-md px-2 py-2 text-muted-foreground cursor-pointer">
-            <div className="flex size-7 items-center justify-center rounded-md border border-dashed border-muted-foreground/30 shrink-0">
-              <Plus className="size-3.5" />
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <SidebarMenuButton
+            size="lg"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-foreground hover:bg-sidebar-accent"
+          >
+            <div className="flex size-8 shrink-0 rounded-md overflow-hidden bg-primary text-primary-foreground text-xs font-bold select-none items-center justify-center">
+              {isLoading ? (
+                "…"
+              ) : avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={orgName}
+                  className="size-full object-cover"
+                />
+              ) : (
+                initials
+              )}
             </div>
-            <span className="text-sm">{t("newWorkspace")}</span>
-          </DropdownMenuItem>
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <div className="flex flex-col gap-0.5 leading-none min-w-0">
+              <span className="font-semibold text-sm truncate text-sidebar-foreground">
+                {isLoading ? t("loading") : orgName}
+              </span>
+              <span className="text-[11px] text-sidebar-foreground/50 truncate capitalize">
+                {planLabel} {t("plan")}
+              </span>
+            </div>
+            <ChevronsUpDown className="ml-auto size-3.5 shrink-0 text-sidebar-foreground/40" />
+          </SidebarMenuButton>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          className="w-64"
+          align="start"
+          side="bottom"
+          sideOffset={8}
+        >
+          <div className="px-3 pt-2.5 pb-1">
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+              {t("workspaces")}
+            </p>
+          </div>
+
+          <div className="px-1 pb-1">
+            {teams.map((team) => {
+              const isActive = activeTeam?.id === team.id;
+              const teamInitials = team.name.slice(0, 2).toUpperCase();
+              return (
+                <DropdownMenuItem
+                  key={team.id}
+                  onClick={() => switchTeam(team.id)}
+                  className="gap-2.5 rounded-md px-2 py-2 cursor-pointer"
+                >
+                  <div
+                    className={[
+                      "flex size-7 shrink-0 rounded-md overflow-hidden text-[11px] font-bold items-center justify-center",
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground",
+                    ].join(" ")}
+                  >
+                    {team.avatarUrl ? (
+                      <img
+                        src={team.avatarUrl}
+                        alt={team.name}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      teamInitials
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                    <span className="text-sm font-medium truncate">
+                      {team.name}
+                    </span>
+                    {isActive && activeTeam?.plan && (
+                      <span className="text-[10px] text-muted-foreground capitalize">
+                        {activeTeam.plan.toLowerCase()} {t("plan")}
+                      </span>
+                    )}
+                  </div>
+                  {isActive && (
+                    <Check className="size-3.5 text-primary shrink-0" />
+                  )}
+                </DropdownMenuItem>
+              );
+            })}
+          </div>
+
+          <DropdownMenuSeparator />
+
+          <div className="px-1 py-1">
+            <DropdownMenuItem
+              className="gap-2.5 rounded-md px-2 py-2 text-muted-foreground cursor-pointer"
+              onClick={() => setShowCreateModal(true)}
+            >
+              <div className="flex size-7 items-center justify-center rounded-md border border-dashed border-muted-foreground/30 shrink-0">
+                <Plus className="size-3.5" />
+              </div>
+              <span className="text-sm">{t("newWorkspace")}</span>
+            </DropdownMenuItem>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <CreateWorkspaceModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        userPlan={userPlan}
+      />
+    </>
   );
 }
 

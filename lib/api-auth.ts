@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { redis } from "@/lib/redis";
 import { logAudit } from "@/lib/audit";
+import { dispatchWebhook } from "@/lib/webhooks";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -159,6 +160,11 @@ export async function authenticateApiKey(
   // 6. Check expiry
   if (record.expiresAt && record.expiresAt < new Date()) {
     handleFailure(record.userId);
+    dispatchWebhook(record.userId, "api_key.expired", {
+      api_key_id: record.id,
+      name: record.name,
+      expired_at: record.expiresAt.toISOString(),
+    }).catch(() => {});
     throw new ApiAuthError("api_key_expired", 401);
   }
 

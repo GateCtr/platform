@@ -41,8 +41,31 @@ export default getRequestConfig(async ({ requestLocale }) => {
     settingsSecurity: (
       await import(`../messages/${locale}/settings-security.json`)
     ).default,
+    settingsProviders: (
+      await import(`../messages/${locale}/settings-providers.json`)
+    ).default,
+    settingsApiKeys: (
+      await import(`../messages/${locale}/settings-api-keys.json`)
+    ).default,
+    settingsBudget: (await import(`../messages/${locale}/settings-budget.json`))
+      .default,
+    settingsWorkspace: (
+      await import(`../messages/${locale}/settings-workspace.json`)
+    ).default,
+    settingsTeam: (await import(`../messages/${locale}/settings-team.json`))
+      .default,
+    settingsNotifications: (
+      await import(`../messages/${locale}/settings-notifications.json`)
+    ).default,
     changelog: (await import(`../messages/${locale}/changelog.json`)).default,
     blocked: (await import(`../messages/${locale}/blocked.json`)).default,
+    analytics: (await import(`../messages/${locale}/analytics.json`)).default,
+    webhooks: (await import(`../messages/${locale}/webhooks.json`)).default,
+    projects: (await import(`../messages/${locale}/projects.json`)).default,
+    dashboardHome: (await import(`../messages/${locale}/dashboard-home.json`))
+      .default,
+    notifications: (await import(`../messages/${locale}/notifications.json`))
+      .default,
   };
 
   return {

@@ -6,6 +6,7 @@
     "providers": "Providers LLM",
     "apiKeys": "Clés API",
     "budget": "Budget",
+    "webhooks": "Webhooks",
     "notifications": "Notifications",
     "security": "Sécurité",
     "billing": "Facturation"
@@ -40,6 +41,10 @@
   "budget": {
     "title": "Budget",
     "description": "Limites de tokens globales et seuils d'alerte."
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "description": "Envoyez les événements vers Slack, Teams ou n'importe quelle URL."
   },
   "notifications": {
     "title": "Notifications",

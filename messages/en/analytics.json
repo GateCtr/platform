@@ -1,0 +1,49 @@
+{
+  "page": {
+    "title": "Analytics",
+    "subtitle": "Every token. Every cost. Real-time."
+  },
+  "dateRange": {
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "thisMonth": "This month",
+    "lastMonth": "Last month"
+  },
+  "stats": {
+    "totalTokens": "Tokens",
+    "totalRequests": "Requests",
+    "totalCost": "Cost",
+    "savedTokens": "Tokens saved"
+  },
+  "budget": {
+    "title": "Budget",
+    "label": "Monthly token usage",
+    "limitReached": "Budget limit reached. Adjust in Settings."
+  },
+  "trend": {
+    "title": "Trends",
+    "tokens": "Tokens",
+    "cost": "Cost (USD)",
+    "saved": "Tokens saved"
+  },
+  "provider": {
+    "title": "By provider"
+  },
+  "filter": {
+    "allProjects": "All projects"
+  },
+  "breakdown": {
+    "title": "By model",
+    "model": "Model",
+    "provider": "Provider"
+  },
+  "upsell": {
+    "title": "Pro feature",
+    "description": "Upgrade to Pro to unlock trend charts and model breakdown.",
+    "cta": "Upgrade to Pro"
+  },
+  "export": {
+    "csv": "Export CSV"
+  },
+  "empty": "No usage yet. Make your first API call to see data here."
+}

@@ -1,0 +1,100 @@
+{
+  "page": {
+    "title": "Webhooks",
+    "subtitle": "Envoyez les événements vers Slack, Teams ou n'importe quelle URL. Signés HMAC-SHA256.",
+    "create": "Ajouter un webhook",
+    "loading": "Chargement...",
+    "emptyTitle": "Aucun webhook",
+    "empty": "Connectez votre premier endpoint pour recevoir des événements."
+  },
+  "quota": {
+    "label": "{used} sur {max} webhooks utilisés",
+    "limitReached": "Limite atteinte ({max} webhooks). Passez à un plan supérieur pour en ajouter."
+  },
+  "stats": {
+    "total": "Total",
+    "active": "Actifs",
+    "delivered": "Livrés",
+    "failed": "Échoués",
+    "successRate": "Taux de succès"
+  },
+  "form": {
+    "title": "Nouveau webhook",
+    "name": "Nom",
+    "namePlaceholder": "Mon alerte Slack",
+    "url": "URL de l'endpoint",
+    "events": "Événements",
+    "eventsSelected": "sélectionnés",
+    "selectAll": "Tout sélectionner",
+    "clearAll": "Effacer",
+    "searchEvents": "Rechercher un événement...",
+    "noResults": "Aucun événement ne correspond.",
+    "groupAll": "Tous",
+    "groupNone": "Aucun",
+    "groups": {
+      "requests": "Requêtes",
+      "budget": "Budget",
+      "provider": "Provider",
+      "apiKeys": "Clés API",
+      "projects": "Projets",
+      "team": "Équipe",
+      "billing": "Facturation",
+      "webhook": "Webhook"
+    },
+    "create": "Créer le webhook",
+    "creating": "Création...",
+    "nameMinLength": "Le nom doit contenir au moins 2 caractères.",
+    "urlRequired": "L'URL de l'endpoint est requise.",
+    "urlHttpsError": "L'URL doit commencer par https://",
+    "urlInvalid": "Entrez une URL valide.",
+    "eventsRequired": "Sélectionnez au moins un événement.",
+    "genericError": "Une erreur est survenue. Réessayez."
+  },
+  "secret": {
+    "warning": "Conservez ce secret en lieu sûr. Il ne sera plus affiché.",
+    "copy": "Copier",
+    "copied": "Copié",
+    "done": "C'est noté, je l'ai sauvegardé"
+  },
+  "row": {
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "delete": "Supprimer",
+    "sendTest": "Envoyer un test",
+    "testSuccess": "Test envoyé. Vérifiez votre endpoint dans quelques secondes.",
+    "testError": "Échec du test. Vérifiez l'URL de votre endpoint.",
+    "failWarning": "{count} échecs",
+    "lastFired": "Dernier envoi",
+    "deliveries": "Livraisons récentes",
+    "loading": "Chargement...",
+    "noDeliveries": "Aucune livraison.",
+    "colEvent": "Événement",
+    "colStatus": "Statut",
+    "colLatency": "Latence",
+    "colTime": "Heure"
+  },
+  "eventLabels": {
+    "request_completed": "Requête complétée",
+    "request_failed": "Requête échouée",
+    "request_routed": "Requête routée",
+    "budget_threshold": "Seuil budgétaire",
+    "budget_exceeded": "Budget dépassé",
+    "budget_reset": "Budget réinitialisé",
+    "provider_fallback": "Fallback provider",
+    "provider_error": "Erreur provider",
+    "api_key_created": "Clé API créée",
+    "api_key_revoked": "Clé API révoquée",
+    "api_key_expired": "Clé API expirée",
+    "project_created": "Projet créé",
+    "team_member_added": "Membre ajouté",
+    "team_member_removed": "Membre retiré",
+    "billing_plan_upgraded": "Plan amélioré",
+    "billing_plan_downgraded": "Plan réduit",
+    "billing_payment_failed": "Paiement échoué",
+    "billing_trial_started": "Essai démarré",
+    "billing_trial_ending": "Essai se terminant",
+    "billing_subscription_cancellation_scheduled": "Annulation planifiée",
+    "webhook_test": "Test webhook",
+    "webhook_failed": "Webhook échoué"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "trigger": "Notifications",
+  "title": "Notifications",
+  "markAllRead": "Mark all read",
+  "earlier": "Earlier",
+  "empty": {
+    "title": "No notifications",
+    "description": "Alerts from your budget and token rules will appear here."
+  },
+  "footer": "{count, plural, =1 {1 alert} other {# alerts}} total"
+}

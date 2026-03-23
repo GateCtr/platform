@@ -1,0 +1,60 @@
+{
+  "page": {
+    "title": "Équipe",
+    "description": "Membres, rôles et invitations."
+  },
+  "sections": {
+    "members": "Membres",
+    "invite": "Inviter",
+    "pending": "Invitations en attente"
+  },
+  "roles": {
+    "OWNER": "Propriétaire",
+    "ADMIN": "Admin",
+    "MEMBER": "Membre",
+    "VIEWER": "Lecteur"
+  },
+  "invitation": {
+    "invitedBy": "Invité par {name}",
+    "expires": "Expire le {date}",
+    "revoke": "Révoquer",
+    "revoking": "Révocation…",
+    "revoked": "Invitation révoquée."
+  },
+  "invite": {
+    "email": "Adresse email",
+    "emailPlaceholder": "collegue@entreprise.com",
+    "role": "Rôle",
+    "submit": "Envoyer l'invitation",
+    "submitting": "Envoi...",
+    "sent": "Invitation envoyée."
+  },
+  "member": {
+    "you": "Vous",
+    "joined": "Rejoint",
+    "remove": "Retirer",
+    "removing": "Retrait...",
+    "confirmRemove": "Retirer ce membre ?",
+    "confirmRemoveDescription": "Il perdra l'accès à ce workspace immédiatement.",
+    "confirmRemoveAction": "Retirer",
+    "cancel": "Annuler"
+  },
+  "planGate": {
+    "title": "Plan Team requis",
+    "description": "Passez au plan Team pour inviter des membres, assigner des rôles et collaborer.",
+    "cta": "Passer au plan Team"
+  },
+  "errors": {
+    "email_required": "L'email est requis.",
+    "invalid_email": "Entrez un email valide.",
+    "already_member": "Cette personne est déjà membre.",
+    "quota_exceeded": "Limite de membres atteinte pour votre plan.",
+    "internal_error": "Une erreur est survenue. Réessayez.",
+    "forbidden": "Vous n'avez pas la permission."
+  },
+  "success": {
+    "invited": "Invitation envoyée.",
+    "removed": "Membre retiré.",
+    "revoked": "Invitation révoquée."
+  }
+}

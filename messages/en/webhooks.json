@@ -1,0 +1,100 @@
+{
+  "page": {
+    "title": "Webhooks",
+    "subtitle": "Push events to Slack, Teams, or any URL. Signed with HMAC-SHA256.",
+    "create": "Add webhook",
+    "loading": "Loading...",
+    "emptyTitle": "No webhooks yet",
+    "empty": "Connect your first endpoint to start receiving events."
+  },
+  "quota": {
+    "label": "{used} of {max} webhooks used",
+    "limitReached": "Webhook limit reached ({max}). Upgrade your plan to add more."
+  },
+  "stats": {
+    "total": "Total",
+    "active": "Active",
+    "delivered": "Delivered",
+    "failed": "Failed",
+    "successRate": "Success rate"
+  },
+  "form": {
+    "title": "New webhook",
+    "name": "Name",
+    "namePlaceholder": "My Slack alert",
+    "url": "Endpoint URL",
+    "events": "Events",
+    "eventsSelected": "selected",
+    "selectAll": "Select all",
+    "clearAll": "Clear",
+    "searchEvents": "Search events...",
+    "noResults": "No events match your search.",
+    "groupAll": "All",
+    "groupNone": "None",
+    "groups": {
+      "requests": "Requests",
+      "budget": "Budget",
+      "provider": "Provider",
+      "apiKeys": "API Keys",
+      "projects": "Projects",
+      "team": "Team",
+      "billing": "Billing",
+      "webhook": "Webhook"
+    },
+    "create": "Create webhook",
+    "creating": "Creating...",
+    "nameMinLength": "Name must be at least 2 characters.",
+    "urlRequired": "Endpoint URL is required.",
+    "urlHttpsError": "URL must start with https://",
+    "urlInvalid": "Enter a valid URL.",
+    "eventsRequired": "Select at least one event.",
+    "genericError": "Something went wrong. Try again."
+  },
+  "secret": {
+    "warning": "Store this secret securely. It will not be shown again.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "done": "Done, I saved it"
+  },
+  "row": {
+    "enable": "Enable",
+    "disable": "Disable",
+    "delete": "Delete",
+    "sendTest": "Send test",
+    "testSuccess": "Test queued. Check your endpoint in a few seconds.",
+    "testError": "Test failed. Check your endpoint URL.",
+    "failWarning": "{count} failures",
+    "lastFired": "Last fired",
+    "deliveries": "Recent deliveries",
+    "loading": "Loading deliveries...",
+    "noDeliveries": "No deliveries yet.",
+    "colEvent": "Event",
+    "colStatus": "Status",
+    "colLatency": "Latency",
+    "colTime": "Time"
+  },
+  "eventLabels": {
+    "request_completed": "Request completed",
+    "request_failed": "Request failed",
+    "request_routed": "Request routed",
+    "budget_threshold": "Budget threshold",
+    "budget_exceeded": "Budget exceeded",
+    "budget_reset": "Budget reset",
+    "provider_fallback": "Provider fallback",
+    "provider_error": "Provider error",
+    "api_key_created": "API key created",
+    "api_key_revoked": "API key revoked",
+    "api_key_expired": "API key expired",
+    "project_created": "Project created",
+    "team_member_added": "Member added",
+    "team_member_removed": "Member removed",
+    "billing_plan_upgraded": "Plan upgraded",
+    "billing_plan_downgraded": "Plan downgraded",
+    "billing_payment_failed": "Payment failed",
+    "billing_trial_started": "Trial started",
+    "billing_trial_ending": "Trial ending",
+    "billing_subscription_cancellation_scheduled": "Cancellation scheduled",
+    "webhook_test": "Webhook test",
+    "webhook_failed": "Webhook failed"
+  }
+}

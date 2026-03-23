@@ -1,0 +1,71 @@
+{
+  "page": {
+    "title": "LLM Providers",
+    "description": "Your API keys for OpenAI, Anthropic, Mistral, Gemini. Encrypted with AES-256. Never exposed."
+  },
+  "security": {
+    "badge": "AES-256 encrypted",
+    "note": "Keys are encrypted before storage. GateCtr never logs or exposes them."
+  },
+  "empty": {
+    "title": "No provider connected",
+    "description": "Connect your first LLM provider to start routing requests.",
+    "cta": "Connect a provider"
+  },
+  "add": {
+    "title": "Connect a provider",
+    "provider": "Provider",
+    "keyName": "Key name",
+    "keyNamePlaceholder": "e.g. Production key",
+    "keyNameDescription": "A label to identify this key.",
+    "apiKey": "API key",
+    "apiKeyPlaceholder": "sk-... or similar",
+    "apiKeyDescription": "Paste your provider API key. It will be encrypted immediately.",
+    "whereToFind": "Where to find my key?",
+    "submit": "Connect",
+    "submitting": "Connecting...",
+    "cancel": "Cancel"
+  },
+  "card": {
+    "added": "Added",
+    "lastUsed": "Last used",
+    "never": "Never",
+    "active": "Active",
+    "inactive": "Inactive",
+    "revoke": "Revoke",
+    "revoking": "Revoking...",
+    "confirmRevoke": "Revoke this key?",
+    "confirmRevokeDescription": "Requests using this provider will fail until you add a new key.",
+    "confirmRevokeAction": "Revoke",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "confirmDelete": "Delete this key?",
+    "confirmDeleteDescription": "This action is permanent. The key will be removed from GateCtr.",
+    "confirmDeleteAction": "Delete key"
+  },
+  "providers": {
+    "openai": "OpenAI",
+    "anthropic": "Anthropic",
+    "mistral": "Mistral",
+    "gemini": "Gemini"
+  },
+  "docsUrl": {
+    "openai": "https://platform.openai.com/api-keys",
+    "anthropic": "https://console.anthropic.com/settings/keys",
+    "mistral": "https://console.mistral.ai/api-keys",
+    "gemini": "https://aistudio.google.com/app/apikey"
+  },
+  "errors": {
+    "provider_required": "Select a provider.",
+    "key_required": "API key is required.",
+    "name_required": "Key name is required.",
+    "already_exists": "A key for this provider already exists. Revoke it first.",
+    "internal_error": "Something went wrong. Try again."
+  },
+  "success": {
+    "connected": "Connected. Your first request is already optimized.",
+    "revoked": "Key revoked.",
+    "deleted": "Key deleted."
+  }
+}

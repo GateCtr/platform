@@ -1,3 +1,8 @@
+export interface LLMAdapter {
+  complete(params: GatewayRequest, apiKey: string): Promise<GatewayResponse>;
+  chat(params: GatewayRequest, apiKey: string): Promise<GatewayResponse>;
+}
+
 export interface Message {
   role: "system" | "user" | "assistant";
   content: string;

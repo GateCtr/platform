@@ -1,0 +1,49 @@
+{
+  "page": {
+    "title": "Analytiques",
+    "subtitle": "Chaque token. Chaque coût. En temps réel."
+  },
+  "dateRange": {
+    "last7": "7 derniers jours",
+    "last30": "30 derniers jours",
+    "thisMonth": "Ce mois-ci",
+    "lastMonth": "Mois dernier"
+  },
+  "stats": {
+    "totalTokens": "Tokens",
+    "totalRequests": "Requêtes",
+    "totalCost": "Coût",
+    "savedTokens": "Tokens économisés"
+  },
+  "budget": {
+    "title": "Budget",
+    "label": "Utilisation mensuelle des tokens",
+    "limitReached": "Limite budgétaire atteinte. Ajustez dans Paramètres."
+  },
+  "trend": {
+    "title": "Tendances",
+    "tokens": "Tokens",
+    "cost": "Coût (USD)",
+    "saved": "Tokens économisés"
+  },
+  "provider": {
+    "title": "Par fournisseur"
+  },
+  "filter": {
+    "allProjects": "Tous les projets"
+  },
+  "breakdown": {
+    "title": "Par modèle",
+    "model": "Modèle",
+    "provider": "Fournisseur"
+  },
+  "upsell": {
+    "title": "Fonctionnalité Pro",
+    "description": "Passez à Pro pour accéder aux graphiques et à la répartition par modèle.",
+    "cta": "Passer à Pro"
+  },
+  "export": {
+    "csv": "Exporter CSV"
+  },
+  "empty": "Aucune utilisation. Faites votre premier appel API pour voir les données."
+}

@@ -10,7 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
 import { useActiveTeam } from "@/hooks/use-active-team";
 import { useUsageSummary } from "@/hooks/use-usage-summary";
-import { Bell, Zap, ChevronRight } from "lucide-react";
+import { NotificationPanel } from "@/components/dashboard/notification-panel";
+import { Zap, ChevronRight } from "lucide-react";
 
 // ─── Breadcrumb map ───────────────────────────────────────────────────────────
 
@@ -165,16 +166,7 @@ export function DashboardHeader() {
         />
 
         {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-8 relative"
-          aria-label="Notifications"
-        >
-          <Bell className="size-4" />
-          {/* Unread dot — placeholder */}
-          <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-secondary-500" />
-        </Button>
+        <NotificationPanel />
 
         <LanguageSwitcher />
         <ThemeToggle />

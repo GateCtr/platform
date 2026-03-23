@@ -1,0 +1,77 @@
+{
+  "page": {
+    "title": "API Keys",
+    "description": "GateCtr SDK keys. One key per project. Shown once — store it securely."
+  },
+  "security": {
+    "note": "Keys are hashed on creation. GateCtr never stores the raw value."
+  },
+  "empty": {
+    "title": "No API keys yet",
+    "description": "Create your first key to start routing requests through GateCtr.",
+    "cta": "Create API key"
+  },
+  "create": {
+    "title": "Create API key",
+    "name": "Key name",
+    "namePlaceholder": "e.g. Production",
+    "nameDescription": "A label to identify this key.",
+    "scopes": "Scopes",
+    "scopeComplete": "complete",
+    "scopeChat": "chat",
+    "scopeRead": "read",
+    "scopeAdmin": "admin",
+    "expiration": "Expiration",
+    "expiry_0": "No expiration",
+    "expiry_30": "30 days",
+    "expiry_90": "90 days",
+    "expiry_365": "1 year",
+    "project": "Project (optional)",
+    "projectPlaceholder": "No project",
+    "submit": "Create",
+    "submitting": "Creating...",
+    "cancel": "Cancel"
+  },
+  "reveal": {
+    "title": "Save your API key",
+    "warning": "This key will only be shown once. Copy it now.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "done": "Done, I saved it"
+  },
+  "card": {
+    "prefix": "Prefix",
+    "scopes": "Scopes",
+    "project": "Project",
+    "noProject": "No project",
+    "created": "Created",
+    "lastUsed": "Last used",
+    "never": "Never",
+    "expires": "Expires",
+    "expired": "Expired",
+    "usageCount": "requests",
+    "active": "Active",
+    "inactive": "Inactive",
+    "revoke": "Revoke",
+    "revoking": "Revoking...",
+    "confirmRevoke": "Revoke this key?",
+    "confirmRevokeDescription": "Any SDK or integration using this key will stop working immediately.",
+    "confirmRevokeAction": "Revoke",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "confirmDelete": "Delete this key?",
+    "confirmDeleteDescription": "This action is permanent. The key will be removed from your account.",
+    "confirmDeleteAction": "Delete key",
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "name_required": "Key name is required.",
+    "quota_exceeded": "API key limit reached for your plan. Upgrade to create more.",
+    "internal_error": "Something went wrong. Try again."
+  },
+  "success": {
+    "created": "Key created. Copy it now — it won't be shown again.",
+    "revoked": "Key revoked.",
+    "deleted": "Key deleted."
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "page": {
+    "title": "Fournisseurs LLM",
+    "description": "Vos clés API pour OpenAI, Anthropic, Mistral, Gemini. Chiffrées en AES-256. Jamais exposées."
+  },
+  "security": {
+    "badge": "Chiffrement AES-256",
+    "note": "Les clés sont chiffrées avant stockage. GateCtr ne les journalise ni ne les expose jamais."
+  },
+  "empty": {
+    "title": "Aucun fournisseur connecté",
+    "description": "Connectez votre premier fournisseur LLM pour commencer à router vos requêtes.",
+    "cta": "Connecter un fournisseur"
+  },
+  "add": {
+    "title": "Connecter un fournisseur",
+    "provider": "Fournisseur",
+    "keyName": "Nom de la clé",
+    "keyNamePlaceholder": "ex. Clé de production",
+    "keyNameDescription": "Un libellé pour identifier cette clé.",
+    "apiKey": "Clé API",
+    "apiKeyPlaceholder": "sk-... ou similaire",
+    "apiKeyDescription": "Collez votre clé API. Elle sera chiffrée immédiatement.",
+    "whereToFind": "Où trouver ma clé ?",
+    "submit": "Connecter",
+    "submitting": "Connexion...",
+    "cancel": "Annuler"
+  },
+  "card": {
+    "added": "Ajoutée",
+    "lastUsed": "Dernière utilisation",
+    "never": "Jamais",
+    "active": "Active",
+    "inactive": "Inactive",
+    "revoke": "Révoquer",
+    "revoking": "Révocation...",
+    "confirmRevoke": "Révoquer cette clé ?",
+    "confirmRevokeDescription": "Les requêtes utilisant ce fournisseur échoueront jusqu'à l'ajout d'une nouvelle clé.",
+    "confirmRevokeAction": "Révoquer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "deleting": "Suppression...",
+    "confirmDelete": "Supprimer cette clé ?",
+    "confirmDeleteDescription": "Cette action est permanente. La clé sera supprimée de GateCtr.",
+    "confirmDeleteAction": "Supprimer la clé"
+  },
+  "providers": {
+    "openai": "OpenAI",
+    "anthropic": "Anthropic",
+    "mistral": "Mistral",
+    "gemini": "Gemini"
+  },
+  "docsUrl": {
+    "openai": "https://platform.openai.com/api-keys",
+    "anthropic": "https://console.anthropic.com/settings/keys",
+    "mistral": "https://console.mistral.ai/api-keys",
+    "gemini": "https://aistudio.google.com/app/apikey"
+  },
+  "errors": {
+    "provider_required": "Sélectionnez un fournisseur.",
+    "key_required": "La clé API est requise.",
+    "name_required": "Le nom de la clé est requis.",
+    "already_exists": "Une clé pour ce fournisseur existe déjà. Révoquez-la d'abord.",
+    "internal_error": "Une erreur est survenue. Réessayez."
+  },
+  "success": {
+    "connected": "Connecté. Votre première requête est déjà optimisée.",
+    "revoked": "Clé révoquée.",
+    "deleted": "Clé supprimée."
+  }
+}

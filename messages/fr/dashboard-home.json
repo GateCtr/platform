@@ -1,0 +1,40 @@
+{
+  "greetingMorning": "Bonjour.",
+  "greetingAfternoon": "Bon après-midi.",
+  "greetingEvening": "Bonsoir.",
+  "viewAnalytics": "Voir les analytics",
+  "stats": {
+    "tokensToday": "Tokens aujourd'hui",
+    "requestsToday": "Requêtes aujourd'hui",
+    "costToday": "Coût aujourd'hui",
+    "tokensMonth": "Tokens ce mois",
+    "saved": "économisés"
+  },
+  "budget": {
+    "title": "Budget Firewall",
+    "adjust": "Ajuster",
+    "monthlyTokens": "Consommation mensuelle"
+  },
+  "projects": {
+    "title": "Projets",
+    "viewAll": "Voir tout",
+    "empty": "Aucun projet. Créez le premier.",
+    "requests": "req"
+  },
+  "activity": {
+    "title": "Activité récente",
+    "viewAll": "Voir tout",
+    "empty": "Aucune requête. Faites votre premier appel API."
+  },
+  "empty": {
+    "setupTitle": "Démarrer",
+    "title": "Votre workspace est prêt.",
+    "subtitle": "Connectez un provider pour commencer à router vos requêtes.",
+    "connectProvider": "Connecter un provider",
+    "connectProviderDesc": "Ajoutez votre clé OpenAI, Anthropic ou Mistral.",
+    "createProject": "Créer un projet",
+    "createProjectDesc": "Organisez les requêtes et définissez des budgets par projet.",
+    "setBudget": "Définir un budget",
+    "setBudgetDesc": "Limites strictes. Zéro facture surprise."
+  }
+}

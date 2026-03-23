@@ -1,0 +1,80 @@
+{
+  "page": {
+    "title": "Notifications",
+    "description": "Règles d'alerte et canaux de livraison."
+  },
+  "sections": {
+    "rules": "Règles d'alerte",
+    "add": "Nouvelle règle"
+  },
+  "fields": {
+    "name": {
+      "label": "Nom de la règle",
+      "placeholders": {
+        "budget_threshold": "Budget 80%",
+        "token_limit": "Limite tokens 90%",
+        "error_rate": "Pic de taux d'erreur",
+        "latency": "Alerte latence élevée"
+      }
+    },
+    "alertType": {
+      "label": "Type d'alerte",
+      "budget_threshold": "Seuil budgétaire",
+      "token_limit": "Limite de tokens",
+      "error_rate": "Taux d'erreur",
+      "latency": "Latence"
+    },
+    "threshold": {
+      "label": "Seuil (%)",
+      "placeholder": "80"
+    },
+    "channels": {
+      "label": "Canaux",
+      "email": "Email",
+      "webhook": "Webhook",
+      "slack": "Slack"
+    },
+    "webhookUrl": {
+      "label": "URL Webhook",
+      "placeholder": "https://hooks.slack.com/..."
+    }
+  },
+  "actions": {
+    "add": "Ajouter",
+    "adding": "Ajout...",
+    "delete": "Supprimer",
+    "deleting": "Suppression..."
+  },
+  "empty": {
+    "title": "Aucune règle d'alerte.",
+    "description": "Ajoutez une règle pour être notifié quand votre budget ou vos tokens atteignent un seuil."
+  },
+  "planGate": {
+    "title": "Plan Pro requis",
+    "description": "Passez au plan Pro pour configurer des règles d'alerte et des canaux de livraison.",
+    "cta": "Passer à Pro"
+  },
+  "success": {
+    "added": "Règle ajoutée.",
+    "deleted": "Règle supprimée."
+  },
+  "errors": {
+    "name_required": "Le nom de la règle est requis.",
+    "channel_required": "Sélectionnez au moins un canal.",
+    "invalid_url": "Entrez une URL valide.",
+    "threshold_range": "Le seuil doit être compris entre 1 et 100.",
+    "internal_error": "Une erreur est survenue. Réessayez."
+  },
+  "deleteDialog": {
+    "title": "Supprimer cette règle ?",
+    "description": "Vous ne recevrez plus d'alertes de \"{name}\".",
+    "cancel": "Annuler",
+    "confirm": "Supprimer"
+  },
+  "alertTypes": {
+    "budget_threshold": "Seuil budgétaire",
+    "token_limit": "Limite de tokens",
+    "error_rate": "Taux d'erreur",
+    "latency": "Latence"
+  }
+}
