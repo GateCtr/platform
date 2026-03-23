@@ -14,8 +14,16 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 import { GET } from "@/app/api/v1/system/health/route";
+import { NextRequest } from "next/server";
 
 const SERVICES = ["app", "database", "redis", "queue", "stripe"] as const;
+
+/** Minimal NextRequest for tests — no real origin needed */
+function makeReq(origin?: string) {
+  return new NextRequest("https://app.gatectr.com/api/v1/system/health", {
+    headers: origin ? { origin } : {},
+  });
+}
 
 describe("Property 20: System health returns latest record per service", () => {
   beforeEach(() => {
@@ -48,7 +56,7 @@ describe("Property 20: System health returns latest record per service", () => {
             });
           });
 
-          const res = await GET();
+          const res = await GET(makeReq());
           const body = await res.json();
 
           expect(res.status).toBe(200);
@@ -78,7 +86,7 @@ describe("Property 20: System health returns latest record per service", () => {
     // All findFirst calls return null
     mockFindFirst.mockResolvedValue(null);
 
-    const res = await GET();
+    const res = await GET(makeReq());
     const body = await res.json();
 
     expect(res.status).toBe(200);
@@ -103,7 +111,7 @@ describe("Property 20: System health returns latest record per service", () => {
           });
         });
 
-        const res = await GET();
+        const res = await GET(makeReq());
         const body = await res.json();
         expect(body.status).toBe("down");
       }),
@@ -125,7 +133,7 @@ describe("Property 20: System health returns latest record per service", () => {
             });
           });
 
-          const res = await GET();
+          const res = await GET(makeReq());
           const body = await res.json();
           expect(body.status).toBe("degraded");
         },
@@ -136,7 +144,7 @@ describe("Property 20: System health returns latest record per service", () => {
 
   it("includes X-GateCtr-Request-Id header", async () => {
     mockFindFirst.mockResolvedValue(null);
-    const res = await GET();
+    const res = await GET(makeReq());
     expect(res.headers.get("X-GateCtr-Request-Id")).toMatch(/^[0-9a-f]{16}$/);
   });
 });
