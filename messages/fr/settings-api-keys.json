@@ -1,0 +1,77 @@
+{
+  "page": {
+    "title": "Clés API",
+    "description": "Clés SDK GateCtr. Une clé par projet. Affichée une seule fois — stockez-la en sécurité."
+  },
+  "security": {
+    "note": "Les clés sont hachées à la création. GateCtr ne stocke jamais la valeur brute."
+  },
+  "empty": {
+    "title": "Aucune clé API",
+    "description": "Créez votre première clé pour commencer à router vos requêtes via GateCtr.",
+    "cta": "Créer une clé API"
+  },
+  "create": {
+    "title": "Créer une clé API",
+    "name": "Nom de la clé",
+    "namePlaceholder": "ex. Production",
+    "nameDescription": "Un libellé pour identifier cette clé.",
+    "scopes": "Permissions",
+    "scopeComplete": "complete",
+    "scopeChat": "chat",
+    "scopeRead": "read",
+    "scopeAdmin": "admin",
+    "expiration": "Expiration",
+    "expiry_0": "Sans expiration",
+    "expiry_30": "30 jours",
+    "expiry_90": "90 jours",
+    "expiry_365": "1 an",
+    "project": "Projet (optionnel)",
+    "projectPlaceholder": "Aucun projet",
+    "submit": "Créer",
+    "submitting": "Création...",
+    "cancel": "Annuler"
+  },
+  "reveal": {
+    "title": "Sauvegardez votre clé API",
+    "warning": "Cette clé ne sera affichée qu'une seule fois. Copiez-la maintenant.",
+    "copy": "Copier",
+    "copied": "Copié",
+    "done": "C'est fait, je l'ai sauvegardée"
+  },
+  "card": {
+    "prefix": "Préfixe",
+    "scopes": "Permissions",
+    "project": "Projet",
+    "noProject": "Aucun projet",
+    "created": "Créée",
+    "lastUsed": "Dernière utilisation",
+    "never": "Jamais",
+    "expires": "Expire",
+    "expired": "Expirée",
+    "usageCount": "requêtes",
+    "active": "Active",
+    "inactive": "Inactive",
+    "revoke": "Révoquer",
+    "revoking": "Révocation...",
+    "confirmRevoke": "Révoquer cette clé ?",
+    "confirmRevokeDescription": "Tout SDK ou intégration utilisant cette clé cessera de fonctionner immédiatement.",
+    "confirmRevokeAction": "Révoquer",
+    "delete": "Supprimer",
+    "deleting": "Suppression...",
+    "confirmDelete": "Supprimer cette clé ?",
+    "confirmDeleteDescription": "Action irréversible. La clé sera définitivement supprimée de votre compte.",
+    "confirmDeleteAction": "Supprimer la clé",
+    "cancel": "Annuler"
+  },
+  "errors": {
+    "name_required": "Le nom de la clé est requis.",
+    "quota_exceeded": "Limite de clés API atteinte pour votre plan. Passez à un plan supérieur.",
+    "internal_error": "Une erreur est survenue. Réessayez."
+  },
+  "success": {
+    "created": "Clé créée. Copiez-la maintenant — elle ne sera plus affichée.",
+    "revoked": "Clé révoquée.",
+    "deleted": "Clé supprimée."
+  }
+}

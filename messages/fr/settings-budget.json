@@ -1,0 +1,65 @@
+{
+  "page": {
+    "title": "Budget",
+    "description": "Limites strictes. Alertes douces. Zéro facture surprise."
+  },
+  "scope": {
+    "label": "Configurer le budget pour",
+    "global": "Workspace global",
+    "globalDescription": "Appliqué à toutes les requêtes, tous projets confondus.",
+    "projectDescription": "Appliqué uniquement aux requêtes de ce projet.",
+    "placeholder": "Sélectionner un périmètre"
+  },
+  "list": {
+    "title": "Budgets configurés",
+    "noLimit": "Aucune limite",
+    "tokensUnit": "tokens/mois"
+  },
+  "sections": {
+    "global": "Limites",
+    "globalDescription": "Laisser vide pour aucune limite.",
+    "behavior": "Comportement"
+  },
+  "tokens": {
+    "perDay": "Limite quotidienne de tokens",
+    "perDayDescription": "Bloquer ou alerter quand l'usage journalier dépasse ce seuil.",
+    "perMonth": "Limite mensuelle de tokens",
+    "perMonthDescription": "Bloquer ou alerter quand l'usage mensuel dépasse ce seuil.",
+    "placeholder": "Aucune limite",
+    "unit": "tokens"
+  },
+  "cost": {
+    "perDay": "Limite quotidienne (USD)",
+    "perDayDescription": "Bloquer ou alerter quand la dépense journalière dépasse ce seuil.",
+    "perMonth": "Limite mensuelle (USD)",
+    "perMonthDescription": "Bloquer ou alerter quand la dépense mensuelle dépasse ce seuil.",
+    "placeholder": "Aucune limite",
+    "unit": "$"
+  },
+  "alert": {
+    "threshold": "Seuil d'alerte",
+    "thresholdDescription": "Envoyer une alerte quand l'usage atteint ce pourcentage de la limite.",
+    "pct": "{pct}% de la limite"
+  },
+  "hardStop": {
+    "label": "Blocage strict",
+    "description": "Bloquer toutes les requêtes quand la limite est atteinte. Désactivez pour recevoir des alertes uniquement.",
+    "on": "Requêtes bloquées à la limite",
+    "off": "Alerte uniquement — les requêtes continuent"
+  },
+  "planLimit": {
+    "note": "Votre plan {plan} inclut {limit} tokens/mois.",
+    "upgrade": "Passer à un plan supérieur"
+  },
+  "save": "Enregistrer le budget",
+  "saving": "Enregistrement...",
+  "saved": "Budget enregistré.",
+  "errors": {
+    "invalid_value": "Entrez un nombre positif ou laissez vide pour aucune limite.",
+    "day_exceeds_month_tokens": "La limite quotidienne ne peut pas dépasser la limite mensuelle.",
+    "day_exceeds_month_cost": "La limite de coût quotidienne ne peut pas dépasser la limite mensuelle.",
+    "exceeds_plan_limit": "Dépasse la limite de votre plan ({limit} tokens/mois).",
+    "internal_error": "Une erreur est survenue. Réessayez.",
+    "project_exceeds_global": "Cette limite dépasse le budget global du workspace. Le plafond global se déclenchera en premier — définissez une valeur inférieure."
+  }
+}

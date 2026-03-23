@@ -1,0 +1,60 @@
+{
+  "page": {
+    "title": "Team",
+    "description": "Members, roles, and invitations."
+  },
+  "sections": {
+    "members": "Members",
+    "invite": "Invite",
+    "pending": "Pending invitations"
+  },
+  "roles": {
+    "OWNER": "Owner",
+    "ADMIN": "Admin",
+    "MEMBER": "Member",
+    "VIEWER": "Viewer"
+  },
+  "invitation": {
+    "invitedBy": "Invited by {name}",
+    "expires": "Expires {date}",
+    "revoke": "Revoke",
+    "revoking": "Revoking…",
+    "revoked": "Invitation revoked."
+  },
+  "invite": {
+    "email": "Email address",
+    "emailPlaceholder": "colleague@company.com",
+    "role": "Role",
+    "submit": "Send invite",
+    "submitting": "Sending...",
+    "sent": "Invite sent."
+  },
+  "member": {
+    "you": "You",
+    "joined": "Joined",
+    "remove": "Remove",
+    "removing": "Removing...",
+    "confirmRemove": "Remove this member?",
+    "confirmRemoveDescription": "They will lose access to this workspace immediately.",
+    "confirmRemoveAction": "Remove",
+    "cancel": "Cancel"
+  },
+  "planGate": {
+    "title": "Team plan required",
+    "description": "Upgrade to Team to invite members, assign roles, and collaborate.",
+    "cta": "Upgrade to Team"
+  },
+  "errors": {
+    "email_required": "Email is required.",
+    "invalid_email": "Enter a valid email.",
+    "already_member": "This person is already a member.",
+    "quota_exceeded": "Member limit reached for your plan.",
+    "internal_error": "Something went wrong. Try again.",
+    "forbidden": "You don't have permission to do this."
+  },
+  "success": {
+    "invited": "Invite sent.",
+    "removed": "Member removed.",
+    "revoked": "Invitation revoked."
+  }
+}

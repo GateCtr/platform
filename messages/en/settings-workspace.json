@@ -1,0 +1,49 @@
+{
+  "page": {
+    "title": "Workspace",
+    "description": "Workspace name, slug, and usage type."
+  },
+  "sections": {
+    "identity": "Identity"
+  },
+  "fields": {
+    "name": {
+      "label": "Workspace name",
+      "placeholder": "My workspace",
+      "description": "Displayed across your dashboard and team."
+    },
+    "slug": {
+      "label": "Slug",
+      "description": "Used in URLs. Lowercase, hyphens only.",
+      "taken": "This slug is already taken."
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "What this workspace is for…",
+      "description": "Optional. Visible to team members."
+    },
+    "avatarUrl": {
+      "label": "Logo",
+      "upload": "Upload logo",
+      "uploading": "Uploading…",
+      "description": "PNG, JPG, WebP or SVG. Max 2 MB."
+    },
+    "usageType": {
+      "label": "Usage type",
+      "solo": "Solo",
+      "team": "Team",
+      "enterprise": "Enterprise"
+    }
+  },
+  "actions": {
+    "save": "Save workspace",
+    "saving": "Saving...",
+    "saved": "Saved."
+  },
+  "errors": {
+    "name_required": "Workspace name is required.",
+    "slug_taken": "This slug is already taken. Choose another.",
+    "internal_error": "Something went wrong. Try again.",
+    "upload_failed": "Upload failed. Try again."
+  }
+}
