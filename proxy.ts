@@ -92,6 +92,42 @@ export default clerkMiddleware(
     /** Wrap any NextResponse with security headers before returning */
     const secure = (res: NextResponse) => applySecurityHeaders(res);
 
+    // ── Marketing domain — bypass Clerk entirely (free plan: no cross-subdomain cookies) ──
+    // gatectr.com is marketing-only. Auth lives exclusively on app.gatectr.com.
+    // Calling auth() on gatectr.com triggers client-uat-but-no-session-token errors.
+    if (!isAppSubdomain && !isDev) {
+      // OG image and static assets — serve as-is
+      if (pathname === "/opengraph-image") {
+        return secure(NextResponse.next());
+      }
+
+      // App routes on marketing domain → redirect to app subdomain
+      const appRoutes = [
+        "/dashboard",
+        "/fr/dashboard",
+        "/onboarding",
+        "/fr/onboarding",
+        "/admin",
+        "/fr/admin",
+        "/sign-in",
+        "/fr/sign-in",
+        "/sign-up",
+        "/fr/sign-up",
+      ];
+      const appBase =
+        process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com";
+      if (appRoutes.some((r) => pathname.startsWith(r))) {
+        return secure(
+          NextResponse.redirect(
+            new URL(pathname + req.nextUrl.search, appBase),
+          ),
+        );
+      }
+
+      // All other marketing routes — serve via i18n, no auth
+      return secure(intlMiddleware(req));
+    }
+
     // ── Geo-blocking ──────────────────────────────────────────────────────────
     const geoEnabled = process.env.ENABLE_GEO_BLOCKING === "true";
     const isBlockedPage = pathname === "/blocked" || pathname === "/fr/blocked";
@@ -144,31 +180,7 @@ export default clerkMiddleware(
       return secure(intlMiddleware(req));
     }
 
-    // gatectr.com (marketing) → redirect app routes to app.gatectr.com
-    if (!isAppSubdomain) {
-      // OG image and static assets must be served from marketing domain — never redirect
-      if (pathname === "/opengraph-image") {
-        return secure(NextResponse.next());
-      }
-
-      const appRoutes = [
-        "/dashboard",
-        "/fr/dashboard",
-        "/onboarding",
-        "/fr/onboarding",
-        "/admin",
-        "/fr/admin",
-        "/sign-in",
-        "/fr/sign-in",
-        "/sign-up",
-        "/fr/sign-up",
-      ];
-      if (appRoutes.some((r) => pathname.startsWith(r))) {
-        const appBase =
-          process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com";
-        return secure(NextResponse.redirect(new URL(pathname, appBase)));
-      }
-    }
+    // gatectr.com routes are handled above before auth() is called — nothing to do here.
 
     // app.gatectr.com (app) → redirect marketing-only routes to gatectr.com
     if (isAppSubdomain && !isDev) {
