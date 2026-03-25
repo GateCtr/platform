@@ -15,11 +15,13 @@ export function ClerkProvider({
   return (
     <ClerkNextJSProvider
       localization={getClerkLocalization(locale)}
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/onboarding"
-      afterSignOutUrl="/sign-in"
+      allowedRedirectOrigins={[
+        "https://app.gatectr.com",
+        "https://gatectr.com",
+        ...(process.env.NEXT_PUBLIC_APP_URL
+          ? [process.env.NEXT_PUBLIC_APP_URL]
+          : []),
+      ]}
       appearance={{
         theme: shadcn,
         ...appearance,

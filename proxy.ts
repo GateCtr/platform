@@ -124,6 +124,19 @@ export default clerkMiddleware(
         );
       }
 
+      // Waitlist redirect — if enabled, home page → /waitlist
+      const waitlistEnabled = process.env.ENABLE_WAITLIST === "true";
+      const isHomePage =
+        pathname === "/" || pathname === "/fr" || pathname === "/fr/";
+      const isWaitlistPage =
+        pathname.startsWith("/waitlist") || pathname.startsWith("/fr/waitlist");
+      if (waitlistEnabled && isHomePage && !isWaitlistPage) {
+        const waitlistPath = pathname.startsWith("/fr")
+          ? "/fr/waitlist"
+          : "/waitlist";
+        return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
+      }
+
       // All other marketing routes — serve via i18n, no auth
       return secure(intlMiddleware(req));
     }
