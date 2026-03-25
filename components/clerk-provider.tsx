@@ -20,13 +20,6 @@ export function ClerkProvider({
       signInFallbackRedirectUrl="/dashboard"
       signUpFallbackRedirectUrl="/onboarding"
       afterSignOutUrl="/sign-in"
-      // Ensure cookies are scoped to the root domain so they work across
-      // app.gatectr.com and gatectr.com without handshake loops
-      domain={
-        typeof window !== "undefined"
-          ? window.location.hostname.split(".").slice(-2).join(".")
-          : undefined
-      }
       appearance={{
         theme: shadcn,
         ...appearance,
