@@ -19,7 +19,7 @@
       "desc": "Économies moyennes via le Context Optimizer"
     },
     "stat2": {
-      "value": "< 10ms",
+      "value": "~20ms",
       "label": "Latence ajoutée",
       "desc": "Surcharge médiane par requête"
     },
@@ -70,7 +70,7 @@
       {
         "name": "Ryan Sabowa",
         "role": "Fondateur & CEO",
-        "bio": "A précédemment construit de l'infrastructure IA à grande échelle. Obsédé par l'expérience développeur et l'efficacité des coûts."
+        "bio": "Builder et fondateur de GateCtr."
       },
       {
         "name": "Équipe GateCtr",

@@ -14,7 +14,7 @@ export const PRODUCT = {
   metrics: {
     tokenReduction: "-40%",
     setupTime: "5 min",
-    latency: "< 10ms",
+    latency: "~20ms",
     providers: 4,
     sla: "99.9%",
     auditRetentionDays: 90,

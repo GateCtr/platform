@@ -19,7 +19,7 @@
       "desc": "Average savings via Context Optimizer"
     },
     "stat2": {
-      "value": "< 10ms",
+      "value": "~20ms",
       "label": "Added latency",
       "desc": "Median overhead per request"
     },
@@ -70,7 +70,7 @@
       {
         "name": "Ryan Sabowa",
         "role": "Founder & CEO",
-        "bio": "Previously built AI infrastructure at scale. Obsessed with developer experience and cost efficiency."
+        "bio": "Builder and founder of GateCtr."
       },
       {
         "name": "GateCtr Team",

@@ -281,8 +281,9 @@ export default clerkMiddleware(
 
     // ── Waitlist redirect ─────────────────────────────────────────────────────
     const waitlistEnabled = process.env.ENABLE_WAITLIST === "true";
-    const signupsDisabled = process.env.ENABLE_SIGNUPS === "false";
-    if (waitlistEnabled && signupsDisabled && pathname.includes("/sign-up")) {
+    // When waitlist is active, /sign-up is always blocked regardless of ENABLE_SIGNUPS.
+    // Only invited users can sign up — enforced at the webhook level too.
+    if (waitlistEnabled && pathname.includes("/sign-up")) {
       const waitlistPath = locale === "fr" ? "/fr/waitlist" : "/waitlist";
       return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
     }

@@ -165,6 +165,27 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
 
   const name = [first_name, last_name].filter(Boolean).join(" ") || null;
 
+  // ── Waitlist gate ─────────────────────────────────────────────────────────
+  // If waitlist mode is enabled, only users with status "INVITED" can sign up.
+  // Anyone who bypasses the frontend (direct Clerk URL, API) gets deleted here.
+  if (process.env.ENABLE_WAITLIST === "true") {
+    const waitlistEntry = await prisma.waitlistEntry.findUnique({
+      where: { email },
+      select: { status: true },
+    });
+    if (!waitlistEntry || waitlistEntry.status !== "INVITED") {
+      console.warn(`Waitlist gate: deleting unauthorized signup for ${email}`);
+      try {
+        const { clerkClient } = await import("@clerk/nextjs/server");
+        const clerk = await clerkClient();
+        await clerk.users.deleteUser(id);
+      } catch (err) {
+        console.error("Failed to delete unauthorized Clerk user:", err);
+      }
+      return;
+    }
+  }
+
   // Check if user already exists (idempotency at database level)
   const existingUser = await prisma.user.findUnique({
     where: { clerkId: id },
