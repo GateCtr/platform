@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Syne, Geist } from "next/font/google";
 import { cookies, headers } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from "@/components/clerk-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryProvider } from "@/components/query-provider";
 import { Analytics } from "@vercel/analytics/next";
@@ -117,11 +116,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClerkProvider locale={locale}>
-            <ReactQueryProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </ReactQueryProvider>
-          </ClerkProvider>
+          <ReactQueryProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </ReactQueryProvider>
         </ThemeProvider>
         <Analytics />
       </body>
