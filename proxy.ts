@@ -28,6 +28,18 @@ const isPublicRoute = createRouteMatcher([
   "/fr/changelog(.*)",
   "/blocked",
   "/fr/blocked",
+  "/status",
+  "/fr/status",
+  "/privacy",
+  "/fr/privacy",
+  "/terms",
+  "/fr/terms",
+  "/cookies",
+  "/fr/cookies",
+  "/about",
+  "/fr/about",
+  "/careers",
+  "/fr/careers",
   "/sign-in(.*)",
   "/fr/sign-in(.*)",
   "/sign-up(.*)",
@@ -95,7 +107,8 @@ export default clerkMiddleware(
     // ── Marketing domain — bypass Clerk entirely (free plan: no cross-subdomain cookies) ──
     // gatectr.com is marketing-only. Auth lives exclusively on app.gatectr.com.
     // Calling auth() on gatectr.com triggers client-uat-but-no-session-token errors.
-    if (!isAppSubdomain && !isDev) {
+    // Note: status.gatectr.com is handled separately below — skip it here.
+    if (!isAppSubdomain && !isDev && host !== "status.gatectr.com") {
       // OG image, static assets and API routes — serve as-is (never redirect)
       if (pathname === "/opengraph-image" || pathname.startsWith("/api/")) {
         return secure(NextResponse.next());
@@ -268,8 +281,9 @@ export default clerkMiddleware(
 
     // ── Waitlist redirect ─────────────────────────────────────────────────────
     const waitlistEnabled = process.env.ENABLE_WAITLIST === "true";
-    const signupsDisabled = process.env.ENABLE_SIGNUPS === "false";
-    if (waitlistEnabled && signupsDisabled && pathname.includes("/sign-up")) {
+    // When waitlist is active, /sign-up is always blocked regardless of ENABLE_SIGNUPS.
+    // Only invited users can sign up — enforced at the webhook level too.
+    if (waitlistEnabled && pathname.includes("/sign-up")) {
       const waitlistPath = locale === "fr" ? "/fr/waitlist" : "/waitlist";
       return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
     }

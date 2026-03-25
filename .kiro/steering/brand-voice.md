@@ -19,7 +19,7 @@ inclusion: always
 
 ### DO ✅
 
-- Use concrete numbers: "-40% tokens", "5 min setup", "< 10ms latency"
+- Use concrete numbers: "-40% tokens", "5 min setup", "~20ms latency"
 - Short sentences. One idea per sentence.
 - Active voice: "GateCtr routes", not "routing is handled by GateCtr"
 - Address the developer directly: "you", "your API key", "your budget"
