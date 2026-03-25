@@ -96,8 +96,8 @@ export default clerkMiddleware(
     // gatectr.com is marketing-only. Auth lives exclusively on app.gatectr.com.
     // Calling auth() on gatectr.com triggers client-uat-but-no-session-token errors.
     if (!isAppSubdomain && !isDev) {
-      // OG image and static assets — serve as-is
-      if (pathname === "/opengraph-image") {
+      // OG image, static assets and API routes — serve as-is (never redirect)
+      if (pathname === "/opengraph-image" || pathname.startsWith("/api/")) {
         return secure(NextResponse.next());
       }
 
