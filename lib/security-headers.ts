@@ -42,7 +42,7 @@ export function applySecurityHeaders(response: NextResponse): NextResponse {
     "default-src 'self'",
     // Scripts: self + Next.js inline scripts + Clerk + Stripe
     isDev
-      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://js.stripe.com"
+      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://js.stripe.com https://challenges.cloudflare.com"
       : "script-src 'self' 'unsafe-inline' blob: https://*.clerk.accounts.dev https://clerk.app.gatectr.com https://js.stripe.com https://cdn.jsdelivr.net https://challenges.cloudflare.com",
     // Styles: self + inline (Tailwind/shadcn injects inline styles)
     "style-src 'self' 'unsafe-inline'",
@@ -51,7 +51,7 @@ export function applySecurityHeaders(response: NextResponse): NextResponse {
     // Fonts: self
     "font-src 'self' data:",
     // Connect: self + Clerk + Stripe + Sentry + Upstash
-    `connect-src 'self' ${appUrl} https://*.clerk.accounts.dev https://clerk.app.gatectr.com https://api.clerk.dev https://js.stripe.com https://api.stripe.com https://*.sentry.io https://o4509445026152448.ingest.us.sentry.io wss://*.clerk.accounts.dev wss://clerk.app.gatectr.com`,
+    `connect-src 'self' ${appUrl} https://*.clerk.accounts.dev https://clerk.app.gatectr.com https://api.clerk.dev https://js.stripe.com https://api.stripe.com https://*.sentry.io https://o4509445026152448.ingest.us.sentry.io wss://*.clerk.accounts.dev wss://clerk.app.gatectr.com https://challenges.cloudflare.com`,
     // Frames: Stripe + Cloudflare Turnstile (Clerk CAPTCHA)
     "frame-src https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com",
     // Workers: self + blob (Next.js RSC + Clerk workers)
