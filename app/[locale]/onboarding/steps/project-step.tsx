@@ -32,11 +32,17 @@ interface ProjectStepProps {
   onComplete: () => void;
   onSkip: () => void;
   onBack: () => void;
+  isFinishing?: boolean;
 }
 
 const EXAMPLE_NAMES = ["My API", "Production App", "AI Assistant", "Chat Bot"];
 
-export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
+export function ProjectStep({
+  onComplete,
+  onSkip,
+  onBack,
+  isFinishing = false,
+}: ProjectStepProps) {
   const t = useTranslations("onboarding.project");
   const tNav = useTranslations("onboarding.nav");
 
@@ -150,12 +156,12 @@ export function ProjectStep({ onComplete, onSkip, onBack }: ProjectStepProps) {
           variant="cta-accent"
           size="lg"
           className="w-full group"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isFinishing}
         >
-          {isSubmitting ? (
+          {isSubmitting || isFinishing ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t("submitting")}
+              {isFinishing ? t("finishing") : t("submitting")}
             </>
           ) : (
             <>

@@ -125,6 +125,7 @@
     },
     "submit": "Terminer la configuration",
     "submitting": "Création...",
+    "finishing": "Configuration de votre espace...",
     "skip": "Passer pour l'instant",
     "errors": {
       "required": "Nom du projet requis.",

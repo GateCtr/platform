@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useUser, useAuth } from "@clerk/nextjs";
 import { useTranslations, useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 import { WorkspaceStep } from "./steps/workspace-step";
@@ -16,8 +15,6 @@ const STORAGE_KEY = "gatectr_onboarding_step";
 
 export default function OnboardingPage() {
   const t = useTranslations("onboarding");
-  const { user } = useUser();
-  const { getToken } = useAuth();
   const locale = useLocale();
 
   const [step, setStep] = useState<OnboardingStep>(() => {
@@ -27,7 +24,8 @@ export default function OnboardingPage() {
   });
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [animating, setAnimating] = useState(false);
-  const [redirectTo, setRedirectTo] = useState<string | null>(null);
+  const [redirectTo] = useState<string | null>(null);
+  const [isFinishing, setIsFinishing] = useState(false);
 
   // Persist step to localStorage
   useEffect(() => {
@@ -66,34 +64,17 @@ export default function OnboardingPage() {
   }
 
   async function finish() {
+    setIsFinishing(true);
     const fd = new FormData();
     fd.set("locale", locale);
     const result = await finalizeOnboarding(fd);
-    if (result?.error) return;
-
-    // Force Clerk to issue a fresh token with onboardingComplete: true
-    // Retry up to 5 times with 800ms delay to wait for Clerk propagation
-    let attempts = 0;
-    let tokenRefreshed = false;
-    while (attempts < 5 && !tokenRefreshed) {
-      try {
-        await new Promise((r) => setTimeout(r, 800));
-        await user?.reload();
-        const token = await getToken({ skipCache: true });
-        if (token) {
-          // Decode payload to check if onboardingComplete is now true
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          if (payload?.metadata?.onboardingComplete === true) {
-            tokenRefreshed = true;
-            break;
-          }
-        }
-      } catch {
-        // best-effort
-      }
-      attempts++;
+    if (result?.error) {
+      setIsFinishing(false);
+      return;
     }
 
+    // Redirect immediately — middleware reads onboardingComplete from DB
+    // JWT propagation happens in background, no need to wait
     localStorage.removeItem(STORAGE_KEY);
     const dashPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
     window.location.href = dashPath;
@@ -182,7 +163,12 @@ export default function OnboardingPage() {
             <BudgetStep onComplete={goNext} onBack={goBack} />
           )}
           {step === "project" && (
-            <ProjectStep onComplete={finish} onSkip={finish} onBack={goBack} />
+            <ProjectStep
+              onComplete={finish}
+              onSkip={finish}
+              onBack={goBack}
+              isFinishing={isFinishing}
+            />
           )}
         </div>
       </div>

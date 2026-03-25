@@ -125,6 +125,7 @@
     },
     "submit": "Finish setup",
     "submitting": "Creating...",
+    "finishing": "Setting up your workspace...",
     "skip": "Skip for now",
     "errors": {
       "required": "Project name required.",
