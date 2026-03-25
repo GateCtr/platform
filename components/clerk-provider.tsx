@@ -15,6 +15,13 @@ export function ClerkProvider({
   return (
     <ClerkNextJSProvider
       localization={getClerkLocalization(locale)}
+      allowedRedirectOrigins={[
+        "https://app.gatectr.com",
+        "https://gatectr.com",
+        ...(process.env.NEXT_PUBLIC_APP_URL
+          ? [process.env.NEXT_PUBLIC_APP_URL]
+          : []),
+      ]}
       appearance={{
         theme: shadcn,
         ...appearance,
