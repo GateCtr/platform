@@ -311,8 +311,17 @@ export function BillingPageClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ planId: planName, interval }),
       });
-      const data = (await res.json()) as { url?: string };
-      if (data.url) navigateTo(data.url);
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (data.url) {
+        navigateTo(data.url);
+        return;
+      }
+      // Active subscription → use portal to change plan
+      if (res.status === 409) {
+        const portalRes = await fetch("/api/billing/portal", { method: "POST" });
+        const portalData = (await portalRes.json()) as { url?: string };
+        if (portalData.url) navigateTo(portalData.url);
+      }
     },
     [interval],
   );

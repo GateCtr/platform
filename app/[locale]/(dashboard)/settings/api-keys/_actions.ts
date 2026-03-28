@@ -5,14 +5,20 @@ import { prisma } from "@/lib/prisma";
 import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes, createHash } from "crypto";
 
-function generateApiKey(): { raw: string; prefix: string; hash: string } {
-  const raw = `gct_${randomBytes(24).toString("hex")}`;
-  const prefix = raw.slice(0, 12);
+const ALLOWED_SCOPES = ["complete", "chat", "read", "admin"] as const;
+const ALLOWED_ENVIRONMENTS = ["live", "test"] as const;
+
+function generateApiKey(env: "live" | "test"): {
+  raw: string;
+  prefix: string;
+  hash: string;
+} {
+  const secret = randomBytes(24).toString("hex");
+  const raw = `gct_${env}_${secret}`;
+  const prefix = `gct_${env}_${secret.slice(0, 6)}`;
   const hash = createHash("sha256").update(raw).digest("hex");
   return { raw, prefix, hash };
 }
-
-const ALLOWED_SCOPES = ["complete", "chat", "read", "admin"] as const;
 
 export async function createApiKey(formData: FormData) {
   const { userId: clerkId } = await auth();
@@ -39,6 +45,11 @@ export async function createApiKey(formData: FormData) {
       ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
       : null;
 
+  const rawEnv = formData.get("environment") as string;
+  const environment = ALLOWED_ENVIRONMENTS.includes(rawEnv as "live" | "test")
+    ? (rawEnv as "live" | "test")
+    : "live";
+
   if (!name) return { error: "name_required" as const };
 
   // Quota check — count active keys for this team
@@ -60,13 +71,14 @@ export async function createApiKey(formData: FormData) {
   }
 
   try {
-    const { raw, prefix, hash } = generateApiKey();
+    const { raw, prefix, hash } = generateApiKey(environment);
 
     const apiKey = await prisma.apiKey.create({
       data: {
         userId: ctx.userId,
         teamId: ctx.teamId,
         name,
+        environment,
         keyHash: hash,
         prefix,
         scopes,
@@ -77,6 +89,7 @@ export async function createApiKey(formData: FormData) {
         id: true,
         name: true,
         prefix: true,
+        environment: true,
         scopes: true,
         projectId: true,
         isActive: true,

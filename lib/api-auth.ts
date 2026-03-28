@@ -12,6 +12,7 @@ export interface AuthContext {
   apiKeyId: string;
   scopes: string[];
   projectId?: string;
+  environment: "live" | "test";
 }
 
 export type ApiAuthErrorCode =
@@ -125,8 +126,12 @@ export async function authenticateApiKey(
     }).catch(() => {});
   };
 
-  // 3. Prefix lookup
-  const prefix = token.slice(0, 12);
+  // 3. Prefix lookup — derive prefix from token format gct_live_xxx or gct_test_xxx
+  // New format: gct_live_xxxxxx (15 chars) or gct_test_xxxxxx (15 chars)
+  // Legacy format: gct_xxxxxx (12 chars)
+  const prefix = token.startsWith("gct_live_") || token.startsWith("gct_test_")
+    ? token.slice(0, 15)
+    : token.slice(0, 12);
   const record = await prisma.apiKey.findFirst({
     where: { prefix, isActive: true },
   });
@@ -182,10 +187,71 @@ export async function authenticateApiKey(
     apiKeyId: record.id,
     scopes: record.scopes,
     projectId: record.projectId ?? undefined,
+    environment: (record.environment === "test" ? "test" : "live") as "live" | "test",
   };
 }
 
-// ─── Scope enforcement ────────────────────────────────────────────────────────
+// ─── Dual auth helper (API key + Clerk session) ───────────────────────────────
+
+export interface ResolvedAuth {
+  userId: string;
+  scopes: string[];
+  apiKeyId: string | null;
+}
+
+/**
+ * Resolves auth from either a GateCtr API key (Bearer gct_*) or a Clerk session.
+ * Returns null if neither is present/valid — caller must return 401.
+ */
+export async function resolveAuth(
+  req: import("next/server").NextRequest,
+): Promise<ResolvedAuth | { error: ApiAuthErrorCode; httpStatus: 401 | 403 }> {
+  const authHeader = req.headers.get("authorization");
+
+  if (authHeader?.startsWith("Bearer gct_")) {
+    try {
+      const ctx = await authenticateApiKey(req);
+      return {
+        userId: ctx.userId,
+        scopes: ctx.scopes,
+        apiKeyId: ctx.apiKeyId,
+      };
+    } catch (err) {
+      if (err instanceof ApiAuthError) {
+        return { error: err.code, httpStatus: err.httpStatus };
+      }
+      return { error: "invalid_api_key", httpStatus: 401 };
+    }
+  }
+
+  // Fall back to Clerk session
+  const { auth } = await import("@clerk/nextjs/server");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return { error: "missing_api_key", httpStatus: 401 };
+
+  const { prisma } = await import("@/lib/prisma");
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkId },
+    select: { id: true },
+  });
+  if (!dbUser) return { error: "invalid_api_key", httpStatus: 401 };
+
+  return {
+    userId: dbUser.id,
+    scopes: ["complete", "chat", "read", "admin"],
+    apiKeyId: null,
+  };
+}
+
+export function checkScope(
+  scopes: string[],
+  required: string,
+): { error: "insufficient_scope"; httpStatus: 403 } | null {
+  if (!scopes.includes(required)) {
+    return { error: "insufficient_scope", httpStatus: 403 };
+  }
+  return null;
+}
 
 export function requireScope(scopes: string[], required: string): void {
   if (!scopes.includes(required)) {

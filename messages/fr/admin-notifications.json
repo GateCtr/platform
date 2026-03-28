@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "title": "Notifications — Admin"
+  },
+  "title": "Notifications",
+  "subtitle": "Alertes plateforme et historique des acquittements.",
+  "unacknowledged": {
+    "title": "Non acquittées",
+    "empty": "Tout est en ordre.",
+    "emptySubtitle": "Aucune alerte en attente.",
+    "acknowledge": "Acquitter",
+    "acknowledging": "En cours...",
+    "acknowledgeAll": "Tout acquitter",
+    "acknowledgeSuccess": "Alerte acquittée.",
+    "acknowledgeError": "Échec de l'acquittement. Réessayez.",
+    "acknowledgeAllSuccess": "{count} alertes acquittées.",
+    "acknowledgeAllError": "Échec de l'acquittement global. Réessayez."
+  },
+  "history": {
+    "title": "Historique des alertes",
+    "severity": "Sévérité",
+    "message": "Message",
+    "rule": "Règle",
+    "createdAt": "Créée le",
+    "status": "Statut",
+    "acknowledged": "Acquittée",
+    "pending": "En attente",
+    "empty": "Aucune alerte ne correspond aux filtres."
+  },
+  "filters": {
+    "all": "Toutes",
+    "critical": "Critique",
+    "warning": "Avertissement",
+    "info": "Info",
+    "unacknowledged": "Non acquittées",
+    "acknowledged": "Acquittées"
+  },
+  "errors": {
+    "loadFailed": "Échec du chargement des notifications.",
+    "forbidden": "Permissions insuffisantes."
+  }
+}

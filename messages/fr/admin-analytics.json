@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "title": "Analytics — Admin"
+  },
+  "title": "Analytics plateforme",
+  "subtitle": "Utilisation des tokens, répartition par modèle et utilisateurs actifs.",
+  "range": {
+    "label": "Période",
+    "7d": "7j",
+    "30d": "30j",
+    "90d": "90j"
+  },
+  "kpi": {
+    "currentPeriod": "Période actuelle",
+    "previousPeriod": "Période précédente",
+    "pctChange": "vs période précédente",
+    "savedByOptimizer": "Économisés par l'optimiseur",
+    "dau": "Utilisateurs actifs / jour",
+    "mau": "Utilisateurs actifs / mois",
+    "tokens": "tokens"
+  },
+  "charts": {
+    "dailyTrend": "Utilisation quotidienne des tokens",
+    "providerBreakdown": "Utilisation par provider",
+    "tokens": "Tokens"
+  },
+  "tables": {
+    "modelBreakdown": {
+      "title": "Top modèles",
+      "model": "Modèle",
+      "provider": "Provider",
+      "tokens": "Tokens",
+      "pctOfTotal": "% du total",
+      "empty": "Aucune donnée de modèle pour cette période."
+    },
+    "topUsers": {
+      "title": "Top utilisateurs",
+      "user": "Utilisateur",
+      "email": "Email",
+      "plan": "Plan",
+      "tokens": "Tokens",
+      "empty": "Aucune donnée d'utilisation pour cette période."
+    }
+  },
+  "export": {
+    "button": "Exporter CSV",
+    "exporting": "Export en cours..."
+  },
+  "errors": {
+    "loadFailed": "Échec du chargement des données analytics.",
+    "exportFailed": "Échec de l'export. Réessayez.",
+    "forbidden": "Permissions insuffisantes."
+  },
+  "loading": "Chargement des analytics...",
+  "noData": "Aucune donnée"
+}

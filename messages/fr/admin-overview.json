@@ -4,6 +4,30 @@
   },
   "title": "Vue d'ensemble",
   "subtitle": "État de la plateforme en un coup d'œil.",
+  "kpi": {
+    "totalUsers": "Utilisateurs actifs",
+    "activeSubscriptions": "Abonnements actifs",
+    "mrr": "MRR",
+    "tokensThisMonth": "Tokens ce mois",
+    "dataUnavailable": "Données indisponibles"
+  },
+  "health": {
+    "title": "Santé système",
+    "viewAll": "Voir les détails",
+    "unavailable": "Statut indisponible",
+    "status": {
+      "healthy": "Opérationnel",
+      "degraded": "Dégradé",
+      "down": "Hors ligne",
+      "unknown": "Inconnu"
+    }
+  },
+  "charts": {
+    "signupTrend": "Nouvelles inscriptions — 7 derniers jours",
+    "signups": "Inscriptions",
+    "planDistribution": "Répartition des plans",
+    "noData": "Aucune donnée"
+  },
   "waitlist": {
     "title": "Funnel liste d'attente",
     "subtitle": "Conversion de l'inscription à l'utilisateur actif.",

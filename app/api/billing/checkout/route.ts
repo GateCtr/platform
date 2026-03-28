@@ -28,6 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { planId, interval = "monthly" } = body;
   if (!planId) {
+    console.error("[checkout] Missing planId in body:", body);
     return NextResponse.json({ error: "planId is required" }, { status: 400 });
   }
 
@@ -55,15 +56,32 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     where: { name: planId as PlanType },
   });
   if (!plan) {
+    console.error("[checkout] Plan not found in DB:", planId);
     return NextResponse.json({ error: "Plan not found" }, { status: 400 });
   }
 
+  const PRICE_ENV_MAP: Record<string, { monthly?: string; yearly?: string }> = {
+    PRO: {
+      monthly: process.env.STRIPE_PRICE_PRO_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_PRO_YEARLY,
+    },
+    TEAM: {
+      monthly: process.env.STRIPE_PRICE_TEAM_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_TEAM_YEARLY,
+    },
+    ENTERPRISE: {
+      monthly: process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY,
+      yearly: process.env.STRIPE_PRICE_ENTERPRISE_YEARLY,
+    },
+  };
+
   const priceId =
-    interval === "yearly"
-      ? plan.stripePriceIdYearly
-      : plan.stripePriceIdMonthly;
+    (interval === "yearly"
+      ? (plan.stripePriceIdYearly ?? PRICE_ENV_MAP[plan.name]?.yearly)
+      : (plan.stripePriceIdMonthly ?? PRICE_ENV_MAP[plan.name]?.monthly)) ?? null;
 
   if (!priceId) {
+    console.error("[checkout] No priceId for plan:", plan.name, "interval:", interval);
     return NextResponse.json(
       { error: "Invalid plan. Plan must have a Stripe price configured." },
       { status: 400 },
@@ -83,7 +101,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL ??
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
     const isNewProSubscription =
       plan.name === "PRO" &&
       (!user.subscription ||

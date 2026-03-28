@@ -55,10 +55,19 @@ import { cn } from "@/lib/utils";
 const SCOPES = ["complete", "chat", "read", "admin"] as const;
 type Scope = (typeof SCOPES)[number];
 
+const ENVIRONMENTS = ["live", "test"] as const;
+type KeyEnvironment = (typeof ENVIRONMENTS)[number];
+
+const ENV_STYLES: Record<KeyEnvironment, string> = {
+  live: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  test: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+};
+
 interface ApiKey {
   id: string;
   name: string;
   prefix: string;
+  environment: string;
   scopes: string[];
   projectId: string | null;
   isActive: boolean;
@@ -191,6 +200,7 @@ function CreateApiKeyDialog({
   const t = useTranslations("settingsApiKeys");
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const [environment, setEnvironment] = useState<KeyEnvironment>("live");
   const [projectId, setProjectId] = useState<string>("none");
   const [scopes, setScopes] = useState<Scope[]>(["complete", "read"]);
   const [expiresInDays, setExpiresInDays] = useState("0");
@@ -199,6 +209,7 @@ function CreateApiKeyDialog({
 
   function reset() {
     setName("");
+    setEnvironment("live");
     setProjectId("none");
     setScopes(["complete", "read"]);
     setExpiresInDays("0");
@@ -217,6 +228,7 @@ function CreateApiKeyDialog({
 
     const fd = new FormData();
     fd.set("name", name);
+    fd.set("environment", environment);
     if (projectId !== "none") fd.set("projectId", projectId);
     scopes.forEach((s) => fd.append("scopes", s));
     fd.set("expiresInDays", expiresInDays);
@@ -247,7 +259,7 @@ function CreateApiKeyDialog({
           {t("empty.cta")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("create.title")}</DialogTitle>
         </DialogHeader>
@@ -266,6 +278,33 @@ function CreateApiKeyDialog({
             <p className="text-xs text-muted-foreground">
               {t("create.nameDescription")}
             </p>
+          </div>
+
+          {/* Environment */}
+          <div className="space-y-1.5">
+            <Label>{t("create.environment")}</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {ENVIRONMENTS.map((env) => (
+                <button
+                  key={env}
+                  type="button"
+                  onClick={() => setEnvironment(env)}
+                  className={cn(
+                    "flex flex-col items-start rounded-lg border px-3 py-2.5 text-left transition-colors",
+                    environment === env
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:bg-accent/50",
+                  )}
+                >
+                  <span className={cn("text-xs font-mono font-medium px-1.5 py-0 rounded border", ENV_STYLES[env])}>
+                    gct_{env}_
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1.5">
+                    {t(`create.env_${env}` as Parameters<typeof t>[0])}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Scopes */}
@@ -287,44 +326,45 @@ function CreateApiKeyDialog({
             </div>
           </div>
 
-          {/* Expiration */}
-          <div className="space-y-1.5">
-            <Label>{t("create.expiration")}</Label>
-            <Select value={expiresInDays} onValueChange={setExpiresInDays}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {EXPIRY_OPTIONS.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {t(`create.expiry_${opt.value}` as Parameters<typeof t>[0])}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Project */}
-          {projects.length > 0 && (
+          {/* Expiration + Project on same row */}
+          <div className={cn("gap-3", projects.length > 0 ? "grid grid-cols-2" : "")}>
             <div className="space-y-1.5">
-              <Label>{t("create.project")}</Label>
-              <Select value={projectId} onValueChange={setProjectId}>
+              <Label>{t("create.expiration")}</Label>
+              <Select value={expiresInDays} onValueChange={setExpiresInDays}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t("create.projectPlaceholder")} />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">
-                    {t("create.projectPlaceholder")}
-                  </SelectItem>
-                  {projects.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      {p.name}
+                  {EXPIRY_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {t(`create.expiry_${opt.value}` as Parameters<typeof t>[0])}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          )}
+
+            {projects.length > 0 && (
+              <div className="space-y-1.5">
+                <Label>{t("create.project")}</Label>
+                <Select value={projectId} onValueChange={setProjectId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("create.projectPlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">
+                      {t("create.projectPlaceholder")}
+                    </SelectItem>
+                    {projects.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
@@ -431,6 +471,12 @@ function ApiKeyCard({
             {/* Name + status */}
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-medium">{apiKey.name}</span>
+              <span className={cn(
+                "inline-flex items-center rounded px-1.5 py-0 text-[10px] font-mono font-medium border",
+                ENV_STYLES[(apiKey.environment as KeyEnvironment) ?? "live"],
+              )}>
+                gct_{apiKey.environment ?? "live"}_
+              </span>
               <Badge
                 variant={apiKey.isActive ? "default" : "secondary"}
                 className={cn(

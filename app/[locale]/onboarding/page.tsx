@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { useTranslations, useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 import { WorkspaceStep } from "./steps/workspace-step";
@@ -15,6 +16,7 @@ const STORAGE_KEY = "gatectr_onboarding_step";
 
 export default function OnboardingPage() {
   const t = useTranslations("onboarding");
+  const { getToken } = useAuth();
   const locale = useLocale();
 
   const [step, setStep] = useState<OnboardingStep>(() => {
@@ -73,9 +75,9 @@ export default function OnboardingPage() {
       return;
     }
 
-    // Redirect immediately — middleware reads onboardingComplete from DB
-    // JWT propagation happens in background, no need to wait
+    // Force JWT refresh so middleware sees onboardingComplete: true immediately
     localStorage.removeItem(STORAGE_KEY);
+    await getToken({ skipCache: true });
     const dashPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
     window.location.href = dashPath;
   }

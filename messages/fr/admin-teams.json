@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "title": "Équipes — Admin"
+  },
+  "title": "Équipes",
+  "subtitle": "Gérez toutes les équipes et leurs membres sur la plateforme.",
+  "table": {
+    "name": "Nom",
+    "slug": "Slug",
+    "owner": "Propriétaire",
+    "members": "Membres",
+    "plan": "Plan",
+    "projects": "Projets",
+    "created": "Créé le",
+    "actions": "Actions"
+  },
+  "search": {
+    "placeholder": "Rechercher par nom, slug ou email du propriétaire..."
+  },
+  "detail": {
+    "title": "Détails de l'équipe",
+    "metadata": "Métadonnées",
+    "owner": "Propriétaire",
+    "plan": "Plan",
+    "created": "Créé le",
+    "slug": "Slug"
+  },
+  "members": {
+    "title": "Membres",
+    "empty": "Aucun membre.",
+    "columns": {
+      "user": "Utilisateur",
+      "role": "Rôle",
+      "joined": "Rejoint le"
+    },
+    "remove": "Retirer",
+    "removeConfirm": "Retirer ce membre de l'équipe ?",
+    "removeSuccess": "Membre retiré.",
+    "removeError": "Échec du retrait du membre."
+  },
+  "invitations": {
+    "title": "Invitations en attente",
+    "empty": "Aucune invitation en attente.",
+    "columns": {
+      "email": "Email",
+      "role": "Rôle",
+      "expires": "Expire le"
+    },
+    "revoke": "Révoquer",
+    "revokeConfirm": "Révoquer cette invitation ?",
+    "revokeSuccess": "Invitation révoquée.",
+    "revokeError": "Échec de la révocation."
+  },
+  "projects": {
+    "title": "Projets",
+    "empty": "Aucun projet.",
+    "columns": {
+      "name": "Nom",
+      "slug": "Slug",
+      "status": "Statut",
+      "created": "Créé le"
+    },
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "actions": {
+    "viewDetail": "Voir les détails",
+    "deleteTeam": "Supprimer l'équipe",
+    "deleteConfirmTitle": "Supprimer l'équipe",
+    "deleteConfirmDescription": "Cette action supprimera définitivement l'équipe ainsi que tous les membres, invitations, projets et clés API associés. Cette action est irréversible.",
+    "deleteConfirmButton": "Supprimer l'équipe",
+    "deleteSuccess": "Équipe supprimée.",
+    "deleteError": "Échec de la suppression."
+  },
+  "empty": "Aucune équipe trouvée.",
+  "errors": {
+    "forbidden": "Permissions insuffisantes.",
+    "notFound": "Équipe introuvable.",
+    "loadFailed": "Échec du chargement des équipes."
+  }
+}

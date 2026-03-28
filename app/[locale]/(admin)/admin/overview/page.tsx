@@ -16,6 +16,13 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { KpiGrid } from "@/components/admin/overview/kpi-grid";
+import { SystemHealthSummary } from "@/components/admin/overview/system-health-summary";
+import { SignupTrendChart } from "@/components/admin/overview/signup-trend-chart";
+import { PlanDistributionChart } from "@/components/admin/overview/plan-distribution-chart";
+import { WidgetErrorBoundary } from "@/components/admin/overview/error-boundary";
+import { fillTrendGaps, computePlanDistribution } from "@/lib/admin/utils";
+import type { OverviewKpiPayload } from "@/app/api/admin/overview/route";
 
 export async function generateMetadata({
   params,
@@ -32,13 +39,81 @@ export async function generateMetadata({
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 
+async function fetchOverviewKpis(): Promise<OverviewKpiPayload> {
+  const startOfMonth = new Date();
+  startOfMonth.setUTCDate(1);
+  startOfMonth.setUTCHours(0, 0, 0, 0);
+
+  const PLAN_PRICES_CENTS: Record<string, number> = {
+    FREE: 0,
+    PRO: 2900,
+    TEAM: 9900,
+    ENTERPRISE: 0,
+  };
+
+  const [activeUsers, subscriptionsByPlan, tokenAggregate] = await Promise.all([
+    prisma.user.count({ where: { isActive: true, isBanned: false } }),
+    prisma.subscription.findMany({
+      where: { status: "ACTIVE" },
+      include: { plan: { select: { name: true } } },
+    }),
+    prisma.usageLog.aggregate({
+      _sum: { totalTokens: true },
+      where: { createdAt: { gte: startOfMonth } },
+    }),
+  ]);
+
+  const mrrCents = subscriptionsByPlan.reduce((sum, sub) => {
+    return sum + (PLAN_PRICES_CENTS[sub.plan.name] ?? 0);
+  }, 0);
+
+  return {
+    activeUsers,
+    activeSubscriptions: subscriptionsByPlan.length,
+    mrrCents,
+    tokensThisMonth: tokenAggregate._sum.totalTokens ?? 0,
+  };
+}
+
+async function fetchChartData() {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
+  sevenDaysAgo.setUTCHours(0, 0, 0, 0);
+
+  const [rawSignupTrend, userPlans] = await Promise.all([
+    prisma.$queryRaw<{ day: string; count: bigint }[]>`
+      SELECT
+        TO_CHAR("createdAt" AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS day,
+        COUNT(*) AS count
+      FROM users
+      WHERE "createdAt" >= ${sevenDaysAgo}
+      GROUP BY day
+      ORDER BY day ASC
+    `,
+    prisma.user.findMany({
+      where: { isActive: true },
+      select: { plan: true },
+    }),
+  ]);
+
+  const signupTrend = fillTrendGaps(
+    rawSignupTrend.map((r) => ({ day: r.day, count: Number(r.count) })),
+    7,
+  );
+
+  const planDistribution = computePlanDistribution(
+    userPlans.map((u) => u.plan),
+  );
+
+  return { signupTrend, planDistribution };
+}
+
 async function getWaitlistStats() {
   const [counts, last7Days] = await Promise.all([
     prisma.waitlistEntry.groupBy({
       by: ["status"],
       _count: { _all: true },
     }),
-    // Last 7 days signups — group by date string
     prisma.$queryRaw<{ day: string; count: bigint }[]>`
       SELECT
         TO_CHAR("createdAt" AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS day,
@@ -63,7 +138,6 @@ async function getWaitlistStats() {
   const pct = (n: number, d: number) =>
     d === 0 ? 0 : Math.round((n / d) * 100);
 
-  // Fill in missing days with 0
   const trendMap = new Map(last7Days.map((r) => [r.day, Number(r.count)]));
   const trend: { day: string; count: number }[] = [];
   for (let i = 6; i >= 0; i--) {
@@ -203,8 +277,11 @@ export default async function AdminOverviewPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [t, stats] = await Promise.all([
+
+  const [t, kpis, chartData, waitlistStats] = await Promise.all([
     getTranslations({ locale, namespace: "adminOverview" }),
+    fetchOverviewKpis().catch(() => null),
+    fetchChartData().catch(() => null),
     getWaitlistStats(),
   ]);
 
@@ -215,6 +292,41 @@ export default async function AdminOverviewPage({
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
+      </div>
+
+      {/* KPI grid */}
+      <WidgetErrorBoundary>
+        <KpiGrid data={kpis ?? undefined} isLoading={false} />
+      </WidgetErrorBoundary>
+
+      {/* System health + charts row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* System health summary */}
+        <WidgetErrorBoundary>
+          <SystemHealthSummary />
+        </WidgetErrorBoundary>
+
+        {/* Signup trend chart */}
+        <WidgetErrorBoundary>
+          {chartData ? (
+            <SignupTrendChart data={chartData.signupTrend} />
+          ) : (
+            <div className="flex items-center justify-center p-4 rounded-lg border border-border bg-card text-xs text-muted-foreground">
+              {t("kpi.dataUnavailable")}
+            </div>
+          )}
+        </WidgetErrorBoundary>
+
+        {/* Plan distribution chart */}
+        <WidgetErrorBoundary>
+          {chartData ? (
+            <PlanDistributionChart distribution={chartData.planDistribution} />
+          ) : (
+            <div className="flex items-center justify-center p-4 rounded-lg border border-border bg-card text-xs text-muted-foreground">
+              {t("kpi.dataUnavailable")}
+            </div>
+          )}
+        </WidgetErrorBoundary>
       </div>
 
       {/* Waitlist funnel */}
@@ -230,31 +342,31 @@ export default async function AdminOverviewPage({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             <StatCard
               label={tw("total")}
-              value={stats.total}
+              value={waitlistStats.total}
               icon={Users}
               iconClass="bg-muted text-muted-foreground"
             />
             <StatCard
               label={tw("waiting")}
-              value={stats.waiting}
+              value={waitlistStats.waiting}
               icon={Clock}
               iconClass="bg-muted text-muted-foreground"
             />
             <StatCard
               label={tw("invited")}
-              value={stats.invited}
+              value={waitlistStats.invited}
               icon={Mail}
               iconClass="bg-amber-500/10 text-amber-600 dark:text-amber-400"
             />
             <StatCard
               label={tw("joined")}
-              value={stats.joined}
+              value={waitlistStats.joined}
               icon={CheckCircle2}
               iconClass="bg-secondary-500/10 text-secondary-600 dark:text-secondary-400"
             />
             <StatCard
               label={tw("skipped")}
-              value={stats.skipped}
+              value={waitlistStats.skipped}
               icon={Ban}
               iconClass="bg-destructive/10 text-destructive"
             />
@@ -269,23 +381,23 @@ export default async function AdminOverviewPage({
               </div>
               <ConversionRow
                 label={tw("conversionInvited")}
-                value={stats.inviteRate}
+                value={waitlistStats.inviteRate}
                 color="bg-amber-500"
               />
               <ConversionRow
                 label={tw("conversionJoined")}
-                value={stats.joinRate}
+                value={waitlistStats.joinRate}
                 color="bg-secondary-500"
               />
               <ConversionRow
                 label={tw("conversionOverall")}
-                value={stats.overallRate}
+                value={waitlistStats.overallRate}
                 color="bg-primary"
               />
             </div>
 
             <TrendBar
-              trend={stats.trend}
+              trend={waitlistStats.trend}
               todayLabel={tw("today")}
               trendLabel={tw("trend")}
             />

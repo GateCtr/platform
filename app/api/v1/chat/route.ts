@@ -81,6 +81,7 @@ export async function POST(req: NextRequest) {
   let apiKeyId: string | null = null;
   let scopes: string[] = [];
   let projectId: string | undefined = body.projectId;
+  let keyEnvironment: "live" | "test" = "live";
 
   const authHeader = req.headers.get("authorization");
   if (authHeader?.startsWith("Bearer gct_")) {
@@ -90,6 +91,7 @@ export async function POST(req: NextRequest) {
       apiKeyId = ctx.apiKeyId;
       scopes = ctx.scopes;
       projectId = projectId ?? ctx.projectId;
+      keyEnvironment = ctx.environment;
     } catch (err) {
       if (err instanceof ApiAuthError) {
         return NextResponse.json(
@@ -134,6 +136,21 @@ export async function POST(req: NextRequest) {
         { status: 403, headers: baseHeaders },
       );
     }
+  }
+
+  // ── 3b. Test mode — return mock, no LLM call, no cost ────────────────────────
+  if (keyEnvironment === "test") {
+    return NextResponse.json(
+      {
+        id: `chatcmpl_test_${rid}`,
+        object: "chat.completion",
+        model: body.model ?? "test",
+        test_mode: true,
+        choices: [{ message: { role: "assistant", content: "[GateCtr test mode] Mock chat response." }, finish_reason: "stop" }],
+        usage: { prompt_tokens: 10, completion_tokens: 9, total_tokens: 19 },
+      },
+      { headers: { ...baseHeaders, "X-GateCtr-Test-Mode": "true" } },
+    );
   }
 
   // ── 4. Validate model ────────────────────────────────────────────────────────

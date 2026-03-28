@@ -46,6 +46,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import type { RoleName } from "@/lib/permissions";
+import { useAdminStore } from "@/lib/stores/admin-store";
 
 // ─── Route → label key ────────────────────────────────────────────────────────
 
@@ -57,6 +58,9 @@ const ADMIN_ROUTES: Record<string, string> = {
   "/admin/audit-logs": "sidebar.auditLogs",
   "/admin/feature-flags": "sidebar.featureFlags",
   "/admin/system": "sidebar.systemHealth",
+  "/admin/teams": "sidebar.teams",
+  "/admin/analytics": "sidebar.analytics",
+  "/admin/notifications": "sidebar.notifications",
 };
 
 function useAdminBreadcrumb() {
@@ -239,8 +243,10 @@ export function AdminHeader() {
   const t = useTranslations("adminShared");
   const breadcrumb = useAdminBreadcrumb();
   const { data: roles = [], isLoading: rolesLoading } = useRoles();
+  const unacknowledgedCount = useAdminStore((s) => s.unacknowledgedCount);
 
   const displayRole = ROLE_PRIORITY.find((r) => roles.includes(r)) ?? null;
+  const badgeLabel = unacknowledgedCount > 9 ? "9+" : String(unacknowledgedCount);
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -314,9 +320,16 @@ export function AdminHeader() {
                 size="icon"
                 className="size-8 relative shrink-0"
                 aria-label={t("header.notifications")}
+                asChild
               >
-                <Bell className="size-4" />
-                <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-secondary-500" />
+                <Link href="/admin/notifications">
+                  <Bell className="size-4" />
+                  {unacknowledgedCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold leading-4 flex items-center justify-center">
+                      {badgeLabel}
+                    </span>
+                  )}
+                </Link>
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">

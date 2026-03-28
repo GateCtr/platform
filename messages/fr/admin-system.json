@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "title": "Santé du système"
+  },
+  "title": "Santé du système",
+  "subtitle": "Statut en temps réel de tous les services de la plateforme.",
+  "status": {
+    "healthy": "Opérationnel",
+    "degraded": "Dégradé",
+    "down": "Hors service",
+    "unknown": "Inconnu",
+    "unavailable": "Statut indisponible",
+    "lastUpdated": "Dernière mise à jour {time}"
+  },
+  "services": {
+    "title": "Services",
+    "app": "Application",
+    "database": "Base de données",
+    "redis": "Redis",
+    "queue": "File d'attente",
+    "stripe": "Stripe",
+    "latency": "Latence",
+    "lastChecked": "Dernière vérification",
+    "history": "Historique 24h",
+    "noHistory": "Aucun historique disponible"
+  },
+  "stats": {
+    "title": "Statistiques de la plateforme (24h)",
+    "totalRequests": "Total des requêtes",
+    "p50Latency": "Latence p50",
+    "p95Latency": "Latence p95",
+    "errorRate": "Taux d'erreur",
+    "cacheHitRate": "Taux de cache",
+    "ms": "ms",
+    "noData": "Aucune donnée"
+  },
+  "errors": {
+    "fetchFailed": "Impossible de charger les données de santé du système.",
+    "statsFailed": "Impossible de charger les statistiques de la plateforme."
+  }
+}

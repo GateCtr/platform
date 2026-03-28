@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "title": "Indicateurs de fonctionnalité — Admin"
+  },
+  "title": "Indicateurs de fonctionnalité",
+  "subtitle": "Contrôlez le déploiement des fonctionnalités par plan et par utilisateur.",
+  "table": {
+    "key": "Clé",
+    "name": "Nom",
+    "enabled": "Activé",
+    "rollout": "Déploiement",
+    "plans": "Plans",
+    "overrides": "Exceptions"
+  },
+  "rollout": {
+    "label": "Déploiement %",
+    "error": "Doit être entre 0 et 100"
+  },
+  "overrides": {
+    "title": "Exceptions utilisateur",
+    "add": "Ajouter une exception",
+    "remove": "Supprimer",
+    "user": "Email utilisateur",
+    "value": "Valeur",
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "empty": "Aucune exception configurée."
+  },
+  "actions": {
+    "toggle": "Basculer l'indicateur",
+    "save": "Enregistrer"
+  },
+  "empty": "Aucun indicateur de fonctionnalité configuré.",
+  "errors": {
+    "invalidRollout": "Le déploiement doit être un entier entre 0 et 100.",
+    "userNotFound": "Aucun utilisateur trouvé avec cet email.",
+    "forbidden": "Permissions insuffisantes."
+  }
+}

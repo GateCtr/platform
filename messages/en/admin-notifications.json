@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "title": "Notifications — Admin"
+  },
+  "title": "Notifications",
+  "subtitle": "Platform alerts and acknowledgement history.",
+  "unacknowledged": {
+    "title": "Unacknowledged",
+    "empty": "All clear.",
+    "emptySubtitle": "No unacknowledged alerts right now.",
+    "acknowledge": "Acknowledge",
+    "acknowledging": "Acknowledging...",
+    "acknowledgeAll": "Acknowledge all",
+    "acknowledgeSuccess": "Alert acknowledged.",
+    "acknowledgeError": "Failed to acknowledge. Try again.",
+    "acknowledgeAllSuccess": "{count} alerts acknowledged.",
+    "acknowledgeAllError": "Failed to acknowledge all. Try again."
+  },
+  "history": {
+    "title": "Alert history",
+    "severity": "Severity",
+    "message": "Message",
+    "rule": "Rule",
+    "createdAt": "Created",
+    "status": "Status",
+    "acknowledged": "Acknowledged",
+    "pending": "Pending",
+    "empty": "No alerts match the current filters."
+  },
+  "filters": {
+    "all": "All",
+    "critical": "Critical",
+    "warning": "Warning",
+    "info": "Info",
+    "unacknowledged": "Unacknowledged",
+    "acknowledged": "Acknowledged"
+  },
+  "errors": {
+    "loadFailed": "Failed to load notifications.",
+    "forbidden": "Insufficient permissions."
+  }
+}

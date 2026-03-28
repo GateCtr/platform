@@ -45,6 +45,9 @@ import {
   ShieldCheck,
   Flag,
   Activity,
+  Building2,
+  BarChart3,
+  Bell,
   ChevronsUpDown,
   LogOut,
   ExternalLink,
@@ -52,6 +55,7 @@ import {
   Moon,
   Monitor,
 } from "lucide-react";
+import { useAdminStore } from "@/lib/stores/admin-store";
 import type { Permission } from "@/lib/permissions";
 
 // ─── Nav structure ────────────────────────────────────────────────────────────
@@ -79,6 +83,18 @@ const NAV_GROUPS: NavGroup[] = [
         permission: "analytics:read",
         icon: LayoutDashboard,
       },
+      {
+        key: "sidebar.analytics",
+        href: "/admin/analytics",
+        permission: "analytics:read",
+        icon: BarChart3,
+      },
+      {
+        key: "sidebar.notifications",
+        href: "/admin/notifications",
+        permission: "analytics:read",
+        icon: Bell,
+      },
     ],
   },
   {
@@ -89,6 +105,12 @@ const NAV_GROUPS: NavGroup[] = [
         href: "/admin/users",
         permission: "users:read",
         icon: Users,
+      },
+      {
+        key: "sidebar.teams",
+        href: "/admin/teams",
+        permission: "users:read",
+        icon: Building2,
       },
       {
         key: "sidebar.waitlist",
@@ -266,12 +288,20 @@ export function AdminSidebar() {
   const t = useTranslations("adminShared");
   const pathname = usePathname();
   const { data: permissions = [], isLoading } = usePermissions();
+  const unacknowledgedCount = useAdminStore((s) => s.unacknowledgedCount);
 
   const cleanPath = pathname.replace(/^\/fr/, "") || "/";
 
   const visibleGroups = NAV_GROUPS.map((group) => ({
     ...group,
-    items: group.items.filter((item) => permissions.includes(item.permission)),
+    items: group.items
+      .filter((item) => permissions.includes(item.permission))
+      .map((item) => {
+        if (item.href === "/admin/notifications" && unacknowledgedCount > 0) {
+          return { ...item, badge: String(unacknowledgedCount) };
+        }
+        return item;
+      }),
   })).filter((group) => group.items.length > 0);
 
   return (

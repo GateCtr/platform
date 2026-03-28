@@ -4,6 +4,30 @@
   },
   "title": "Overview",
   "subtitle": "Platform health at a glance.",
+  "kpi": {
+    "totalUsers": "Active users",
+    "activeSubscriptions": "Active subscriptions",
+    "mrr": "MRR",
+    "tokensThisMonth": "Tokens this month",
+    "dataUnavailable": "Data unavailable"
+  },
+  "health": {
+    "title": "System health",
+    "viewAll": "View details",
+    "unavailable": "Status unavailable",
+    "status": {
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "down": "Down",
+      "unknown": "Unknown"
+    }
+  },
+  "charts": {
+    "signupTrend": "New signups — last 7 days",
+    "signups": "Signups",
+    "planDistribution": "Plan distribution",
+    "noData": "No data"
+  },
   "waitlist": {
     "title": "Waitlist Funnel",
     "subtitle": "Conversion from signup to active user.",
