@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { ClerkProvider } from "@/components/clerk-provider";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminHeader } from "@/components/admin/header";
+import { AdminStoreProvider } from "@/components/admin/admin-store-provider";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { IdleTimeoutDialog } from "@/components/idle-timeout-dialog";
 
@@ -32,14 +33,16 @@ export default async function AdminRouteLayout({
   return (
     <ClerkProvider>
       <SidebarProvider className="overflow-hidden">
-        <AdminSidebar />
-        <SidebarInset className="min-w-0">
-          <AdminHeader />
-          <IdleTimeoutDialog />
-          <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
-            {children}
-          </div>
-        </SidebarInset>
+        <AdminStoreProvider>
+          <AdminSidebar />
+          <SidebarInset className="min-w-0">
+            <AdminHeader />
+            <IdleTimeoutDialog />
+            <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+              {children}
+            </div>
+          </SidebarInset>
+        </AdminStoreProvider>
       </SidebarProvider>
     </ClerkProvider>
   );

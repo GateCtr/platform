@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { authenticateApiKey, requireScope, ApiAuthError } from "@/lib/api-auth";
+import { authenticateApiKey, checkScope, ApiAuthError } from "@/lib/api-auth";
 import { checkFeatureAccess } from "@/lib/plan-guard";
 import { resolveTeamContext } from "@/lib/team-context";
 
@@ -15,16 +15,20 @@ export async function GET(req: NextRequest) {
   if (authHeader?.startsWith("Bearer gct_")) {
     try {
       const ctx = await authenticateApiKey(req);
-      requireScope(ctx.scopes, "read");
+      const scopeErr = checkScope(ctx.scopes, "read");
+      if (scopeErr)
+        return NextResponse.json(
+          { error: scopeErr.error, required: "read" },
+          { status: 403 },
+        );
       userIds = [ctx.userId];
       primaryUserId = ctx.userId;
     } catch (err) {
-      if (err instanceof ApiAuthError) {
+      if (err instanceof ApiAuthError)
         return NextResponse.json(
           { error: err.code },
           { status: err.httpStatus },
         );
-      }
       return NextResponse.json({ error: "internal_error" }, { status: 500 });
     }
   } else {

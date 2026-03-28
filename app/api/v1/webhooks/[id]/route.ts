@@ -1,18 +1,28 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { resolveTeamContext } from "@/lib/team-context";
+import { resolveTeamContextByUserId } from "@/lib/team-context";
+import { resolveAuth, checkScope } from "@/lib/api-auth";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { userId: clerkId } = await auth();
-  if (!clerkId)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = await resolveAuth(req);
+  if ("error" in auth)
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
-  const ctx = await resolveTeamContext(clerkId);
+  const scopeErr = checkScope(auth.scopes, "admin");
+  if (scopeErr)
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403 },
+    );
+
+  const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json({ error: "No active team" }, { status: 404 });
 
@@ -40,17 +50,10 @@ export async function PATCH(
     try {
       parsedUrl = new URL(body.url);
     } catch {
-      return NextResponse.json(
-        { error: "url_invalid", message: "URL must be a valid HTTPS URL" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "url_invalid" }, { status: 400 });
     }
-    if (parsedUrl.protocol !== "https:") {
-      return NextResponse.json(
-        { error: "url_must_be_https", message: "Webhook URL must use HTTPS" },
-        { status: 400 },
-      );
-    }
+    if (parsedUrl.protocol !== "https:")
+      return NextResponse.json({ error: "url_must_be_https" }, { status: 400 });
   }
 
   const updated = await prisma.webhook.update({
@@ -78,14 +81,24 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { userId: clerkId } = await auth();
-  if (!clerkId)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = await resolveAuth(req);
+  if ("error" in auth)
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
-  const ctx = await resolveTeamContext(clerkId);
+  const scopeErr = checkScope(auth.scopes, "admin");
+  if (scopeErr)
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403 },
+    );
+
+  const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json({ error: "No active team" }, { status: 404 });
 
@@ -97,6 +110,5 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   await prisma.webhook.delete({ where: { id } });
-
   return new NextResponse(null, { status: 204 });
 }

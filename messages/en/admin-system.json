@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "title": "System Health"
+  },
+  "title": "System Health",
+  "subtitle": "Real-time status of all platform services.",
+  "status": {
+    "healthy": "Healthy",
+    "degraded": "Degraded",
+    "down": "Down",
+    "unknown": "Unknown",
+    "unavailable": "Status unavailable",
+    "lastUpdated": "Last updated {time}"
+  },
+  "services": {
+    "title": "Services",
+    "app": "App",
+    "database": "Database",
+    "redis": "Redis",
+    "queue": "Queue",
+    "stripe": "Stripe",
+    "latency": "Latency",
+    "lastChecked": "Last checked",
+    "history": "24h history",
+    "noHistory": "No history available"
+  },
+  "stats": {
+    "title": "Platform Stats (24h)",
+    "totalRequests": "Total requests",
+    "p50Latency": "p50 latency",
+    "p95Latency": "p95 latency",
+    "errorRate": "Error rate",
+    "cacheHitRate": "Cache hit rate",
+    "ms": "ms",
+    "noData": "No data"
+  },
+  "errors": {
+    "fetchFailed": "Failed to load system health data.",
+    "statsFailed": "Failed to load platform stats."
+  }
+}

@@ -34,6 +34,18 @@ export default getRequestConfig(async ({ requestLocale }) => {
       .default,
     adminWaitlist: (await import(`../messages/${locale}/admin-waitlist.json`))
       .default,
+    adminFeatureFlags: (
+      await import(`../messages/${locale}/admin-feature-flags.json`)
+    ).default,
+    adminSystem: (await import(`../messages/${locale}/admin-system.json`))
+      .default,
+    adminTeams: (await import(`../messages/${locale}/admin-teams.json`))
+      .default,
+    adminAnalytics: (await import(`../messages/${locale}/admin-analytics.json`))
+      .default,
+    adminNotifications: (
+      await import(`../messages/${locale}/admin-notifications.json`)
+    ).default,
     settings: (await import(`../messages/${locale}/settings.json`)).default,
     settingsProfile: (
       await import(`../messages/${locale}/settings-profile.json`)

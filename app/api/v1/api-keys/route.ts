@@ -11,11 +11,18 @@ import { resolveTeamContext } from "@/lib/team-context";
 import { randomBytes, createHash } from "crypto";
 
 const ALLOWED_SCOPES = ["complete", "chat", "read", "admin"];
+const ALLOWED_ENVIRONMENTS = ["live", "test"] as const;
+type KeyEnvironment = (typeof ALLOWED_ENVIRONMENTS)[number];
 const REQUEST_ID_HEADER = "X-GateCtr-Request-Id";
 
-function generateApiKey(): { raw: string; prefix: string; hash: string } {
-  const raw = `gct_${randomBytes(24).toString("hex")}`;
-  const prefix = raw.slice(0, 12);
+function generateApiKey(env: KeyEnvironment): {
+  raw: string;
+  prefix: string;
+  hash: string;
+} {
+  const secret = randomBytes(24).toString("hex");
+  const raw = `gct_${env}_${secret}`;
+  const prefix = `gct_${env}_${secret.slice(0, 6)}`;
   const hash = createHash("sha256").update(raw).digest("hex");
   return { raw, prefix, hash };
 }
@@ -86,6 +93,7 @@ export async function POST(req: NextRequest) {
     name?: string;
     projectId?: string;
     scopes?: string[];
+    environment?: string;
   };
 
   if (!body.name) {
@@ -94,6 +102,9 @@ export async function POST(req: NextRequest) {
       { status: 400, headers },
     );
   }
+
+  const environment: KeyEnvironment =
+    body.environment === "test" ? "test" : "live";
 
   const scopes = body.scopes ?? ["complete", "read"];
   const invalidScopes = scopes.filter((s) => !ALLOWED_SCOPES.includes(s));
@@ -108,13 +119,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { raw, prefix, hash } = generateApiKey();
+  const { raw, prefix, hash } = generateApiKey(environment);
 
   const apiKey = await prisma.apiKey.create({
     data: {
       userId: ctx.userId,
       teamId: ctx.teamId,
       name: body.name,
+      environment,
       keyHash: hash,
       prefix,
       projectId: body.projectId ?? null,

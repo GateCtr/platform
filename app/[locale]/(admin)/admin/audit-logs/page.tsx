@@ -37,12 +37,33 @@ async function fetchLogs({
   resource,
   status,
   search,
+  actor,
+  action,
+  from,
+  to,
 }: {
   page: number;
   resource?: string;
   status?: string;
   search?: string;
+  actor?: string;
+  action?: string;
+  from?: string;
+  to?: string;
 }) {
+  // Resolve actor email → actorId
+  let actorId: string | undefined;
+  if (actor) {
+    const actorUser = await prisma.user.findFirst({
+      where: { email: { contains: actor, mode: "insensitive" } },
+      select: { id: true },
+    });
+    if (!actorUser) {
+      return { logs: [], total: 0, resources: [] as string[] };
+    }
+    actorId = actorUser.id;
+  }
+
   const where = {
     ...(resource ? { resource } : {}),
     ...(status === "success"
@@ -52,6 +73,18 @@ async function fetchLogs({
         : {}),
     ...(search
       ? { user: { email: { contains: search, mode: "insensitive" as const } } }
+      : {}),
+    ...(actorId ? { actorId } : {}),
+    ...(action
+      ? { action: { contains: action, mode: "insensitive" as const } }
+      : {}),
+    ...(from || to
+      ? {
+          createdAt: {
+            ...(from ? { gte: new Date(from) } : {}),
+            ...(to ? { lte: new Date(to) } : {}),
+          },
+        }
       : {}),
   };
 
@@ -116,6 +149,10 @@ export default async function AuditLogsPage({
     resource?: string;
     status?: string;
     search?: string;
+    actor?: string;
+    action?: string;
+    from?: string;
+    to?: string;
   }>;
 }) {
   const { locale } = await params;
@@ -125,21 +162,37 @@ export default async function AuditLogsPage({
   const resource = sp.resource || undefined;
   const status = sp.status || undefined;
   const search = sp.search || undefined;
+  const actor = sp.actor || undefined;
+  const action = sp.action || undefined;
+  const from = sp.from || undefined;
+  const to = sp.to || undefined;
 
   const [t, tc, { logs, total, resources }] = await Promise.all([
     getTranslations({ locale, namespace: "adminAuditLogs" }),
     getTranslations({ locale, namespace: "common.pagination" }),
-    fetchLogs({ page, resource, status, search }),
+    fetchLogs({ page, resource, status, search, actor, action, from, to }),
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
-  const hasFilters = !!(resource || status || search);
+  const hasFilters = !!(
+    resource ||
+    status ||
+    search ||
+    actor ||
+    action ||
+    from ||
+    to
+  );
 
   // Build export URL with current filters
   const exportParams = new URLSearchParams();
   if (resource) exportParams.set("resource", resource);
   if (status) exportParams.set("status", status);
   if (search) exportParams.set("search", search);
+  if (actor) exportParams.set("actor", actor);
+  if (action) exportParams.set("action", action);
+  if (from) exportParams.set("from", from);
+  if (to) exportParams.set("to", to);
   const exportHref = `/api/admin/audit-logs?${exportParams.toString()}`;
 
   const detailLabels = {
@@ -187,6 +240,13 @@ export default async function AuditLogsPage({
           statusAll: t("status.all"),
           statusSuccess: t("status.success"),
           statusFailed: t("status.failed"),
+          actor: t("filters.actor"),
+          action: t("filters.action"),
+          dateRange: t("filters.dateRange"),
+          dateFrom: t("filters.dateFrom"),
+          dateTo: t("filters.dateTo"),
+          applyDateRange: t("filters.applyDateRange"),
+          clearDateRange: t("filters.clearDateRange"),
           clearAll: t("filters.clearAll"),
           export: t("filters.export"),
         }}
@@ -249,6 +309,10 @@ export default async function AuditLogsPage({
           resource={resource}
           status={status}
           search={search}
+          actor={actor}
+          action={action}
+          from={from}
+          to={to}
           labels={{
             previous: tc("previous"),
             next: tc("next"),

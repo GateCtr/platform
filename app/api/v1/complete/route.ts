@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
   let apiKeyId: string | null = null;
   let scopes: string[] = [];
   let projectId: string | undefined = body.projectId;
+  let keyEnvironment: "live" | "test" = "live";
 
   const authHeader = req.headers.get("authorization");
   if (authHeader?.startsWith("Bearer gct_")) {
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
       apiKeyId = ctx.apiKeyId;
       scopes = ctx.scopes;
       projectId = projectId ?? ctx.projectId;
+      keyEnvironment = ctx.environment;
     } catch (err) {
       if (err instanceof ApiAuthError) {
         return NextResponse.json(
@@ -137,7 +139,25 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── 4. Validate model ────────────────────────────────────────────────────────
+  // ── 3b. Test mode — return mock, no LLM call, no cost ────────────────────────
+  if (keyEnvironment === "test") {
+    return NextResponse.json(
+      {
+        id: `cmpl_test_${rid}`,
+        object: "text_completion",
+        model: body.model ?? "test",
+        test_mode: true,
+        choices: [
+          {
+            text: "[GateCtr test mode] Mock completion response.",
+            finish_reason: "stop",
+          },
+        ],
+        usage: { prompt_tokens: 10, completion_tokens: 8, total_tokens: 18 },
+      },
+      { headers: { ...baseHeaders, "X-GateCtr-Test-Mode": "true" } },
+    );
+  }
   if (!body.model) {
     return NextResponse.json(
       { error: "model is required" },
