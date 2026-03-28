@@ -174,7 +174,15 @@ export default async function AuditLogsPage({
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
-  const hasFilters = !!(resource || status || search || actor || action || from || to);
+  const hasFilters = !!(
+    resource ||
+    status ||
+    search ||
+    actor ||
+    action ||
+    from ||
+    to
+  );
 
   // Build export URL with current filters
   const exportParams = new URLSearchParams();
