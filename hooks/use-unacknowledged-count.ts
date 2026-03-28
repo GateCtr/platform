@@ -22,9 +22,7 @@ async function fetchUnacknowledgedCount(): Promise<number> {
  * double-fetching.
  */
 export function useUnacknowledgedCount() {
-  const setUnacknowledgedCount = useAdminStore(
-    (s) => s.setUnacknowledgedCount,
-  );
+  const setUnacknowledgedCount = useAdminStore((s) => s.setUnacknowledgedCount);
 
   const query = useQuery<number>({
     queryKey: ["admin", "unacknowledged-count"],
