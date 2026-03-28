@@ -140,7 +140,9 @@ export function TeamsTable({ teams, total, page, pageSize }: TeamsTableProps) {
       accessorKey: "projectCount",
       header: t("table.projects"),
       cell: ({ row }) => (
-        <span className="tabular-nums text-sm">{row.original.projectCount}</span>
+        <span className="tabular-nums text-sm">
+          {row.original.projectCount}
+        </span>
       ),
     },
     {
@@ -184,7 +186,10 @@ export function TeamsTable({ teams, total, page, pageSize }: TeamsTableProps) {
               <TableRow key={hg.id}>
                 {hg.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -205,13 +210,14 @@ export function TeamsTable({ teams, total, page, pageSize }: TeamsTableProps) {
                 <TableRow
                   key={row.id}
                   className="cursor-pointer hover:bg-muted/50"
-                  onClick={() =>
-                    router.push(`/admin/teams/${row.original.id}`)
-                  }
+                  onClick={() => router.push(`/admin/teams/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

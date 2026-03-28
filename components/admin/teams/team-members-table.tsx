@@ -46,7 +46,11 @@ function formatDate(iso: string) {
   });
 }
 
-export function TeamMembersTable({ teamId, members: initialMembers, canWrite }: TeamMembersTableProps) {
+export function TeamMembersTable({
+  teamId,
+  members: initialMembers,
+  canWrite,
+}: TeamMembersTableProps) {
   const t = useTranslations("adminTeams.members");
   const [members, setMembers] = React.useState(initialMembers);
   const [removing, setRemoving] = React.useState<string | null>(null);
@@ -54,9 +58,12 @@ export function TeamMembersTable({ teamId, members: initialMembers, canWrite }: 
   async function handleRemove(memberId: string) {
     setRemoving(memberId);
     try {
-      const res = await fetch(`/api/admin/teams/${teamId}/members/${memberId}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `/api/admin/teams/${teamId}/members/${memberId}`,
+        {
+          method: "DELETE",
+        },
+      );
       const data = await res.json();
       if (!res.ok || !data.success) {
         toast.error(t("removeError"));
@@ -162,7 +169,9 @@ export function TeamMembersTable({ teamId, members: initialMembers, canWrite }: 
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>{t("remove")}</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  {t("remove")}
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
                                   {t("removeConfirm")}
                                 </AlertDialogDescription>

@@ -147,7 +147,12 @@ export async function POST(req: NextRequest) {
         object: "text_completion",
         model: body.model ?? "test",
         test_mode: true,
-        choices: [{ text: "[GateCtr test mode] Mock completion response.", finish_reason: "stop" }],
+        choices: [
+          {
+            text: "[GateCtr test mode] Mock completion response.",
+            finish_reason: "stop",
+          },
+        ],
         usage: { prompt_tokens: 10, completion_tokens: 8, total_tokens: 18 },
       },
       { headers: { ...baseHeaders, "X-GateCtr-Test-Mode": "true" } },

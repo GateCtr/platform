@@ -55,7 +55,9 @@ export function TopUsersTable({ data, isLoading }: TopUsersTableProps) {
             <TableRow>
               <TableHead className="text-xs">{t("user")}</TableHead>
               <TableHead className="text-xs">{t("plan")}</TableHead>
-              <TableHead className="text-xs text-right">{t("tokens")}</TableHead>
+              <TableHead className="text-xs text-right">
+                {t("tokens")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -71,8 +73,12 @@ export function TopUsersTable({ data, isLoading }: TopUsersTableProps) {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell><Skeleton className="h-5 w-14" /></TableCell>
-                  <TableCell><Skeleton className="h-3 w-16 ml-auto" /></TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-14" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-16 ml-auto" />
+                  </TableCell>
                 </TableRow>
               ))
             ) : data.length === 0 ? (

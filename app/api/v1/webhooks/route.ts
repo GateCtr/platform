@@ -10,11 +10,17 @@ import { randomBytes } from "crypto";
 export async function POST(req: NextRequest) {
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
   const scopeErr = checkScope(auth.scopes, "admin");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "admin" }, { status: 403 });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403 },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
@@ -24,7 +30,9 @@ export async function POST(req: NextRequest) {
   if (!quotaResult.allowed) return quotaExceededResponse(quotaResult);
 
   let body: { name?: string; url?: string; events?: string[] };
-  try { body = await req.json(); } catch {
+  try {
+    body = await req.json();
+  } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
@@ -34,7 +42,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "url is required" }, { status: 400 });
 
   let parsedUrl: URL;
-  try { parsedUrl = new URL(body.url); } catch {
+  try {
+    parsedUrl = new URL(body.url);
+  } catch {
     return NextResponse.json({ error: "url_invalid" }, { status: 400 });
   }
   if (parsedUrl.protocol !== "https:")
@@ -58,11 +68,17 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
   const scopeErr = checkScope(auth.scopes, "read");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "read" }, { status: 403 });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "read" },
+      { status: 403 },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
@@ -71,9 +87,15 @@ export async function GET(req: NextRequest) {
   const webhooks = await prisma.webhook.findMany({
     where: { teamId: ctx.teamId },
     select: {
-      id: true, name: true, url: true, events: true,
-      isActive: true, lastFiredAt: true, failCount: true,
-      successCount: true, createdAt: true,
+      id: true,
+      name: true,
+      url: true,
+      events: true,
+      isActive: true,
+      lastFiredAt: true,
+      failCount: true,
+      successCount: true,
+      createdAt: true,
     },
     orderBy: { createdAt: "desc" },
   });

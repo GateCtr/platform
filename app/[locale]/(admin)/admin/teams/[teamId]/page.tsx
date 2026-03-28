@@ -24,7 +24,9 @@ export async function generateMetadata({
     where: { id: teamId },
     select: { name: true },
   });
-  return { title: team ? `${team.name} — ${t("detail.title")}` : t("detail.title") };
+  return {
+    title: team ? `${team.name} — ${t("detail.title")}` : t("detail.title"),
+  };
 }
 
 async function fetchTeamDetail(teamId: string) {
@@ -33,11 +35,19 @@ async function fetchTeamDetail(teamId: string) {
       where: { id: teamId },
       include: {
         owner: {
-          select: { id: true, email: true, name: true, plan: true, avatarUrl: true },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            plan: true,
+            avatarUrl: true,
+          },
         },
         members: {
           include: {
-            user: { select: { id: true, email: true, name: true, avatarUrl: true } },
+            user: {
+              select: { id: true, email: true, name: true, avatarUrl: true },
+            },
           },
           orderBy: { createdAt: "asc" },
         },
@@ -46,7 +56,13 @@ async function fetchTeamDetail(teamId: string) {
           orderBy: { createdAt: "desc" },
         },
         projects: {
-          select: { id: true, name: true, slug: true, isActive: true, createdAt: true },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            isActive: true,
+            createdAt: true,
+          },
           orderBy: { createdAt: "desc" },
         },
       },
@@ -122,7 +138,9 @@ export default async function TeamDetailPage({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{team.name}</h1>
-          <p className="text-sm text-muted-foreground font-mono mt-0.5">{team.slug}</p>
+          <p className="text-sm text-muted-foreground font-mono mt-0.5">
+            {team.slug}
+          </p>
         </div>
         {canDelete && (
           <DeleteTeamButton teamId={team.id} teamName={team.name} />

@@ -51,7 +51,12 @@ export function DeleteTeamButton({ teamId, teamName }: DeleteTeamButtonProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="sm" className="gap-2" disabled={loading}>
+        <Button
+          variant="destructive"
+          size="sm"
+          className="gap-2"
+          disabled={loading}
+        >
           <Trash2 className="size-4" />
           {t("deleteTeam")}
         </Button>

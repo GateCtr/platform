@@ -55,7 +55,10 @@ export async function acknowledgeAlert(
       success: true,
     });
 
-    return { success: true, data: { id: updated.id, acknowledged: updated.acknowledged } };
+    return {
+      success: true,
+      data: { id: updated.id, acknowledged: updated.acknowledged },
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal error";
     if (msg.includes("permission") || msg.includes("Unauthorized")) {

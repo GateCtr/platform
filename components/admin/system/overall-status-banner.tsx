@@ -75,7 +75,12 @@ export function OverallStatusBanner({
   const { icon: Icon, label, className, iconClass } = config[overall];
 
   return (
-    <div className={cn("flex items-center gap-3 rounded-lg border px-4 py-3", className)}>
+    <div
+      className={cn(
+        "flex items-center gap-3 rounded-lg border px-4 py-3",
+        className,
+      )}
+    >
       <Icon className={cn("size-5 shrink-0", iconClass)} />
       <div className="flex flex-col gap-0.5">
         <span className="text-sm font-semibold">{label}</span>

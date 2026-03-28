@@ -90,9 +90,10 @@ function makeRecord(
   }> = {},
 ) {
   const env = token.startsWith("gct_test_") ? "test" : "live";
-  const prefix = token.startsWith("gct_live_") || token.startsWith("gct_test_")
-    ? token.slice(0, 15)
-    : token.slice(0, 12);
+  const prefix =
+    token.startsWith("gct_live_") || token.startsWith("gct_test_")
+      ? token.slice(0, 15)
+      : token.slice(0, 12);
   return {
     id: "key_1",
     userId: "user_1",
@@ -466,9 +467,15 @@ describe("Property 1: API Key Structural Invariants", () => {
         (keyBytes, env) => {
           const secret = Buffer.from(keyBytes).toString("hex");
           const rawKey = `gct_${env}_${secret}`;
-          const keyHash = crypto.createHash("sha256").update(rawKey).digest("hex");
+          const keyHash = crypto
+            .createHash("sha256")
+            .update(rawKey)
+            .digest("hex");
 
-          const providedHash = crypto.createHash("sha256").update(rawKey).digest();
+          const providedHash = crypto
+            .createHash("sha256")
+            .update(rawKey)
+            .digest();
           const storedHash = Buffer.from(keyHash, "hex");
           expect(providedHash.length).toBe(storedHash.length);
           expect(crypto.timingSafeEqual(providedHash, storedHash)).toBe(true);

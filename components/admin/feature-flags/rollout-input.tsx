@@ -11,7 +11,12 @@ interface RolloutInputProps {
   errorLabel?: string; // i18n error string
 }
 
-export function RolloutInput({ value, onChange, disabled, errorLabel }: RolloutInputProps) {
+export function RolloutInput({
+  value,
+  onChange,
+  disabled,
+  errorLabel,
+}: RolloutInputProps) {
   const [raw, setRaw] = React.useState(String(value));
   const [error, setError] = React.useState<string | null>(null);
 
@@ -66,9 +71,7 @@ export function RolloutInput({ value, onChange, disabled, errorLabel }: RolloutI
         />
         <span className="text-sm text-muted-foreground">%</span>
       </div>
-      {error && (
-        <p className="text-xs text-destructive">{error}</p>
-      )}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
 }

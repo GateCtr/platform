@@ -31,7 +31,9 @@ const PROVIDER_COLORS: Record<string, string> = {
 };
 
 function getProviderColor(provider: string): string {
-  return PROVIDER_COLORS[provider.toLowerCase()] ?? "hsl(var(--muted-foreground))";
+  return (
+    PROVIDER_COLORS[provider.toLowerCase()] ?? "hsl(var(--muted-foreground))"
+  );
 }
 
 function formatTokenTick(value: number): string {

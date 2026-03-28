@@ -3,8 +3,17 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { FeatureFlagsTable, type FeatureFlagRow } from "@/components/admin/feature-flags/feature-flags-table";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import {
+  FeatureFlagsTable,
+  type FeatureFlagRow,
+} from "@/components/admin/feature-flags/feature-flags-table";
 
 export async function generateMetadata({
   params,
@@ -12,7 +21,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "adminFeatureFlags.metadata" });
+  const t = await getTranslations({
+    locale,
+    namespace: "adminFeatureFlags.metadata",
+  });
   return { title: t("title") };
 }
 

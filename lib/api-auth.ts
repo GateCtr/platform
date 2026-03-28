@@ -129,9 +129,10 @@ export async function authenticateApiKey(
   // 3. Prefix lookup — derive prefix from token format gct_live_xxx or gct_test_xxx
   // New format: gct_live_xxxxxx (15 chars) or gct_test_xxxxxx (15 chars)
   // Legacy format: gct_xxxxxx (12 chars)
-  const prefix = token.startsWith("gct_live_") || token.startsWith("gct_test_")
-    ? token.slice(0, 15)
-    : token.slice(0, 12);
+  const prefix =
+    token.startsWith("gct_live_") || token.startsWith("gct_test_")
+      ? token.slice(0, 15)
+      : token.slice(0, 12);
   const record = await prisma.apiKey.findFirst({
     where: { prefix, isActive: true },
   });
@@ -187,7 +188,9 @@ export async function authenticateApiKey(
     apiKeyId: record.id,
     scopes: record.scopes,
     projectId: record.projectId ?? undefined,
-    environment: (record.environment === "test" ? "test" : "live") as "live" | "test",
+    environment: (record.environment === "test" ? "test" : "live") as
+      | "live"
+      | "test",
   };
 }
 

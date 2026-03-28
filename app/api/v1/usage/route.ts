@@ -36,12 +36,18 @@ export async function GET(req: NextRequest) {
       const ctx = await authenticateApiKey(req);
       const scopeErr = checkScope(ctx.scopes, "read");
       if (scopeErr)
-        return NextResponse.json({ error: scopeErr.error, required: "read" }, { status: 403 });
+        return NextResponse.json(
+          { error: scopeErr.error, required: "read" },
+          { status: 403 },
+        );
       userIds = [ctx.userId];
       primaryUserId = ctx.userId;
     } catch (err) {
       if (err instanceof ApiAuthError)
-        return NextResponse.json({ error: err.code }, { status: err.httpStatus });
+        return NextResponse.json(
+          { error: err.code },
+          { status: err.httpStatus },
+        );
       return NextResponse.json({ error: "internal_error" }, { status: 500 });
     }
   } else {

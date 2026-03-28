@@ -318,7 +318,9 @@ export function BillingPageClient({
       }
       // Active subscription → use portal to change plan
       if (res.status === 409) {
-        const portalRes = await fetch("/api/billing/portal", { method: "POST" });
+        const portalRes = await fetch("/api/billing/portal", {
+          method: "POST",
+        });
         const portalData = (await portalRes.json()) as { url?: string };
         if (portalData.url) navigateTo(portalData.url);
       }

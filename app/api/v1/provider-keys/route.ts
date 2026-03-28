@@ -19,19 +19,38 @@ export async function GET(req: NextRequest) {
 
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus, headers });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus, headers },
+    );
 
   const scopeErr = checkScope(auth.scopes, "read");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "read" }, { status: 403, headers });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "read" },
+      { status: 403, headers },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
-    return NextResponse.json({ error: "No active team" }, { status: 404, headers });
+    return NextResponse.json(
+      { error: "No active team" },
+      { status: 404, headers },
+    );
 
   const keys = await prisma.lLMProviderKey.findMany({
-    where: { isActive: true, OR: [{ teamId: ctx.teamId }, { userId: ctx.userId, teamId: null }] },
-    select: { id: true, provider: true, name: true, isActive: true, lastUsedAt: true, createdAt: true },
+    where: {
+      isActive: true,
+      OR: [{ teamId: ctx.teamId }, { userId: ctx.userId, teamId: null }],
+    },
+    select: {
+      id: true,
+      provider: true,
+      name: true,
+      isActive: true,
+      lastUsedAt: true,
+      createdAt: true,
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -44,32 +63,71 @@ export async function POST(req: NextRequest) {
 
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus, headers });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus, headers },
+    );
 
   const scopeErr = checkScope(auth.scopes, "admin");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "admin" }, { status: 403, headers });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403, headers },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
-    return NextResponse.json({ error: "No active team" }, { status: 404, headers });
+    return NextResponse.json(
+      { error: "No active team" },
+      { status: 404, headers },
+    );
 
-  const body = (await req.json()) as { provider?: string; apiKey?: string; name?: string };
+  const body = (await req.json()) as {
+    provider?: string;
+    apiKey?: string;
+    name?: string;
+  };
 
   if (!body.provider || !VALID_PROVIDERS.includes(body.provider as Provider))
-    return NextResponse.json({ error: "invalid_provider", allowed: VALID_PROVIDERS }, { status: 400, headers });
+    return NextResponse.json(
+      { error: "invalid_provider", allowed: VALID_PROVIDERS },
+      { status: 400, headers },
+    );
   if (!body.apiKey)
-    return NextResponse.json({ error: "apiKey is required" }, { status: 400, headers });
+    return NextResponse.json(
+      { error: "apiKey is required" },
+      { status: 400, headers },
+    );
 
   const name = body.name ?? "Default";
-  const existing = await prisma.lLMProviderKey.findFirst({ where: { teamId: ctx.teamId, provider: body.provider, name } });
+  const existing = await prisma.lLMProviderKey.findFirst({
+    where: { teamId: ctx.teamId, provider: body.provider, name },
+  });
   if (existing)
-    return NextResponse.json({ error: "conflict", message: `A key named "${name}" already exists for ${body.provider}` }, { status: 409, headers });
+    return NextResponse.json(
+      {
+        error: "conflict",
+        message: `A key named "${name}" already exists for ${body.provider}`,
+      },
+      { status: 409, headers },
+    );
 
   const encryptedApiKey = encrypt(body.apiKey);
   const providerKey = await prisma.lLMProviderKey.create({
-    data: { userId: ctx.userId, teamId: ctx.teamId, provider: body.provider, name, encryptedApiKey },
-    select: { id: true, provider: true, name: true, isActive: true, createdAt: true },
+    data: {
+      userId: ctx.userId,
+      teamId: ctx.teamId,
+      provider: body.provider,
+      name,
+      encryptedApiKey,
+    },
+    select: {
+      id: true,
+      provider: true,
+      name: true,
+      isActive: true,
+      createdAt: true,
+    },
   });
 
   return NextResponse.json(providerKey, { status: 201, headers });

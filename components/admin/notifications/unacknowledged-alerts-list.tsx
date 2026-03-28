@@ -32,13 +32,15 @@ const SEVERITY_CONFIG = {
   },
   warning: {
     icon: AlertTriangle,
-    badgeClass: "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+    badgeClass:
+      "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400",
     rowClass: "border-amber-500/20 bg-amber-500/5",
     iconClass: "text-amber-500",
   },
   info: {
     icon: Info,
-    badgeClass: "border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+    badgeClass:
+      "border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-400",
     rowClass: "border-blue-500/20 bg-blue-500/5",
     iconClass: "text-blue-500",
   },
@@ -117,7 +119,10 @@ export function UnacknowledgedAlertsList({
               <div className="flex items-center gap-2 flex-wrap">
                 <Badge
                   variant="outline"
-                  className={cn("text-[10px] px-1.5 py-0 capitalize", config.badgeClass)}
+                  className={cn(
+                    "text-[10px] px-1.5 py-0 capitalize",
+                    config.badgeClass,
+                  )}
                 >
                   {alert.severity}
                 </Badge>

@@ -246,7 +246,8 @@ export function AdminHeader() {
   const unacknowledgedCount = useAdminStore((s) => s.unacknowledgedCount);
 
   const displayRole = ROLE_PRIORITY.find((r) => roles.includes(r)) ?? null;
-  const badgeLabel = unacknowledgedCount > 9 ? "9+" : String(unacknowledgedCount);
+  const badgeLabel =
+    unacknowledgedCount > 9 ? "9+" : String(unacknowledgedCount);
 
   return (
     <TooltipProvider delayDuration={300}>

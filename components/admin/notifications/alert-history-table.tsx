@@ -7,7 +7,13 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
-import { AlertTriangle, XCircle, Info, CheckCircle2, Clock } from "lucide-react";
+import {
+  AlertTriangle,
+  XCircle,
+  Info,
+  CheckCircle2,
+  Clock,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -43,12 +49,14 @@ const SEVERITY_CONFIG = {
   },
   warning: {
     icon: AlertTriangle,
-    badgeClass: "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+    badgeClass:
+      "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400",
     iconClass: "text-amber-500",
   },
   info: {
     icon: Info,
-    badgeClass: "border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+    badgeClass:
+      "border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-400",
     iconClass: "text-blue-500",
   },
 } as const;
@@ -79,7 +87,10 @@ export function AlertHistoryTable({ data, isLoading }: AlertHistoryTableProps) {
             <Icon className={cn("size-3.5 shrink-0", config.iconClass)} />
             <Badge
               variant="outline"
-              className={cn("text-[10px] px-1.5 py-0 capitalize", config.badgeClass)}
+              className={cn(
+                "text-[10px] px-1.5 py-0 capitalize",
+                config.badgeClass,
+              )}
             >
               {sev}
             </Badge>
@@ -140,7 +151,10 @@ export function AlertHistoryTable({ data, isLoading }: AlertHistoryTableProps) {
               <TableRow key={hg.id}>
                 {hg.headers.map((header) => (
                   <TableHead key={header.id} className="text-xs">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -171,7 +185,10 @@ export function AlertHistoryTable({ data, isLoading }: AlertHistoryTableProps) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

@@ -44,7 +44,9 @@ export async function GET(
       },
       members: {
         include: {
-          user: { select: { id: true, email: true, name: true, avatarUrl: true } },
+          user: {
+            select: { id: true, email: true, name: true, avatarUrl: true },
+          },
         },
         orderBy: { createdAt: "asc" },
       },
@@ -53,7 +55,13 @@ export async function GET(
         orderBy: { createdAt: "desc" },
       },
       projects: {
-        select: { id: true, name: true, slug: true, isActive: true, createdAt: true },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          isActive: true,
+          createdAt: true,
+        },
         orderBy: { createdAt: "desc" },
       },
     },

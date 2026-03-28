@@ -63,8 +63,12 @@ export function NotificationsClient() {
   }, [data?.unacknowledged, setUnacknowledgedCount]);
 
   function invalidate() {
-    void queryClient.invalidateQueries({ queryKey: ["admin", "notifications"] });
-    void queryClient.invalidateQueries({ queryKey: ["admin", "unacknowledged-count"] });
+    void queryClient.invalidateQueries({
+      queryKey: ["admin", "notifications"],
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ["admin", "unacknowledged-count"],
+    });
   }
 
   const unacknowledged = data?.unacknowledged ?? [];
@@ -75,7 +79,9 @@ export function NotificationsClient() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t("title")}
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
       </div>

@@ -146,7 +146,15 @@ export async function POST(req: NextRequest) {
         object: "chat.completion",
         model: body.model ?? "test",
         test_mode: true,
-        choices: [{ message: { role: "assistant", content: "[GateCtr test mode] Mock chat response." }, finish_reason: "stop" }],
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: "[GateCtr test mode] Mock chat response.",
+            },
+            finish_reason: "stop",
+          },
+        ],
         usage: { prompt_tokens: 10, completion_tokens: 9, total_tokens: 19 },
       },
       { headers: { ...baseHeaders, "X-GateCtr-Test-Mode": "true" } },

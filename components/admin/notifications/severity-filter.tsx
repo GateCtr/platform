@@ -10,7 +10,8 @@ const OPTIONS: SeverityOption[] = ["all", "critical", "warning", "info"];
 
 const OPTION_CLASS: Record<SeverityOption, string> = {
   all: "data-[active=true]:bg-foreground data-[active=true]:text-background",
-  critical: "data-[active=true]:bg-destructive data-[active=true]:text-destructive-foreground",
+  critical:
+    "data-[active=true]:bg-destructive data-[active=true]:text-destructive-foreground",
   warning: "data-[active=true]:bg-amber-500 data-[active=true]:text-white",
   info: "data-[active=true]:bg-blue-500 data-[active=true]:text-white",
 };

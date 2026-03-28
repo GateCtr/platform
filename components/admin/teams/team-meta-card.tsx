@@ -69,14 +69,23 @@ export function TeamMetaCard({ owner, createdAt, slug }: TeamMetaCardProps) {
             </dt>
             <dd className="flex items-center gap-2">
               <Avatar className="size-6 rounded-md">
-                <AvatarImage src={owner.avatarUrl ?? undefined} alt={owner.name ?? owner.email} />
-                <AvatarFallback className="text-[10px] rounded-md">{initials}</AvatarFallback>
+                <AvatarImage
+                  src={owner.avatarUrl ?? undefined}
+                  alt={owner.name ?? owner.email}
+                />
+                <AvatarFallback className="text-[10px] rounded-md">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
               <div className="flex flex-col min-w-0">
                 {owner.name && (
-                  <span className="text-sm font-medium truncate">{owner.name}</span>
+                  <span className="text-sm font-medium truncate">
+                    {owner.name}
+                  </span>
                 )}
-                <span className="text-xs text-muted-foreground truncate">{owner.email}</span>
+                <span className="text-xs text-muted-foreground truncate">
+                  {owner.email}
+                </span>
               </div>
             </dd>
           </div>

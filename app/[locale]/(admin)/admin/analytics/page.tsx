@@ -21,8 +21,7 @@ export default async function AdminAnalyticsPage({
   searchParams: Promise<{ range?: string }>;
 }) {
   const { range } = await searchParams;
-  const validRange =
-    range === "7d" || range === "90d" ? range : "30d";
+  const validRange = range === "7d" || range === "90d" ? range : "30d";
 
   return <AnalyticsClient initialRange={validRange} />;
 }

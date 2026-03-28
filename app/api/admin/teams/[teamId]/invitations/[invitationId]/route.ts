@@ -13,9 +13,7 @@ import type { ActionResult } from "@/app/api/admin/feature-flags/[id]/route";
  */
 export async function DELETE(
   _req: NextRequest,
-  {
-    params,
-  }: { params: Promise<{ teamId: string; invitationId: string }> },
+  { params }: { params: Promise<{ teamId: string; invitationId: string }> },
 ) {
   const { teamId, invitationId } = await params;
 

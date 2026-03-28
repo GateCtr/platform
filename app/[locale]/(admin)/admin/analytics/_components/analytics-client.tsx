@@ -45,7 +45,9 @@ export function AnalyticsClient({ initialRange }: AnalyticsClientProps) {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t("title")}
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -86,14 +88,8 @@ export function AnalyticsClient({ initialRange }: AnalyticsClientProps) {
 
       {/* Tables row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ModelBreakdownTable
-          data={data?.byModel ?? []}
-          isLoading={isLoading}
-        />
-        <TopUsersTable
-          data={data?.topUsers ?? []}
-          isLoading={isLoading}
-        />
+        <ModelBreakdownTable data={data?.byModel ?? []} isLoading={isLoading} />
+        <TopUsersTable data={data?.topUsers ?? []} isLoading={isLoading} />
       </div>
     </div>
   );

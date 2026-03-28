@@ -19,18 +19,30 @@ export async function DELETE(
 
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus, headers });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus, headers },
+    );
 
   const scopeErr = checkScope(auth.scopes, "admin");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "admin" }, { status: 403, headers });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403, headers },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
-    return NextResponse.json({ error: "No active team" }, { status: 404, headers });
+    return NextResponse.json(
+      { error: "No active team" },
+      { status: 404, headers },
+    );
 
   const key = await prisma.lLMProviderKey.findFirst({
-    where: { id, OR: [{ teamId: ctx.teamId }, { userId: ctx.userId, teamId: null }] },
+    where: {
+      id,
+      OR: [{ teamId: ctx.teamId }, { userId: ctx.userId, teamId: null }],
+    },
   });
   if (!key)
     return NextResponse.json({ error: "Not found" }, { status: 404, headers });
@@ -39,7 +51,10 @@ export async function DELETE(
   if (hard) {
     await prisma.lLMProviderKey.delete({ where: { id } });
   } else {
-    await prisma.lLMProviderKey.update({ where: { id }, data: { isActive: false } });
+    await prisma.lLMProviderKey.update({
+      where: { id },
+      data: { isActive: false },
+    });
   }
 
   return NextResponse.json({ success: true }, { headers });

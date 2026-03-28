@@ -29,7 +29,10 @@ function formatTokens(n: number): string {
   return n.toLocaleString();
 }
 
-export function ModelBreakdownTable({ data, isLoading }: ModelBreakdownTableProps) {
+export function ModelBreakdownTable({
+  data,
+  isLoading,
+}: ModelBreakdownTableProps) {
   const t = useTranslations("adminAnalytics.tables.modelBreakdown");
 
   return (
@@ -45,18 +48,30 @@ export function ModelBreakdownTable({ data, isLoading }: ModelBreakdownTableProp
             <TableRow>
               <TableHead className="text-xs">{t("model")}</TableHead>
               <TableHead className="text-xs">{t("provider")}</TableHead>
-              <TableHead className="text-xs text-right">{t("tokens")}</TableHead>
-              <TableHead className="text-xs text-right">{t("pctOfTotal")}</TableHead>
+              <TableHead className="text-xs text-right">
+                {t("tokens")}
+              </TableHead>
+              <TableHead className="text-xs text-right">
+                {t("pctOfTotal")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell><Skeleton className="h-3 w-32" /></TableCell>
-                  <TableCell><Skeleton className="h-3 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-3 w-16 ml-auto" /></TableCell>
-                  <TableCell><Skeleton className="h-3 w-10 ml-auto" /></TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-32" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-16 ml-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-3 w-10 ml-auto" />
+                  </TableCell>
                 </TableRow>
               ))
             ) : data.length === 0 ? (
@@ -71,7 +86,9 @@ export function ModelBreakdownTable({ data, isLoading }: ModelBreakdownTableProp
             ) : (
               data.map((row) => (
                 <TableRow key={`${row.provider}/${row.model}`}>
-                  <TableCell className="font-mono text-xs">{row.model}</TableCell>
+                  <TableCell className="font-mono text-xs">
+                    {row.model}
+                  </TableCell>
                   <TableCell className="text-xs text-muted-foreground capitalize">
                     {row.provider}
                   </TableCell>

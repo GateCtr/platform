@@ -106,7 +106,9 @@ export async function POST(
     );
 
   const override = await prisma.featureFlagOverride.upsert({
-    where: { featureFlagId_userId: { featureFlagId: id, userId: targetUser.id } },
+    where: {
+      featureFlagId_userId: { featureFlagId: id, userId: targetUser.id },
+    },
     create: {
       featureFlagId: id,
       userId: targetUser.id,
@@ -190,11 +192,16 @@ export async function DELETE(
     resource: "feature_flag_override",
     action: "feature_flag_override.deleted",
     resourceId: body.overrideId,
-    oldValue: { flagId: id, userId: override.userId, enabled: override.enabled },
+    oldValue: {
+      flagId: id,
+      userId: override.userId,
+      enabled: override.enabled,
+    },
     success: true,
   });
 
-  return NextResponse.json<ActionResult<{ deleted: true }>>(
-    { success: true, data: { deleted: true } },
-  );
+  return NextResponse.json<ActionResult<{ deleted: true }>>({
+    success: true,
+    data: { deleted: true },
+  });
 }

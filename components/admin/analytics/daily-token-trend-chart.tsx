@@ -23,7 +23,10 @@ function formatTokenTick(value: number): string {
   return String(value);
 }
 
-export function DailyTokenTrendChart({ data, isLoading }: DailyTokenTrendChartProps) {
+export function DailyTokenTrendChart({
+  data,
+  isLoading,
+}: DailyTokenTrendChartProps) {
   const t = useTranslations("adminAnalytics.charts");
 
   return (

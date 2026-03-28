@@ -45,8 +45,11 @@ async function fetchStats(): Promise<SystemStatsPayload> {
 export function SystemHealthClient() {
   const t = useTranslations("adminSystem");
 
-  const [lastHealthData, setLastHealthData] = useState<CombinedHealthData | null>(null);
-  const [lastStatsData, setLastStatsData] = useState<SystemStatsPayload | null>(null);
+  const [lastHealthData, setLastHealthData] =
+    useState<CombinedHealthData | null>(null);
+  const [lastStatsData, setLastStatsData] = useState<SystemStatsPayload | null>(
+    null,
+  );
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null);
 
   const healthQuery = useQuery<CombinedHealthData>({

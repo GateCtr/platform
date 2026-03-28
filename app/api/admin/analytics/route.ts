@@ -7,7 +7,11 @@ import { fillTrendGaps, computePctChange, topN } from "@/lib/admin/utils";
 
 type RangeOption = "7d" | "30d" | "90d";
 
-const RANGE_DAYS: Record<RangeOption, number> = { "7d": 7, "30d": 30, "90d": 90 };
+const RANGE_DAYS: Record<RangeOption, number> = {
+  "7d": 7,
+  "30d": 30,
+  "90d": 90,
+};
 
 function getRangeStart(range: RangeOption): Date {
   const d = new Date();
@@ -34,7 +38,12 @@ export type AnalyticsPayload = {
   };
   dailyTrend: { day: string; count: number }[];
   byProvider: { provider: string; tokens: number }[];
-  byModel: { model: string; provider: string; tokens: number; pctOfTotal: number }[];
+  byModel: {
+    model: string;
+    provider: string;
+    tokens: number;
+    pctOfTotal: number;
+  }[];
   topUsers: {
     userId: string;
     tokens: number;
@@ -219,7 +228,9 @@ export async function GET(req: NextRequest) {
       current: currentTokens,
       previous: previousTokens,
       pctChange:
-        previousTokens > 0 ? computePctChange(currentTokens, previousTokens) : 0,
+        previousTokens > 0
+          ? computePctChange(currentTokens, previousTokens)
+          : 0,
       savedByOptimizer: savedAgg._sum.savedTokens ?? 0,
     },
     dailyTrend,

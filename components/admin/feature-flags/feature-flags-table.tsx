@@ -53,7 +53,9 @@ interface FeatureFlagsTableProps {
   flags: FeatureFlagRow[];
 }
 
-export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProps) {
+export function FeatureFlagsTable({
+  flags: initialFlags,
+}: FeatureFlagsTableProps) {
   "use no memo";
   const t = useTranslations("adminFeatureFlags");
   const [data, setData] = React.useState<FeatureFlagRow[]>(initialFlags);
@@ -85,9 +87,7 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
   async function handlePlanToggle(id: string, plan: string, checked: boolean) {
     const flag = data.find((f) => f.id === id)!;
     const prev = flag.enabledPlans;
-    const next = checked
-      ? [...prev, plan]
-      : prev.filter((p) => p !== plan);
+    const next = checked ? [...prev, plan] : prev.filter((p) => p !== plan);
     patchFlag(id, { enabledPlans: next }); // optimistic
     const result = await updateEnabledPlans(id, next);
     if (!result.success) patchFlag(id, { enabledPlans: prev }); // revert
@@ -105,7 +105,9 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
       accessorKey: "key",
       header: t("table.key"),
       cell: ({ row }) => (
-        <span className="font-mono text-xs text-muted-foreground">{row.original.key}</span>
+        <span className="font-mono text-xs text-muted-foreground">
+          {row.original.key}
+        </span>
       ),
     },
     {
@@ -115,7 +117,9 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
         <div className="flex flex-col">
           <span className="text-sm font-medium">{row.original.name}</span>
           {row.original.description && (
-            <span className="text-xs text-muted-foreground line-clamp-1">{row.original.description}</span>
+            <span className="text-xs text-muted-foreground line-clamp-1">
+              {row.original.description}
+            </span>
           )}
         </div>
       ),
@@ -203,7 +207,10 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
               <TableRow key={hg.id}>
                 {hg.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -212,7 +219,10 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
           <TableBody>
             {table.getRowModel().rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   {t("empty")}
                 </TableCell>
               </TableRow>
@@ -221,7 +231,10 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -234,7 +247,9 @@ export function FeatureFlagsTable({ flags: initialFlags }: FeatureFlagsTableProp
       {sheetFlag && (
         <FlagOverridesSheet
           open={!!sheetFlagId}
-          onOpenChange={(open) => { if (!open) setSheetFlagId(null); }}
+          onOpenChange={(open) => {
+            if (!open) setSheetFlagId(null);
+          }}
           flagId={sheetFlag.id}
           flagKey={sheetFlag.key}
           overrides={sheetOverrides}

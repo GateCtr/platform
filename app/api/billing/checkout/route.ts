@@ -78,10 +78,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const priceId =
     (interval === "yearly"
       ? (plan.stripePriceIdYearly ?? PRICE_ENV_MAP[plan.name]?.yearly)
-      : (plan.stripePriceIdMonthly ?? PRICE_ENV_MAP[plan.name]?.monthly)) ?? null;
+      : (plan.stripePriceIdMonthly ?? PRICE_ENV_MAP[plan.name]?.monthly)) ??
+    null;
 
   if (!priceId) {
-    console.error("[checkout] No priceId for plan:", plan.name, "interval:", interval);
+    console.error(
+      "[checkout] No priceId for plan:",
+      plan.name,
+      "interval:",
+      interval,
+    );
     return NextResponse.json(
       { error: "Invalid plan. Plan must have a Stripe price configured." },
       { status: 400 },
@@ -103,7 +109,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const appUrl =
       process.env.NEXT_PUBLIC_APP_URL ??
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000");
     const isNewProSubscription =
       plan.name === "PRO" &&
       (!user.subscription ||

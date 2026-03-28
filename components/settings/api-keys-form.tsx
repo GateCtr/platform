@@ -296,7 +296,12 @@ function CreateApiKeyDialog({
                       : "border-border hover:bg-accent/50",
                   )}
                 >
-                  <span className={cn("text-xs font-mono font-medium px-1.5 py-0 rounded border", ENV_STYLES[env])}>
+                  <span
+                    className={cn(
+                      "text-xs font-mono font-medium px-1.5 py-0 rounded border",
+                      ENV_STYLES[env],
+                    )}
+                  >
                     gct_{env}_
                   </span>
                   <span className="text-xs text-muted-foreground mt-1.5">
@@ -327,7 +332,12 @@ function CreateApiKeyDialog({
           </div>
 
           {/* Expiration + Project on same row */}
-          <div className={cn("gap-3", projects.length > 0 ? "grid grid-cols-2" : "")}>
+          <div
+            className={cn(
+              "gap-3",
+              projects.length > 0 ? "grid grid-cols-2" : "",
+            )}
+          >
             <div className="space-y-1.5">
               <Label>{t("create.expiration")}</Label>
               <Select value={expiresInDays} onValueChange={setExpiresInDays}>
@@ -337,7 +347,9 @@ function CreateApiKeyDialog({
                 <SelectContent>
                   {EXPIRY_OPTIONS.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
-                      {t(`create.expiry_${opt.value}` as Parameters<typeof t>[0])}
+                      {t(
+                        `create.expiry_${opt.value}` as Parameters<typeof t>[0],
+                      )}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -471,10 +483,12 @@ function ApiKeyCard({
             {/* Name + status */}
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-medium">{apiKey.name}</span>
-              <span className={cn(
-                "inline-flex items-center rounded px-1.5 py-0 text-[10px] font-mono font-medium border",
-                ENV_STYLES[(apiKey.environment as KeyEnvironment) ?? "live"],
-              )}>
+              <span
+                className={cn(
+                  "inline-flex items-center rounded px-1.5 py-0 text-[10px] font-mono font-medium border",
+                  ENV_STYLES[(apiKey.environment as KeyEnvironment) ?? "live"],
+                )}
+              >
                 gct_{apiKey.environment ?? "live"}_
               </span>
               <Badge

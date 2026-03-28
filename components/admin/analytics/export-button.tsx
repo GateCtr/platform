@@ -17,9 +17,7 @@ export function ExportButton({ range }: ExportButtonProps) {
   async function handleExport() {
     setIsExporting(true);
     try {
-      const res = await fetch(
-        `/api/admin/analytics?export=csv&range=${range}`,
-      );
+      const res = await fetch(`/api/admin/analytics?export=csv&range=${range}`);
       if (!res.ok) throw new Error("Export failed");
 
       const blob = await res.blob();
@@ -27,9 +25,7 @@ export function ExportButton({ range }: ExportButtonProps) {
       const a = document.createElement("a");
       a.href = url;
       a.download =
-        res.headers
-          .get("Content-Disposition")
-          ?.match(/filename="(.+)"/)?.[1] ??
+        res.headers.get("Content-Disposition")?.match(/filename="(.+)"/)?.[1] ??
         `analytics-${range}-${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);

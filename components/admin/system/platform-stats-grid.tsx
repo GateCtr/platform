@@ -30,7 +30,10 @@ function StatCard({ label, value, isLoading }: StatCardProps) {
   );
 }
 
-export function PlatformStatsGrid({ stats, isLoading }: PlatformStatsGridProps) {
+export function PlatformStatsGrid({
+  stats,
+  isLoading,
+}: PlatformStatsGridProps) {
   const t = useTranslations("adminSystem.stats");
 
   const noData = t("noData");

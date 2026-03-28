@@ -70,7 +70,13 @@ export async function GET(request: NextRequest) {
           },
         });
       }
-      return NextResponse.json({ logs: [], total: 0, page, pageSize, totalPages: 0 });
+      return NextResponse.json({
+        logs: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      });
     }
     actorId = actorUser.id;
   }
@@ -111,7 +117,9 @@ export async function GET(request: NextRequest) {
     });
 
     // Resolve actor emails in bulk
-    const actorIds = [...new Set(logs.map((l) => l.actorId).filter(Boolean) as string[])];
+    const actorIds = [
+      ...new Set(logs.map((l) => l.actorId).filter(Boolean) as string[]),
+    ];
     const actorMap = new Map<string, string>();
     if (actorIds.length > 0) {
       const actors = await prisma.user.findMany({

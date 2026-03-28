@@ -28,7 +28,9 @@ const FALLBACK_COLORS = [
   "hsl(var(--muted-foreground))",
 ];
 
-export function PlanDistributionChart({ distribution }: PlanDistributionChartProps) {
+export function PlanDistributionChart({
+  distribution,
+}: PlanDistributionChartProps) {
   const t = useTranslations("adminOverview.charts");
 
   const data = Object.entries(distribution).map(([plan, count]) => ({
@@ -66,7 +68,10 @@ export function PlanDistributionChart({ distribution }: PlanDistributionChartPro
             {data.map((entry, index) => (
               <Cell
                 key={entry.name}
-                fill={PLAN_COLORS[entry.name] ?? FALLBACK_COLORS[index % FALLBACK_COLORS.length]}
+                fill={
+                  PLAN_COLORS[entry.name] ??
+                  FALLBACK_COLORS[index % FALLBACK_COLORS.length]
+                }
               />
             ))}
           </Pie>

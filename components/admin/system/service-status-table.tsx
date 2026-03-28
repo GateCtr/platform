@@ -40,10 +40,17 @@ interface ServiceStatusTableProps {
 function formatDate(value: Date | string | null): string {
   if (!value) return "—";
   const d = value instanceof Date ? value : new Date(value);
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  return d.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
 
-export function ServiceStatusTable({ services, history }: ServiceStatusTableProps) {
+export function ServiceStatusTable({
+  services,
+  history,
+}: ServiceStatusTableProps) {
   const t = useTranslations("adminSystem.services");
 
   return (
@@ -70,7 +77,11 @@ export function ServiceStatusTable({ services, history }: ServiceStatusTableProp
         </thead>
         <tbody>
           {SERVICES.map((name) => {
-            const svc = services[name] ?? { status: "unknown", checkedAt: null, latencyMs: null };
+            const svc = services[name] ?? {
+              status: "unknown",
+              checkedAt: null,
+              latencyMs: null,
+            };
             const statusKey = svc.status.toLowerCase();
             const rowClass = ROW_HIGHLIGHT[statusKey] ?? "";
             const serviceHistory = history[name] ?? [];
@@ -78,7 +89,10 @@ export function ServiceStatusTable({ services, history }: ServiceStatusTableProp
             return (
               <tr
                 key={name}
-                className={cn("border-b border-border last:border-0 transition-colors", rowClass)}
+                className={cn(
+                  "border-b border-border last:border-0 transition-colors",
+                  rowClass,
+                )}
               >
                 <td className="px-4 py-3 font-medium capitalize">
                   {t(name as "app" | "database" | "redis" | "queue" | "stripe")}

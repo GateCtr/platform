@@ -3,7 +3,13 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { TeamsTable, type TeamRow } from "@/components/admin/teams/teams-table";
 
 export async function generateMetadata({
@@ -16,7 +22,11 @@ export async function generateMetadata({
   return { title: t("title") };
 }
 
-async function fetchTeams(search?: string, page = 1, pageSize = 25): Promise<{ teams: TeamRow[]; total: number }> {
+async function fetchTeams(
+  search?: string,
+  page = 1,
+  pageSize = 25,
+): Promise<{ teams: TeamRow[]; total: number }> {
   const skip = (page - 1) * pageSize;
 
   const where = search
@@ -24,7 +34,11 @@ async function fetchTeams(search?: string, page = 1, pageSize = 25): Promise<{ t
         OR: [
           { name: { contains: search, mode: "insensitive" as const } },
           { slug: { contains: search, mode: "insensitive" as const } },
-          { owner: { email: { contains: search, mode: "insensitive" as const } } },
+          {
+            owner: {
+              email: { contains: search, mode: "insensitive" as const },
+            },
+          },
         ],
       }
     : undefined;

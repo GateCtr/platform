@@ -14,7 +14,8 @@ export function AcknowledgedFilter() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const current = (searchParams.get("acknowledged") ?? "all") as AcknowledgedOption;
+  const current = (searchParams.get("acknowledged") ??
+    "all") as AcknowledgedOption;
 
   function handleSelect(value: AcknowledgedOption) {
     const params = new URLSearchParams(searchParams.toString());

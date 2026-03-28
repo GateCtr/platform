@@ -63,7 +63,9 @@ export function SystemHealthSummary() {
       </div>
 
       {error ? (
-        <span className="text-xs text-muted-foreground">{t("unavailable")}</span>
+        <span className="text-xs text-muted-foreground">
+          {t("unavailable")}
+        </span>
       ) : (
         <>
           {/* Overall badge */}

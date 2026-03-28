@@ -10,29 +10,46 @@ export async function PATCH(
 ) {
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
   const scopeErr = checkScope(auth.scopes, "admin");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "admin" }, { status: 403 });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403 },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json({ error: "No active team" }, { status: 404 });
 
   const { id } = await params;
-  const webhook = await prisma.webhook.findFirst({ where: { id, teamId: ctx.teamId } });
+  const webhook = await prisma.webhook.findFirst({
+    where: { id, teamId: ctx.teamId },
+  });
   if (!webhook)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  let body: { name?: string; url?: string; events?: string[]; isActive?: boolean };
-  try { body = await req.json(); } catch {
+  let body: {
+    name?: string;
+    url?: string;
+    events?: string[];
+    isActive?: boolean;
+  };
+  try {
+    body = await req.json();
+  } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
   if (body.url !== undefined) {
     let parsedUrl: URL;
-    try { parsedUrl = new URL(body.url); } catch {
+    try {
+      parsedUrl = new URL(body.url);
+    } catch {
       return NextResponse.json({ error: "url_invalid" }, { status: 400 });
     }
     if (parsedUrl.protocol !== "https:")
@@ -48,9 +65,15 @@ export async function PATCH(
       ...(body.isActive !== undefined && { isActive: body.isActive }),
     },
     select: {
-      id: true, name: true, url: true, events: true,
-      isActive: true, lastFiredAt: true, failCount: true,
-      successCount: true, createdAt: true,
+      id: true,
+      name: true,
+      url: true,
+      events: true,
+      isActive: true,
+      lastFiredAt: true,
+      failCount: true,
+      successCount: true,
+      createdAt: true,
     },
   });
 
@@ -63,18 +86,26 @@ export async function DELETE(
 ) {
   const auth = await resolveAuth(req);
   if ("error" in auth)
-    return NextResponse.json({ error: auth.error }, { status: auth.httpStatus });
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
   const scopeErr = checkScope(auth.scopes, "admin");
   if (scopeErr)
-    return NextResponse.json({ error: scopeErr.error, required: "admin" }, { status: 403 });
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403 },
+    );
 
   const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json({ error: "No active team" }, { status: 404 });
 
   const { id } = await params;
-  const webhook = await prisma.webhook.findFirst({ where: { id, teamId: ctx.teamId } });
+  const webhook = await prisma.webhook.findFirst({
+    where: { id, teamId: ctx.teamId },
+  });
   if (!webhook)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 

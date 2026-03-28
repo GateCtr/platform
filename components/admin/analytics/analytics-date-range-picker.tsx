@@ -11,7 +11,9 @@ interface AnalyticsDateRangePickerProps {
   value: RangeOption;
 }
 
-export function AnalyticsDateRangePicker({ value }: AnalyticsDateRangePickerProps) {
+export function AnalyticsDateRangePicker({
+  value,
+}: AnalyticsDateRangePickerProps) {
   const t = useTranslations("adminAnalytics.range");
   const router = useRouter();
   const pathname = usePathname();

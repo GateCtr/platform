@@ -46,10 +46,18 @@ export async function toggleFlag(
     await validateCsrf();
     await requirePermission("system:write");
     const actor = await getCurrentUser();
-    if (!actor) return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
+    if (!actor)
+      return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
 
-    const existing = await prisma.featureFlag.findUnique({ where: { id: flagId } });
-    if (!existing) return { success: false, error: "Feature flag not found", code: "NOT_FOUND" };
+    const existing = await prisma.featureFlag.findUnique({
+      where: { id: flagId },
+    });
+    if (!existing)
+      return {
+        success: false,
+        error: "Feature flag not found",
+        code: "NOT_FOUND",
+      };
 
     const updated = await prisma.featureFlag.update({
       where: { id: flagId },
@@ -68,7 +76,10 @@ export async function toggleFlag(
       success: true,
     });
 
-    return { success: true, data: { id: updated.id, enabled: updated.enabled } };
+    return {
+      success: true,
+      data: { id: updated.id, enabled: updated.enabled },
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal error";
     if (msg.includes("permission") || msg.includes("Unauthorized")) {
@@ -88,15 +99,23 @@ export async function updateRollout(
     await validateCsrf();
     await requirePermission("system:write");
     const actor = await getCurrentUser();
-    if (!actor) return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
+    if (!actor)
+      return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
 
     const validation = validateRolloutPct(rolloutPct);
     if (!validation.valid) {
       return { success: false, error: validation.error, code: "VALIDATION" };
     }
 
-    const existing = await prisma.featureFlag.findUnique({ where: { id: flagId } });
-    if (!existing) return { success: false, error: "Feature flag not found", code: "NOT_FOUND" };
+    const existing = await prisma.featureFlag.findUnique({
+      where: { id: flagId },
+    });
+    if (!existing)
+      return {
+        success: false,
+        error: "Feature flag not found",
+        code: "NOT_FOUND",
+      };
 
     const updated = await prisma.featureFlag.update({
       where: { id: flagId },
@@ -115,7 +134,10 @@ export async function updateRollout(
       success: true,
     });
 
-    return { success: true, data: { id: updated.id, rolloutPct: updated.rolloutPct } };
+    return {
+      success: true,
+      data: { id: updated.id, rolloutPct: updated.rolloutPct },
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal error";
     if (msg.includes("permission") || msg.includes("Unauthorized")) {
@@ -135,10 +157,18 @@ export async function updateEnabledPlans(
     await validateCsrf();
     await requirePermission("system:write");
     const actor = await getCurrentUser();
-    if (!actor) return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
+    if (!actor)
+      return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
 
-    const existing = await prisma.featureFlag.findUnique({ where: { id: flagId } });
-    if (!existing) return { success: false, error: "Feature flag not found", code: "NOT_FOUND" };
+    const existing = await prisma.featureFlag.findUnique({
+      where: { id: flagId },
+    });
+    if (!existing)
+      return {
+        success: false,
+        error: "Feature flag not found",
+        code: "NOT_FOUND",
+      };
 
     const updated = await prisma.featureFlag.update({
       where: { id: flagId },
@@ -157,7 +187,10 @@ export async function updateEnabledPlans(
       success: true,
     });
 
-    return { success: true, data: { id: updated.id, enabledPlans: updated.enabledPlans } };
+    return {
+      success: true,
+      data: { id: updated.id, enabledPlans: updated.enabledPlans },
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal error";
     if (msg.includes("permission") || msg.includes("Unauthorized")) {
@@ -178,21 +211,33 @@ export async function addOverride(
     await validateCsrf();
     await requirePermission("system:write");
     const actor = await getCurrentUser();
-    if (!actor) return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
+    if (!actor)
+      return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
 
     const flag = await prisma.featureFlag.findUnique({ where: { id: flagId } });
-    if (!flag) return { success: false, error: "Feature flag not found", code: "NOT_FOUND" };
+    if (!flag)
+      return {
+        success: false,
+        error: "Feature flag not found",
+        code: "NOT_FOUND",
+      };
 
     const targetUser = await prisma.user.findUnique({
       where: { email: userEmail },
       select: { id: true },
     });
     if (!targetUser) {
-      return { success: false, error: "No user found with that email.", code: "NOT_FOUND" };
+      return {
+        success: false,
+        error: "No user found with that email.",
+        code: "NOT_FOUND",
+      };
     }
 
     const override = await prisma.featureFlagOverride.upsert({
-      where: { featureFlagId_userId: { featureFlagId: flagId, userId: targetUser.id } },
+      where: {
+        featureFlagId_userId: { featureFlagId: flagId, userId: targetUser.id },
+      },
       create: { featureFlagId: flagId, userId: targetUser.id, enabled },
       update: { enabled },
     });
@@ -213,7 +258,14 @@ export async function addOverride(
       success: true,
     });
 
-    return { success: true, data: { id: override.id, userId: override.userId, enabled: override.enabled } };
+    return {
+      success: true,
+      data: {
+        id: override.id,
+        userId: override.userId,
+        enabled: override.enabled,
+      },
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Internal error";
     if (msg.includes("permission") || msg.includes("Unauthorized")) {
@@ -232,19 +284,23 @@ export async function removeOverride(
     await validateCsrf();
     await requirePermission("system:write");
     const actor = await getCurrentUser();
-    if (!actor) return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
+    if (!actor)
+      return { success: false, error: "Unauthorized", code: "FORBIDDEN" };
 
     const override = await prisma.featureFlagOverride.findUnique({
       where: { id: overrideId },
       include: { featureFlag: { select: { key: true } } },
     });
-    if (!override) return { success: false, error: "Override not found", code: "NOT_FOUND" };
+    if (!override)
+      return { success: false, error: "Override not found", code: "NOT_FOUND" };
 
     await prisma.featureFlagOverride.delete({ where: { id: overrideId } });
 
     // Invalidate cache for this specific user
     try {
-      await redis.del(`feature_flag:${override.userId}:${override.featureFlag.key}`);
+      await redis.del(
+        `feature_flag:${override.userId}:${override.featureFlag.key}`,
+      );
     } catch (err) {
       console.error("Redis cache invalidation error:", err);
     }
@@ -254,7 +310,11 @@ export async function removeOverride(
       resource: "feature_flag_override",
       action: "feature_flag_override.deleted",
       resourceId: overrideId,
-      oldValue: { flagId: override.featureFlagId, userId: override.userId, enabled: override.enabled },
+      oldValue: {
+        flagId: override.featureFlagId,
+        userId: override.userId,
+        enabled: override.enabled,
+      },
       success: true,
     });
 
