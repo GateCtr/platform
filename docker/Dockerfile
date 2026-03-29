@@ -1,7 +1,7 @@
 # GateCtr Production Dockerfile - Multi-stage build optimized for Next.js 16
 
 # Base stage with pnpm
-FROM node:20-alpine AS base
+FROM node:25-alpine AS base
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN apk add --no-cache libc6-compat openssl
 
@@ -47,7 +47,7 @@ ENV NODE_ENV=production
 RUN pnpm build
 
 # Runner stage - minimal production image
-FROM node:20-alpine AS runner
+FROM node:25-alpine AS runner
 WORKDIR /app
 
 # Install runtime dependencies
