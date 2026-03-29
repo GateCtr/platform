@@ -25,16 +25,23 @@ export interface HeaderProps {
   className?: string;
 }
 
-const NAV_LINKS = [
+import { appUrl } from "@/lib/app-url";
+
+type NavLink = {
+  key: string;
+  href: string;
+  external?: boolean;
+  highlight?: boolean;
+};
+
+const NAV_LINKS: NavLink[] = [
   { key: "features", href: "/features" },
   { key: "pricing", href: "/pricing" },
   { key: "demo", href: "/demo", highlight: true },
   { key: "blog", href: "https://blog.gatectr.com", external: true },
   { key: "docs", href: "/docs" },
   { key: "changelog", href: "/changelog" },
-] as const;
-
-import { appUrl } from "@/lib/app-url";
+];
 
 function DesktopNav() {
   const t = useTranslations("common.nav");
