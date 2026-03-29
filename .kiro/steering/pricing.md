@@ -1,99 +1,106 @@
+---
+inclusion: always
+---
+
 # GateCtr — Pricing & Plans
 
-## Modèle SaaS hybride
+## Billing Model
 
-GateCtr adopte un modèle SaaS hybride. L'utilisateur paye directement son provider LLM — GateCtr monétise la valeur ajoutée (optimisation, contrôle, analytics), pas les tokens eux-mêmes.
+GateCtr adopts a hybrid SaaS model. The user pays their LLM provider directly — GateCtr monetizes the value-add (optimization, control, analytics), not the tokens themselves.
 
-> GateCtr ne prend aucune commission sur les tokens. Vous payez directement OpenAI, Anthropic, etc. avec votre propre clé API. GateCtr facture uniquement la valeur ajoutée de sa plateforme.
+> GateCtr takes **zero commission on tokens**. You pay OpenAI, Anthropic, etc. directly with your own API key. GateCtr charges only for the control layer.
+
+This is a key differentiator vs OpenRouter (5.5% platform fee). Always communicate it.
 
 ## Plans
 
-### Free — €0/mois
-
-- Jusqu'à 50K tokens/mois
-- 1 projet
-- Analytics de base
+### Free — $0/mo
+- Up to 50K tokens/month
+- 1 project
+- Budget Firewall
+- Basic analytics
 - 1 webhook
-- API REST + SDK
-- Docs & support communauté
+- REST API + SDK
+- Community support
 
-### Pro — €29/mois
+### Pro — $29/mo
+- Up to 2M tokens/month
+- 5 projects
+- Context Optimizer (avg $80–120/mo savings on tokens)
+- Basic Model Router
+- Advanced analytics
+- Unlimited webhooks
+- Email support
 
-- Jusqu'à 2M tokens/mois
-- 5 projets
-- Analytics avancées
-- Webhooks illimités
-- Context Optimizer actif
-- Model Router basique
-- Support email
+### Team — $99/mo
+- Up to 10M tokens/month
+- Unlimited projects
+- RBAC — Admin, Manager, Dev, Viewer
+- Team dashboard
+- Audit logs 90 days
+- Advanced Model Router
+- Priority support
 
-### Team — €99/mois
-
-- Jusqu'à 10M tokens/mois
-- Projets illimités
-- RBAC multi-utilisateurs
-- Dashboard équipe
-- Audit logs 90 jours
-- Model Router avancé
-- Support prioritaire
-
-### Enterprise — Custom (sur devis)
-
-- Tokens illimités
-- SLA garanti 99.9%
-- Déploiement dédié / on-prem
+### Enterprise — Custom
+- Unlimited tokens
+- 99.9% SLA guaranteed
+- Dedicated / on-prem deploy
 - SSO / SAML
-- Audit logs illimités
-- Intégrations ERP/BI
+- Unlimited audit logs
+- ERP/BI integrations
 - Customer success manager
 
-## Hiérarchie des plans
+## Plan Hierarchy
 
 `Free` < `Pro` < `Team` < `Enterprise`
 
-- Les features Free sont disponibles sur tous les plans
-- Les features Pro nécessitent Pro ou supérieur
-- Les features Team nécessitent Team ou supérieur
-- Enterprise est exclusif au plan Enterprise
+- Free features available on all plans
+- Pro features require Pro or above
+- Team features require Team or above
+- Enterprise is exclusive to Enterprise plan
 
-## Modèles de facturation complémentaires
+## Additional Billing Models
 
-| Modèle                | Description                                                       | Segment cible |
-| --------------------- | ----------------------------------------------------------------- | ------------- |
-| Abonnement mensuel    | Accès plateforme selon plan choisi                                | Tous segments |
-| Usage-based add-on    | Facturation par tranche de 10M tokens routés au-delà du plan      | Pro & Team    |
-| Savings sharing       | Option premium : % des économies tokens réalisées via l'optimizer | Enterprise    |
-| Seats supplémentaires | €15/user/mois pour les membres au-delà des 3 inclus | Team          |
-| Onboarding premium    | Session de setup et intégration par notre équipe technique        | Enterprise    |
+| Model | Description | Segment |
+|---|---|---|
+| Monthly subscription | Platform access based on chosen plan | All plans |
+| Usage-based add-on | Billed per 10M tokens routed beyond plan limit | Pro & Team |
+| Additional seats | $15/user/month for extra team members | Team |
+| Premium onboarding | Setup and integration session with our technical team | Enterprise |
 
-## Règles pour le copy lié au pricing
+Note: "Savings sharing" has been removed from public pricing — it creates confusion with token commission. Do not mention it in UI or marketing copy.
 
-- Toujours rappeler que GateCtr ne facture PAS les tokens — c'est un différenciateur clé
-- Le plan Free est le principal levier d'acquisition — mettre en avant Budget Firewall + Analytics
-- Upsell Pro : déclenché quand un user Free atteint sa limite → mettre en avant Context Optimizer + Model Router
-- Upsell Team : déclenché quand un user Pro ajoute un second utilisateur → mettre en avant RBAC + Audit Logs
-- Upsell Enterprise : déclenché par besoin on-prem ou 50+ users
-- Ne jamais afficher "Gratuit pour toujours" — utiliser "Plan gratuit" ou "Démarrer gratuitement"
-- Toujours afficher le prix HT avec mention "sur devis" pour Enterprise
+## Pricing Copy Rules
 
-## Messaging pricing par contexte
+- Always remind that GateCtr does NOT charge on tokens — it's the key differentiator
+- Free plan is the primary acquisition lever — lead with Budget Firewall + Analytics
+- Pro upsell: triggered when Free user hits limit → surface Context Optimizer + Model Router
+- Team upsell: triggered when Pro user adds a second user → surface RBAC + Audit Logs
+- Enterprise upsell: triggered by on-prem requirement or 50+ users
+- Never say "Free forever" — use "Free plan" or "Start free"
+- Always show price ex-tax with "custom" for Enterprise
+- ROI anchor for Pro: "At $29/mo, the average customer saves $80–120/mo on token costs alone."
+- Annual toggle: offer ~17% discount (2 months free) — communicate as "Annual — save 17%"
 
-| Contexte              | EN                                                 | FR                                                         |
-| --------------------- | -------------------------------------------------- | ---------------------------------------------------------- |
-| Hero / CTA            | "Start free — No card needed"                      | "Démarrer — Sans carte requise"                            |
-| Pricing page headline | "Pay for control. Not for tokens."                 | "Payez pour le contrôle. Pas pour les tokens."             |
-| Free plan             | "Everything you need to start. $0."                | "Tout ce qu'il faut pour démarrer. 0 €."                   |
-| Pro upsell            | "Upgrade to Pro — save 40% on tokens"              | "Passer à Pro — économisez 40% sur les tokens"             |
-| Enterprise            | "Book a demo"                                      | "Réserver une démo"                                        |
-| Billing philosophy    | "You pay OpenAI. We charge for the control layer." | "Vous payez OpenAI. Nous facturons la couche de contrôle." |
+## Pricing Messaging by Context
 
-## Données de référence (source: config/product.ts)
+| Context | EN | FR |
+|---|---|---|
+| Hero / CTA | "Start free — No card needed" | "Démarrer — Sans carte requise" |
+| Pricing headline | "Pay for control. Not for tokens." | "Payez pour le contrôle. Pas pour les tokens." |
+| Free plan | "Everything you need to start. $0." | "Tout ce qu'il faut pour démarrer. $0." |
+| Pro upsell | "Upgrade to Pro — up to 40% fewer tokens" | "Passer à Pro — jusqu'à 40% de tokens en moins" |
+| ROI anchor | "Pro at $29/mo. Average token savings: $80–120/mo. ROI positive from day one." | "Pro à $29/mois. Économies tokens moyennes : $80–120/mois. ROI positif dès le premier jour." |
+| Enterprise | "Book a technical call" | "Réserver un appel technique" |
+| Billing philosophy | "You pay OpenAI. We charge for the control layer." | "Vous payez OpenAI. Nous facturons la couche de contrôle." |
 
-| Plan       | Prix      | Token limit | Projets   | Webhooks  |
-| ---------- | --------- | ----------- | --------- | --------- |
-| Free       | €0        | 50K/mois    | 1         | 1         |
-| Pro        | €29/mois  | 2M/mois     | 5         | Illimités |
-| Team       | €99/mois  | 10M/mois    | Illimités | Illimités |
-| Enterprise | Sur devis | Illimités   | Illimités | Illimités |
+## Reference Data (source: config/product.ts)
 
-Ces valeurs sont la source de vérité — toujours les lire depuis `config/product.ts` dans le code.
+| Plan | Price | Token limit | Projects | Webhooks |
+|---|---|---|---|---|
+| Free | $0 | 50K/mo | 1 | 1 |
+| Pro | $29/mo | 2M/mo | 5 | Unlimited |
+| Team | $99/mo | 10M/mo | Unlimited | Unlimited |
+| Enterprise | Custom | Unlimited | Unlimited | Unlimited |
+
+These values are the source of truth — always read from `config/product.ts` in code.

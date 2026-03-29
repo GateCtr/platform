@@ -2,12 +2,14 @@
   "metadata": {
     "siteName": "GateCtr",
     "defaultTitle": "GateCtr — One gateway. Every LLM.",
-    "defaultDescription": "-40% tokens. Full control. Zero code changes."
+    "defaultDescription": "Up to 40% fewer tokens. Full control. Zero code changes."
   },
   "nav": {
     "home": "Home",
     "features": "Features",
     "pricing": "Pricing",
+    "demo": "Demo",
+    "blog": "Blog",
     "docs": "Docs",
     "changelog": "Changelog",
     "signIn": "Sign in",
@@ -20,7 +22,7 @@
     "resources": "Resources",
     "legal": "Legal",
     "copyright": "© {year} GateCtr. All rights reserved.",
-    "tagline": "One gateway. Every LLM. Your API key stays yours. Always.",
+    "tagline": "AI Cost Infrastructure. One endpoint swap. Up to 40% fewer tokens. Zero code changes.",
     "changelog": "Changelog",
     "blog": "Blog",
     "status": "Status",

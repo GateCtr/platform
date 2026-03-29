@@ -2,12 +2,14 @@
   "metadata": {
     "siteName": "GateCtr",
     "defaultTitle": "GateCtr — Une passerelle. Tous les LLMs.",
-    "defaultDescription": "-40% de tokens. Contrôle total. Zéro modification de code."
+    "defaultDescription": "Jusqu'à 40% de tokens en moins. Contrôle total. Zéro modification de code."
   },
   "nav": {
     "home": "Accueil",
     "features": "Fonctionnalités",
     "pricing": "Tarifs",
+    "demo": "Démo",
+    "blog": "Blog",
     "docs": "Docs",
     "changelog": "Changelog",
     "signIn": "Connexion",
@@ -20,7 +22,7 @@
     "resources": "Ressources",
     "legal": "Légal",
     "copyright": "© {year} GateCtr. Tous droits réservés.",
-    "tagline": "Une passerelle. Tous les LLMs. Votre clé API reste la vôtre. Toujours.",
+    "tagline": "Infrastructure de coût IA. Un endpoint. Jusqu'à 40% de tokens en moins. Zéro modification de code.",
     "changelog": "Changelog",
     "blog": "Blog",
     "status": "Statut",

@@ -1,0 +1,27 @@
+{
+  "label": "Comparaison",
+  "headline": "Les autres observent. GateCtr contrôle.",
+  "description": "Router ou logger ne suffit pas. GateCtr combine compression de prompts, routage intelligent et limites budgétaires strictes — en un seul changement d'endpoint.",
+  "colFeature": "Fonctionnalité",
+  "col": {
+    "gatectr": "GateCtr",
+    "direct": "API directe",
+    "openrouter": "OpenRouter",
+    "langsmith": "LangSmith"
+  },
+  "row": {
+    "budget": "Contrôle budgétaire",
+    "optimizer": "Optimisation tokens",
+    "routing": "Routage de modèles",
+    "analytics": "Analytics d'usage",
+    "codeChanges": "Zéro modification de code",
+    "price": "Tarification"
+  },
+  "cell": {
+    "free": "Plan gratuit",
+    "tokens": "Vous payez les tokens",
+    "markup": "Majoration tokens",
+    "paid": "Payant uniquement"
+  },
+  "footnote": "Comparaison basée sur les informations publiques disponibles. Mars 2026."
+}

@@ -6,16 +6,16 @@
     "ogDescription": "Cut LLM costs by 40%. Without changing a line of code."
   },
   "hero": {
-    "badge": "LLM Middleware · Zero code changes",
-    "headline": "Cut LLM costs by 40%.",
-    "headlineSub": "Without changing a line of code.",
-    "description": "Swap your endpoint. GateCtr optimizes, routes, and enforces budgets — transparently.",
-    "ctaPrimary": "Start free",
-    "ctaSecondary": "See how it works",
-    "trust": "Your API key stays yours. Always.",
-    "statsTokens": "{tokenReduction} tokens",
+    "badge": "AI Cost Infrastructure · Zero code changes",
+    "headline": "Cut LLM costs by up to 40%.",
+    "headlineSub": "One endpoint swap.",
+    "description": "Compresses every prompt, routes to the cheapest model, and blocks requests before they exceed your budget. No code changes.",
+    "ctaPrimary": "See your savings — free",
+    "ctaSecondary": "How it works in 90s",
+    "trust": "Your API key goes directly to OpenAI. GateCtr never touches your billing.",
+    "statsTokens": "{tokenReduction} tokens saved",
     "statsSetup": "{setupTime} setup",
-    "statsLatency": "{latency} latency",
+    "statsLatency": "{latency} added latency",
     "codeTabBefore": "Before",
     "codeTabAfter": "After GateCtr",
     "codeCommentBefore": "// Before",
@@ -56,25 +56,25 @@
         "title": "Budget Firewall",
         "description": "Hard caps. Soft alerts. No surprise invoices.",
         "metric": "Free plan",
-        "detail": "Set token limits per project or user. Get Slack alerts before you hit the cap."
+        "detail": "Set a cap. Hit it → request blocked → $0 cost incurred. Every time."
       },
       {
         "title": "Context Optimizer",
         "description": "Compresses your prompts. {tokenReduction} tokens. Same output.",
         "metric": "Pro plan",
-        "detail": "Automatic prompt compression. No prompt engineering required."
+        "detail": "Saves an average of 312 tokens per request. Measured on every call."
       },
       {
         "title": "Model Router",
         "description": "Picks the right LLM for each request automatically.",
         "metric": "Pro plan",
-        "detail": "GPT-3.5 for simple tasks. GPT-4o for complex ones. You pay the right price."
+        "detail": "Always use the cheapest model that gets the job done. Automatically."
       },
       {
         "title": "Usage Dashboard",
         "description": "Every token. Every cost. Real-time.",
         "metric": "Free plan",
-        "detail": "Token usage, costs, and trends. Per project, per user, per model."
+        "detail": "See exactly where your money goes. Per request, per project, per model."
       },
       {
         "title": "Webhooks Engine",
@@ -110,7 +110,9 @@
         "title": "You save. You see everything.",
         "description": "Real-time dashboard. Budget alerts. {tokenReduction} token cost from day one."
       }
-    ]
+    ],
+    "demoCta": "Try it in 30s — paste your prompt, see the savings",
+    "demoCtaLink": "Live demo →"
   },
   "codePreview": {
     "label": "Integration",
@@ -136,12 +138,12 @@
       {
         "value": "{latency}",
         "label": "Added latency",
-        "description": "Transparent middleware"
+        "description": "Less than a network round-trip"
       },
       {
         "value": "{setupTime}",
         "label": "Setup time",
-        "description": "Endpoint swap, no code changes"
+        "description": "Endpoint swap — see the quickstart"
       },
       {
         "value": "{providers} LLMs",
@@ -154,6 +156,10 @@
     "label": "Pricing",
     "headline": "Pay for control. Not for tokens.",
     "description": "You pay your LLM provider directly. GateCtr charges for the value on top — optimization, routing, analytics.",
+    "annualToggle": "Monthly",
+    "annualToggleActive": "Annual — save 17%",
+    "annualBadge": "2 months free",
+    "roiAnchor": "Pro at $29/mo. Average token savings: $80–120/mo. ROI positive from day one.",
     "ctaFree": "Start free",
     "ctaPro": "Start free — upgrade anytime",
     "ctaTeam": "Start free — upgrade anytime",
@@ -161,6 +167,7 @@
     "popular": "Most popular",
     "custom": "Custom",
     "perMonth": "/mo",
+    "perYear": "/mo billed annually",
     "plans": [
       {
         "name": "Free",

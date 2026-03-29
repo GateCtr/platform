@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Démo live — GateCtr",
+    "description": "Voyez GateCtr en action. Collez un prompt, observez la compression, le routage et les économies en temps réel. Sans compte requis."
+  },
+  "hero": {
+    "badge": "Démo live · Sans compte requis",
+    "headline": "Voyez exactement ce que fait GateCtr.",
+    "description": "Collez n'importe quel prompt. GateCtr le compresse, choisit le bon modèle et affiche les vraies économies.",
+    "trust": "Votre clé API est utilisée une seule fois. Jamais stockée. Jamais loggée."
+  },
+  "playground": {
+    "apiKeyLabel": "Votre clé API",
+    "apiKeyOptional": "optionnel",
+    "apiKeyPlaceholder": "sk-... ou AIza...",
+    "keyTrustNote": "Utilisée pour cette requête uniquement. Jamais stockée. Jamais loggée.",
+    "sandboxNote": "Pas de clé ? Nous couvrons cette requête. 3 appels gratuits/heure.",
+    "sandboxModelNote": "Le sandbox utilise GPT-5.4 nano. Ajoutez votre clé pour choisir n'importe quel modèle.",
+    "sandboxLimit": "· limite sandbox",
+    "inputLabel": "Votre prompt",
+    "inputPlaceholder": "Collez n'importe quel prompt — un message système, une requête utilisateur, tout ce que vous enverriez à un LLM...",
+    "sampleLabel": "Essayez un exemple :",
+    "modelLabel": "Modèle",
+    "modelAuto": "Auto (Model Router)",
+    "ctaSend": "Passer par GateCtr",
+    "ctaSending": "Traitement...",
+    "quotaLabel": "{remaining} requêtes restantes",
+    "quotaExhausted": "Limite atteinte. Créez un compte pour un accès illimité.",
+    "emptyState": "Collez un prompt et passez-le par GateCtr.",
+    "emptyStateSub": "Tokens économisés, routage et coût — mesurés en temps réel.",
+    "processing": "Traitement via GateCtr…"
+  },
+  "results": {
+    "sandboxBadge": "Sandbox — clé GateCtr · pas la vôtre",
+    "tabTokens": "Tokens",
+    "tabResponse": "Réponse",
+    "tabCost": "Coût",
+    "response": {
+      "label": "Réponse LLM",
+      "modelUsed": "Modèle utilisé",
+      "latencyLabel": "Latence gateway",
+      "routingReason": {
+        "low_complexity": "faible complexité → modèle moins cher",
+        "medium_complexity": "complexité moyenne → modèle équilibré",
+        "high_complexity": "haute complexité → meilleur modèle",
+        "auto_routed": "routage automatique",
+        "user_specified": "spécifié par l'utilisateur",
+        "sandbox_fixed": "sandbox — modèle fixe"
+      },
+      "latency": "{ms}ms"
+    },
+    "tokens": {
+      "original": "Prompt original",
+      "optimized": "Après optimisation",
+      "saved": "Tokens économisés",
+      "completion": "Complétion",
+      "total": "Total",
+      "unit": "tokens",
+      "compressionLabel": "Compression",
+      "promptAfter": "Prompt optimisé",
+      "withoutGatectr": "Sans GateCtr",
+      "withGatectr": "Avec GateCtr",
+      "ctaHeadline": "{saved} tokens économisés sur cette requête. -{pct}% sur chaque appel.",
+      "ctaSub": "Automatique. Zéro modification de code."
+    },
+    "cost": {
+      "perRequest": "Coût cette requête",
+      "saved": "Économisé par l'optimizer",
+      "unit": "USD",
+      "projection": "À 100K requêtes/mois",
+      "projectionSaved": "d'économies mensuelles projetées"
+    }
+  },
+  "errors": {
+    "tooShort": "Prompt trop court. Écrivez au moins quelques mots.",
+    "tooLong": "Prompt trop long. Maximum 2 000 caractères.",
+    "invalidApiKey": "Format de clé API invalide. Vérifiez votre clé et réessayez.",
+    "quotaExceeded": "Limite démo atteinte (10 req/heure). Créez un compte pour un accès illimité.",
+    "sandboxQuotaExceeded": "Limite sandbox atteinte (3 req/heure). Ajoutez votre clé API pour 10 req/heure, ou créez un compte.",
+    "sandboxUnavailable": "Le sandbox est temporairement indisponible. Ajoutez votre clé OpenAI pour continuer.",
+    "timeout": "Requête expirée. Essayez un prompt plus court.",
+    "network": "Requête échouée. Vérifiez votre connexion et réessayez.",
+    "unknown": "Une erreur est survenue. Réessayez."
+  },
+  "cta": {
+    "headline": "Ça, c'est sur chaque requête. En production.",
+    "description": "Branchez GateCtr en 5 min. Vos prompts sont compressés, vos modèles routés, votre budget protégé — automatiquement.",
+    "ctaPrimary": "Démarrer — c'est gratuit",
+    "ctaSecondary": "Voir les tarifs",
+    "trust": "Sans carte requise · Prêt en 5 min"
+  }
+}
