@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "Live Demo — GateCtr",
+    "description": "See GateCtr in action. Paste a prompt, watch it get compressed, routed, and measured in real-time. No account required."
+  },
+  "hero": {
+    "badge": "Live demo · No account required",
+    "headline": "See exactly what GateCtr does.",
+    "description": "Paste any prompt. GateCtr compresses it, picks the right model, and shows you the real savings.",
+    "trust": "Your API key is used once. Never stored. Never logged."
+  },
+  "playground": {
+    "apiKeyLabel": "Your API key",
+    "apiKeyOptional": "optional",
+    "apiKeyPlaceholder": "sk-... or AIza...",
+    "keyTrustNote": "Used for this request only. Never stored. Never logged.",
+    "sandboxNote": "No key? We cover this request. 3 free calls/hour.",
+    "sandboxModelNote": "Sandbox uses GPT-5.4 nano. Add your key to choose any model.",
+    "sandboxLimit": "· sandbox limit",
+    "inputLabel": "Your prompt",
+    "inputPlaceholder": "Paste any prompt — a system message, a user query, anything you'd send to an LLM...",
+    "sampleLabel": "Try a sample:",
+    "modelLabel": "Model",
+    "modelAuto": "Auto (Model Router)",
+    "ctaSend": "Run through GateCtr",
+    "ctaSending": "Processing...",
+    "quotaLabel": "{remaining} requests remaining",
+    "quotaExhausted": "Limit reached. Sign up for unlimited access.",
+    "emptyState": "Paste a prompt and run it through GateCtr.",
+    "emptyStateSub": "Token savings, model routing, and cost — all measured in real-time.",
+    "processing": "Processing through GateCtr…"
+  },
+  "results": {
+    "sandboxBadge": "Sandbox — GateCtr's key · not yours",
+    "tabTokens": "Token breakdown",
+    "tabResponse": "Response",
+    "tabCost": "Cost",
+    "response": {
+      "label": "LLM response",
+      "modelUsed": "Model used",
+      "latencyLabel": "Gateway latency",
+      "routingReason": {
+        "low_complexity": "low complexity → cheaper model",
+        "medium_complexity": "medium complexity → balanced model",
+        "high_complexity": "high complexity → best model",
+        "auto_routed": "auto-routed",
+        "user_specified": "user specified",
+        "sandbox_fixed": "sandbox — fixed model"
+      },
+      "latency": "{ms}ms"
+    },
+    "tokens": {
+      "original": "Original prompt",
+      "optimized": "After optimization",
+      "saved": "Tokens saved",
+      "completion": "Completion",
+      "total": "Total",
+      "unit": "tokens",
+      "compressionLabel": "Compression",
+      "promptAfter": "Optimized prompt",
+      "withoutGatectr": "Without GateCtr",
+      "withGatectr": "With GateCtr",
+      "ctaHeadline": "{saved} tokens saved on this request. -{pct}% on every call.",
+      "ctaSub": "This happens automatically. No code changes."
+    },
+    "cost": {
+      "perRequest": "Cost this request",
+      "saved": "Saved by optimizer",
+      "unit": "USD",
+      "projection": "At 100K requests/month",
+      "projectionSaved": "projected monthly savings"
+    }
+  },
+  "errors": {
+    "tooShort": "Prompt too short. Write at least a few words.",
+    "tooLong": "Prompt too long. Max 2,000 characters.",
+    "invalidApiKey": "Invalid API key format. Check your key and try again.",
+    "quotaExceeded": "Demo limit reached (10 req/hour). Sign up for unlimited access.",
+    "sandboxQuotaExceeded": "Sandbox limit reached (3 req/hour). Add your API key for 10 req/hour, or sign up.",
+    "sandboxUnavailable": "Sandbox is temporarily unavailable. Add your OpenAI key to continue.",
+    "timeout": "Request timed out. Try a shorter prompt.",
+    "network": "Request failed. Check your connection and try again.",
+    "unknown": "Something went wrong. Try again."
+  },
+  "cta": {
+    "headline": "This happens on every request. In production.",
+    "description": "Connect GateCtr in 5 min. Your prompts compressed, models routed, budget enforced — automatically.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "View pricing",
+    "trust": "No credit card required · Setup in 5 min"
+  }
+}

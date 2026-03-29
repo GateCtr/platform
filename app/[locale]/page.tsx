@@ -10,6 +10,7 @@ import { Features } from "@/components/marketing/features";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { CodePreview } from "@/components/marketing/code-preview";
 import { Metrics } from "@/components/marketing/metrics";
+import { ComparisonTable } from "@/components/marketing/comparison-table";
 import { Pricing } from "@/components/marketing/pricing";
 import { FinalCta } from "@/components/marketing/final-cta";
 import { getSeoContext, buildCanonicalUrl } from "@/lib/seo";
@@ -77,6 +78,7 @@ export default async function Home({
           <Features />
           <HowItWorks />
           <CodePreview />
+          <ComparisonTable />
           <Metrics />
           <Pricing />
           <FinalCta />

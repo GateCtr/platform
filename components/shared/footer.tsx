@@ -243,12 +243,14 @@ export function Footer({ variant = "marketing", className }: FooterProps) {
                 </a>
               </li>
               <li>
-                <Link
-                  href="/blog"
+                <a
+                  href="https://blog.gatectr.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.blog")}
-                </Link>
+                </a>
               </li>
               <li>
                 <a

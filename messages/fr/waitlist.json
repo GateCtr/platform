@@ -80,7 +80,7 @@
     },
     "optimizer": {
       "title": "Context Optimizer",
-      "description": "-40% de tokens. Même qualité de sortie."
+      "description": "Jusqu'à 40% de tokens en moins. Même qualité de sortie."
     },
     "router": {
       "title": "Model Router",

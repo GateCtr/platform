@@ -5,8 +5,8 @@
   },
   "hero": {
     "badge": "Six fonctionnalités. Un seul changement d'endpoint.",
-    "headline": "Contrôle total sur chaque requête LLM.",
-    "description": "Limites budgétaires, optimisation des tokens, routage intelligent, analytics en temps réel — actifs dès le premier jour. Zéro modification de code.",
+    "headline": "Six fonctionnalités. Un endpoint. Jusqu'à 40% de tokens en moins dès le premier jour.",
+    "description": "Arrêtez de surpayer vos appels LLM. GateCtr compresse, route et plafonne — automatiquement.",
     "ctaPrimary": "Démarrer gratuitement",
     "ctaSecondary": "Voir la documentation"
   },
@@ -19,7 +19,7 @@
         "plan": "Gratuit",
         "title": "Budget Firewall",
         "tagline": "Limites strictes. Alertes douces. Zéro facture surprise.",
-        "description": "Chaque requête passe par le firewall avant d'atteindre le LLM. Limite atteinte — requête bloquée, zéro token consommé.",
+        "description": "Ne dépassez plus jamais votre budget IA. Requêtes bloquées à la limite — zéro token consommé.",
         "metric": "-100%",
         "metricLabel": "factures surprises"
       },
@@ -27,8 +27,8 @@
         "id": "optimizer",
         "plan": "Pro",
         "title": "Context Optimizer",
-        "tagline": "Compresse vos prompts. -40% de tokens. Même résultat.",
-        "description": "Compression automatique des prompts avant chaque requête. Pas de prompt engineering. Pas de modification de code. Juste des économies.",
+        "tagline": "Compresse vos prompts. Jusqu'à 40% de tokens en moins. Même résultat.",
+        "description": "Vos prompts, compressés. Jusqu'à 40% de tokens en moins. Même résultat. Mesuré sur chaque appel.",
         "metric": "-40%",
         "metricLabel": "utilisation tokens"
       },
@@ -37,7 +37,7 @@
         "plan": "Pro",
         "title": "Model Router",
         "tagline": "Sélectionne le bon LLM pour chaque requête.",
-        "description": "Les tâches simples vont vers les modèles moins chers. Les complexes vers les meilleurs. Vous payez le juste prix à chaque fois.",
+        "description": "Utilisez toujours le modèle le moins cher qui fait le travail. Automatiquement.",
         "metric": "4",
         "metricLabel": "providers LLM"
       },
@@ -46,7 +46,7 @@
         "plan": "Gratuit",
         "title": "Dashboard d'usage",
         "tagline": "Chaque token. Chaque coût. En temps réel.",
-        "description": "Usage des tokens, coûts et tendances par projet, par utilisateur, par modèle. Export CSV. Requêtable via API.",
+        "description": "Voyez exactement où va votre argent. Par requête, par projet, par modèle.",
         "metric": "Temps réel",
         "metricLabel": "visibilité"
       },
@@ -83,7 +83,7 @@
       "headline": "Limites strictes. Zéro facture surprise.",
       "description": "Définissez des limites de tokens ou de coût par projet. GateCtr bloque les requêtes dès que la limite est atteinte — aucun token consommé, aucun coût engagé. Des alertes douces se déclenchent avant la limite.",
       "points": [
-        "Bloque les requêtes à la limite — HTTP 429, zéro token consommé",
+        "Limite atteinte → requête bloquée → $0 de coût engagé. À chaque fois.",
         "Alertes douces à un seuil configurable (ex. 80%)",
         "Réinitialisation quotidienne, mensuelle ou à vie",
         "Disponible sur le plan Gratuit et supérieur"
@@ -92,8 +92,8 @@
       "code": "curl -X PATCH https://api.gatectr.com/v1/budget \\\n  -H \"Authorization: Bearer $GATECTR_API_KEY\" \\\n  -d '{ \"project_id\": \"proj_123\", \"limit_tokens\": 100000, \"alert_at_percent\": 80, \"period\": \"day\" }'"
     },
     "optimizer": {
-      "headline": "-40% de tokens. Même qualité de sortie.",
-      "description": "Avant de transmettre votre requête, GateCtr compresse le prompt — supprime le remplissage, condense les instructions, réduit l'historique. Réduction moyenne : -40%. Qualité maintenue.",
+      "headline": "Jusqu'à 40% de tokens en moins. Même qualité de sortie.",
+      "description": "Avant de transmettre votre requête, GateCtr compresse le prompt — supprime le remplissage, condense les instructions, réduit l'historique. Réduction jusqu'à 40%. Qualité maintenue.",
       "points": [
         "Activé par défaut sur les plans Pro",
         "Override par requête : gatectr: { optimize: false }",

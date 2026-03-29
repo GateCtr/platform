@@ -18,7 +18,7 @@ inclusion: always
 ## Messaging by Segment
 
 - **Solo devs**: Lead with simplicity and cost. "5 min setup. $0 surprise invoices."
-- **SaaS startups**: Lead with scale economics. "-40% tokens = direct margin improvement."
+- **SaaS startups**: Lead with scale economics. "Up to 40% fewer tokens = direct margin improvement."
 - **AI/ML teams**: Lead with visibility. "Every prompt. Every token. Full audit trail."
 - **No-code builders**: Lead with control. "Your LLM calls. Finally under control."
 - **Enterprises**: Lead with governance. "RBAC, audit logs, SLA. AI infrastructure your IT team trusts."

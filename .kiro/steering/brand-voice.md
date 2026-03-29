@@ -4,110 +4,122 @@ inclusion: always
 
 # GateCtr Brand Voice & Tone
 
+## Tone Definition
+
+**Dev-first. Outcome-driven. Transparent.**
+
+Not startup hype. Not cold enterprise. The tone of a senior engineer who's seen the invoice and fixed the problem. Direct, precise, no fluff.
+
 ## Core Attributes
 
-| Attribut                  | Description                               | Exemple                                      |
-| ------------------------- | ----------------------------------------- | -------------------------------------------- |
-| Précis                    | Chiffres concrets, pas de vague marketing | "-40% de tokens. Mesuré. Garanti."           |
-| Technique mais accessible | Vocabulaire dev-friendly, pas jargonneux  | "Branchez-vous en 5 min. Sans friction."     |
-| Confiant                  | Affirmations directes, sans hedging       | "GateCtr contrôle. Vous économisez."         |
-| Minimaliste               | Moins de mots, plus d'impact              | "One gateway. Every LLM."                    |
-| Bienveillant              | Du côté du développeur, pas contre lui    | "Votre clé API reste la vôtre. Toujours."    |
-| Transparent               | Aucun mystère sur les coûts et données    | "Nous ne stockons rien. Nous mesurons tout." |
+| Attribute | Description | Example |
+|---|---|---|
+| Precise | Concrete numbers, no vague marketing | "Up to 40% fewer tokens. Measured. Guaranteed." |
+| Technical but accessible | Dev-friendly vocabulary, not jargon | "Connect in 5 min. No friction." |
+| Confident | Direct statements, no hedging | "GateCtr controls. You save." |
+| Minimal | Fewer words, more impact | "One gateway. Every LLM." |
+| Transparent | No mystery on costs and data | "We store nothing. We measure everything." |
+| Outcome-driven | Every claim tied to a result | "Blocked before it reaches the LLM." |
 
-## Writing Rules
+## Tone by Surface
 
-### DO ✅
+| Surface | Tone | Notes |
+|---|---|---|
+| Hero / Marketing | Confident + Minimal | Lead with numbers, end with CTA |
+| Demo | Direct + Factual | Show the data, let it speak |
+| Onboarding | Warm + Efficient | Respect their time, no filler |
+| Dashboard UI | Neutral + Precise | Data speaks, no commentary |
+| Error messages | Honest + Helpful | State fact, give next step |
+| Docs | Technical + Fast | Devs scan, they don't read |
+| Emails | Personal + Concise | One message per email |
+| Admin panel | Neutral + Technical | They know what they're doing |
 
-- Use concrete numbers: "-40% tokens", "5 min setup", "~20ms latency"
-- Short sentences. One idea per sentence.
-- Active voice: "GateCtr routes", not "routing is handled by GateCtr"
-- Address the developer directly: "you", "your API key", "your budget"
-- State facts, not promises: "We measure. You save." not "We'll help you maybe save costs"
-- Bilingual parity: EN and FR copy must carry the same punch, not just translate literally
+## Words to USE
 
-### DON'T ❌
+**Action verbs:** blocks, routes, compresses, enforces, measures, saves, tracks
 
-- No hedging: ~~"might", "could potentially", "helps you to"~~
-- No marketing fluff: ~~"revolutionary", "game-changing", "best-in-class"~~
-- No passive voice in CTAs: ~~"Get started today!"~~ → "Connect in 5 min."
-- No vague claims: ~~"save money"~~ → "-40% token usage"
-- No over-explanation: if it needs 3 sentences, rewrite it in 1
+**Concrete descriptors:** measured, blocked, saved, compressed, real-time, per-request
+
+**Numbers always:** "up to 40%", "312 tokens", "$0.00008", "5 min", "~20ms"
+
+**Ownership language:** "your prompt", "your budget", "your API key", "your providers"
+
+**Transparency signals:** "never stored", "never logged", "zero commission", "directly to OpenAI"
+
+## Words to AVOID
+
+**Generic SaaS jargon:** platform, solution, ecosystem, suite, offering, leverage
+
+**Hype words:** revolutionary, game-changing, next-gen, best-in-class, cutting-edge, innovative, seamless, robust, comprehensive
+
+**Passive / weak verbs:** helps you to, allows you to, enables, empowers
+
+**Vague claims:**
+- ❌ "save money" → ✅ "up to 40% fewer tokens"
+- ❌ "better performance" → ✅ "~20ms added latency"
+- ❌ "easy to use" → ✅ "5 min setup, one endpoint swap"
+- ❌ "the only tool" → ✅ specific combination claim
+
+**Hedging:** might, could potentially, in some cases, typically
 
 ## Copy Patterns by Context
 
 ### Headlines / H1
-
-- Formula: `[Verb] + [Concrete outcome]`
-- EN: "Cut LLM costs by 40%. Without changing a line of code."
-- FR: "Réduisez vos coûts LLM de 40%. Sans toucher à votre code."
+- Formula: `[Outcome] + [How]`
+- EN: "Cut LLM costs by up to 40%. One endpoint swap."
+- FR: "Réduisez vos coûts LLM jusqu'à 40%. Un seul changement d'endpoint."
 
 ### CTAs
-
 - Short, action-first, outcome-implied
-- EN: "Connect now" / "Start free" / "See your usage"
-- FR: "Connecter" / "Démarrer" / "Voir l'usage"
+- EN: "See your savings — free" / "Run through GateCtr" / "Connect your first LLM"
+- FR: "Voir vos économies — gratuit" / "Passer par GateCtr" / "Connecter votre premier LLM"
 
 ### Error messages
-
-- Honest, not apologetic. Tell what happened + what to do.
+- Honest, not apologetic. State fact + next step.
 - EN: "Request blocked. Budget limit reached. Adjust in Settings."
 - FR: "Requête bloquée. Limite budgétaire atteinte. Ajustez dans Paramètres."
 
 ### Empty states
-
 - Useful, not decorative
 - EN: "No usage yet. Make your first API call to see data here."
 - FR: "Aucune utilisation. Faites votre premier appel API pour voir les données."
 
 ### Success messages
-
 - Confirm the action, hint at the value
 - EN: "Connected. Your first request is already optimized."
 - FR: "Connecté. Votre première requête est déjà optimisée."
 
-### Onboarding copy
-
-- Respect the developer's time. No fluff, no filler.
-- EN: "Tell us how you'll use GateCtr. Takes 30 seconds."
-- FR: "Dites-nous comment vous utilisez GateCtr. 30 secondes."
-
-## Tone by Surface
-
-| Surface         | Tone                | Notes                                     |
-| --------------- | ------------------- | ----------------------------------------- |
-| Marketing pages | Confident + Minimal | Lead with numbers, end with CTA           |
-| Onboarding      | Warm + Direct       | Respect their time, no filler             |
-| Dashboard UI    | Neutral + Precise   | Data speaks, no commentary                |
-| Error messages  | Honest + Helpful    | State fact, give next step                |
-| Emails          | Personal + Concise  | One message per email                     |
-| Admin panel     | Neutral + Technical | Devs reading this know what they're doing |
-
-## Bilingual Guidelines (EN / FR)
-
-- FR is not a literal translation — adapt idioms for natural French
-- Maintain the same brevity in FR as EN (French tends to be longer — cut ruthlessly)
-- Numbers and technical terms stay in their original form: "tokens", "API", "SDK"
-- Use "vous" (formal) in all product copy for FR
-
 ## Reference Phrases
 
 ```
-EN: "One gateway. Every LLM."
-FR: "Une passerelle. Tous les LLMs."
+EN:
+"Your API key stays yours. Always."
+"Blocked before it reaches the LLM."
+"Measured on every call."
+"No code changes. No architecture changes."
+"You pay OpenAI. We charge for the control layer."
+"One endpoint swap. Full control."
+"GateCtr controls. You save."
+"Every token. Every cost. Real-time."
+"Up to 40% fewer tokens. Measured. Guaranteed."
+"Your LLM bill is higher than it needs to be."
 
-EN: "Your API key stays yours. Always."
-FR: "Votre clé API reste la vôtre. Toujours."
-
-EN: "-40% tokens. Measured. Guaranteed."
-FR: "-40% de tokens. Mesuré. Garanti."
-
-EN: "Connect in 5 min. No friction."
-FR: "Connectez en 5 min. Sans friction."
-
-EN: "We store nothing. We measure everything."
-FR: "Nous ne stockons rien. Nous mesurons tout."
-
-EN: "GateCtr controls. You save."
-FR: "GateCtr contrôle. Vous économisez."
+FR:
+"Votre clé API reste la vôtre. Toujours."
+"Bloqué avant d'atteindre le LLM."
+"Mesuré sur chaque appel."
+"Zéro modification de code. Zéro changement d'architecture."
+"Vous payez OpenAI. Nous facturons la couche de contrôle."
+"Un seul changement d'endpoint. Contrôle total."
+"GateCtr contrôle. Vous économisez."
+"Chaque token. Chaque coût. En temps réel."
+"Jusqu'à 40% de tokens en moins. Mesuré. Garanti."
 ```
+
+## Bilingual Rules
+
+- FR is not a literal translation — adapt idioms for natural French
+- Maintain the same brevity in FR as EN (French tends to be longer — cut ruthlessly)
+- Numbers and technical terms stay as-is: "tokens", "API", "SDK", "up to 40%"
+- Use "vous" (formal) in all product copy for FR
+- Currency: always $ (not €)

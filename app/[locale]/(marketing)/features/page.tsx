@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { CodeSnippet } from "@/components/ui/code-snippet";
+import { ComparisonTable } from "@/components/marketing/comparison-table";
 import { useState } from "react";
 
 // ─── Icon map ────────────────────────────────────────────────────────────────
@@ -148,9 +149,9 @@ export default function FeaturesPage() {
                           {item.title}
                         </h3>
                         <span
-                          className={`inline-block mt-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium ${planColor}`}
+                          className={`inline-block mt-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium hover:opacity-80 transition-opacity cursor-pointer ${planColor}`}
                         >
-                          {item.plan}
+                          <Link href="/pricing">{item.plan}</Link>
                         </span>
                       </div>
                     </div>
@@ -258,6 +259,9 @@ export default function FeaturesPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Comparison table ─────────────────────────────────────────────── */}
+      <ComparisonTable />
 
       {/* ── Final CTA ────────────────────────────────────────────────────── */}
       <section className="py-24 px-4">

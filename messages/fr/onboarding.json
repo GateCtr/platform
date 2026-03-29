@@ -9,7 +9,7 @@
     "tagline": "Un seul endpoint. Vos clés restent les vôtres.\nGateCtr contrôle. Vous économisez.",
     "features": {
       "optimizer": {
-        "label": "-40% de tokens",
+        "label": "Jusqu'à 40% de tokens économisés",
         "sub": "Context Optimizer sur chaque requête."
       },
       "firewall": {
