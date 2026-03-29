@@ -108,7 +108,11 @@ export default function DemoPage() {
 
       if (!res.ok) {
         if (data.error === "demo_quota_exceeded") {
-          setError(isSandbox ? t("errors.sandboxQuotaExceeded") : t("errors.quotaExceeded"));
+          setError(
+            isSandbox
+              ? t("errors.sandboxQuotaExceeded")
+              : t("errors.quotaExceeded"),
+          );
           setRemaining(0);
         } else if (res.status === 429 || data.error === "provider_error") {
           setError(data.message ?? t("errors.unknown"));
@@ -139,14 +143,17 @@ export default function DemoPage() {
   }
 
   const routingReasonLabel = result
-    ? ((t.raw("results.response.routingReason") as Record<string, string>)[result.routing_reason] ?? result.routing_reason)
+    ? ((t.raw("results.response.routingReason") as Record<string, string>)[
+        result.routing_reason
+      ] ?? result.routing_reason)
     : "";
 
-  const monthlySavings = result ? (result.cost_saved_usd * 100000).toFixed(2) : "0";
+  const monthlySavings = result
+    ? (result.cost_saved_usd * 100000).toFixed(2)
+    : "0";
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
-
       {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <div className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between gap-4">
@@ -158,8 +165,17 @@ export default function DemoPage() {
           </div>
           <div className="flex items-center gap-3">
             {remaining !== null && remaining < 10 && (
-              <span className={cn("text-xs font-mono", remaining === 0 ? "text-destructive" : "text-muted-foreground")}>
-                {remaining === 0 ? t("playground.quotaExhausted") : t("playground.quotaLabel", { remaining })}
+              <span
+                className={cn(
+                  "text-xs font-mono",
+                  remaining === 0
+                    ? "text-destructive"
+                    : "text-muted-foreground",
+                )}
+              >
+                {remaining === 0
+                  ? t("playground.quotaExhausted")
+                  : t("playground.quotaLabel", { remaining })}
               </span>
             )}
           </div>
@@ -168,23 +184,29 @@ export default function DemoPage() {
 
       {/* ── Main layout: sidebar + output ───────────────────────────────── */}
       <div className="flex flex-1 max-w-7xl mx-auto w-full">
-
         {/* ── Left sidebar ─────────────────────────────────────────────── */}
         <aside className="w-full lg:w-[380px] xl:w-[420px] shrink-0 border-r border-border flex flex-col">
-
           {/* Header */}
           <div className="px-5 pt-5 pb-4 border-b border-border">
-            <h1 className="text-base font-semibold text-foreground">{t("hero.headline")}</h1>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{t("hero.description")}</p>
+            <h1 className="text-base font-semibold text-foreground">
+              {t("hero.headline")}
+            </h1>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+              {t("hero.description")}
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-y-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col flex-1 overflow-y-auto"
+          >
             <div className="flex-1 px-5 py-4 space-y-5">
-
               {/* API key */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-foreground">{t("playground.apiKeyLabel")}</label>
+                  <label className="text-xs font-medium text-foreground">
+                    {t("playground.apiKeyLabel")}
+                  </label>
                   <span className="text-[10px] text-muted-foreground/60 bg-muted px-1.5 py-0.5 rounded">
                     {t("playground.apiKeyOptional")}
                   </span>
@@ -204,24 +226,34 @@ export default function DemoPage() {
                     onClick={() => setShowKey((v) => !v)}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {showKey ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+                    {showKey ? (
+                      <EyeOff className="size-3.5" />
+                    ) : (
+                      <Eye className="size-3.5" />
+                    )}
                   </button>
                 </div>
                 <div className="flex items-center gap-1 text-[10px] text-muted-foreground/60">
                   <Lock className="size-2.5 shrink-0" />
-                  {isSandbox ? t("playground.sandboxNote") : t("playground.keyTrustNote")}
+                  {isSandbox
+                    ? t("playground.sandboxNote")
+                    : t("playground.keyTrustNote")}
                 </div>
               </div>
 
               {/* Model — always visible so user can pick provider before entering key */}
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-foreground">{t("playground.modelLabel")}</label>
+                <label className="text-xs font-medium text-foreground">
+                  {t("playground.modelLabel")}
+                </label>
                 <Select value={model} onValueChange={setModel}>
                   <SelectTrigger size="sm" className="w-full text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="auto">{t("playground.modelAuto")}</SelectItem>
+                    <SelectItem value="auto">
+                      {t("playground.modelAuto")}
+                    </SelectItem>
                     <SelectSeparator />
                     <SelectGroup>
                       <SelectLabel>OpenAI</SelectLabel>
@@ -232,8 +264,12 @@ export default function DemoPage() {
                     <SelectSeparator />
                     <SelectGroup>
                       <SelectLabel>Google Gemini</SelectLabel>
-                      <SelectItem value="gemini-2.5-pro">Gemini 2.5 Pro</SelectItem>
-                      <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash</SelectItem>
+                      <SelectItem value="gemini-2.5-pro">
+                        Gemini 2.5 Pro
+                      </SelectItem>
+                      <SelectItem value="gemini-2.5-flash">
+                        Gemini 2.5 Flash
+                      </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -247,7 +283,9 @@ export default function DemoPage() {
               {/* Prompt */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-foreground">{t("playground.inputLabel")}</label>
+                  <label className="text-xs font-medium text-foreground">
+                    {t("playground.inputLabel")}
+                  </label>
                   <span className="text-[10px] text-muted-foreground/50 font-mono">
                     {prompt.length}/{isSandbox ? 500 : 2000}
                   </span>
@@ -320,7 +358,6 @@ export default function DemoPage() {
 
         {/* ── Right output panel ────────────────────────────────────────── */}
         <main className="flex-1 flex flex-col min-w-0 bg-muted/10">
-
           {/* Empty state */}
           {!result && !loading && (
             <div className="flex-1 flex flex-col items-center justify-center gap-6 px-8 py-16 text-center">
@@ -328,8 +365,12 @@ export default function DemoPage() {
                 <Sparkles className="size-7 text-muted-foreground/40" />
               </div>
               <div className="space-y-2 max-w-sm">
-                <p className="text-sm font-medium text-foreground/60">{t("playground.emptyState")}</p>
-                <p className="text-xs text-muted-foreground/40 leading-relaxed">{t("playground.emptyStateSub")}</p>
+                <p className="text-sm font-medium text-foreground/60">
+                  {t("playground.emptyState")}
+                </p>
+                <p className="text-xs text-muted-foreground/40 leading-relaxed">
+                  {t("playground.emptyStateSub")}
+                </p>
               </div>
               {/* Feature pills */}
               <div className="flex flex-wrap gap-2 justify-center mt-2">
@@ -339,7 +380,10 @@ export default function DemoPage() {
                   { icon: BarChart3, label: "Token Analytics" },
                   { icon: Shield, label: "Cost Tracking" },
                 ].map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground">
+                  <div
+                    key={label}
+                    className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground"
+                  >
                     <Icon className="size-3" />
                     {label}
                   </div>
@@ -355,14 +399,15 @@ export default function DemoPage() {
                 <div className="size-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
                 <Zap className="size-4 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
               </div>
-              <p className="text-sm text-muted-foreground">{t("playground.processing")}</p>
+              <p className="text-sm text-muted-foreground">
+                {t("playground.processing")}
+              </p>
             </div>
           )}
 
           {/* Results */}
           {result && (
             <div className="flex-1 flex flex-col">
-
               {/* Stats bar */}
               <div className="border-b border-border bg-background/60 backdrop-blur-sm px-6 py-3 flex items-center gap-6 flex-wrap">
                 {result.sandbox && (
@@ -373,23 +418,33 @@ export default function DemoPage() {
                 )}
                 <div className="flex items-center gap-1.5 text-xs">
                   <TrendingDown className="size-3.5 text-secondary-500" />
-                  <span className="font-semibold text-secondary-500">-{result.compression_ratio}%</span>
+                  <span className="font-semibold text-secondary-500">
+                    -{result.compression_ratio}%
+                  </span>
                   <span className="text-muted-foreground">tokens</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs">
                   <GitBranch className="size-3.5 text-muted-foreground" />
-                  <span className="font-mono text-foreground/80">{result.model_used}</span>
+                  <span className="font-mono text-foreground/80">
+                    {result.model_used}
+                  </span>
                   <span className="text-muted-foreground/50">·</span>
-                  <span className="text-muted-foreground text-[10px]">{routingReasonLabel}</span>
+                  <span className="text-muted-foreground text-[10px]">
+                    {routingReasonLabel}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs">
                   <Clock className="size-3.5 text-muted-foreground" />
-                  <span className="text-muted-foreground">{result.latency_ms}ms</span>
+                  <span className="text-muted-foreground">
+                    {result.latency_ms}ms
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs ml-auto">
                   <Shield className="size-3.5 text-muted-foreground" />
                   <span className="text-muted-foreground">saved</span>
-                  <span className="font-semibold text-secondary-500">${result.cost_saved_usd.toFixed(5)}</span>
+                  <span className="font-semibold text-secondary-500">
+                    ${result.cost_saved_usd.toFixed(5)}
+                  </span>
                 </div>
               </div>
 
@@ -406,18 +461,18 @@ export default function DemoPage() {
                         : "text-muted-foreground border-transparent hover:text-foreground",
                     )}
                   >
-                    {t(`results.tab${tab.charAt(0).toUpperCase() + tab.slice(1)}` as "results.tabTokens")}
+                    {t(
+                      `results.tab${tab.charAt(0).toUpperCase() + tab.slice(1)}` as "results.tabTokens",
+                    )}
                   </button>
                 ))}
               </div>
 
               {/* Tab content */}
               <div className="flex-1 overflow-y-auto p-6">
-
                 {/* Tokens */}
                 {activeTab === "tokens" && (
                   <div className="space-y-5 max-w-2xl">
-
                     {/* Before / After comparison */}
                     <div className="grid grid-cols-2 gap-3">
                       {/* Without GateCtr */}
@@ -427,12 +482,20 @@ export default function DemoPage() {
                         </p>
                         <div className="space-y-2">
                           <div>
-                            <p className="text-2xl font-extrabold text-foreground tabular-nums">{result.tokens.original}</p>
-                            <p className="text-[10px] text-muted-foreground">{t("results.tokens.unit")}</p>
+                            <p className="text-2xl font-extrabold text-foreground tabular-nums">
+                              {result.tokens.original}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t("results.tokens.unit")}
+                            </p>
                           </div>
                           <div>
-                            <p className="text-lg font-bold text-foreground tabular-nums">${result.cost_usd.toFixed(5)}</p>
-                            <p className="text-[10px] text-muted-foreground">{t("results.cost.unit")}</p>
+                            <p className="text-lg font-bold text-foreground tabular-nums">
+                              ${result.cost_usd.toFixed(5)}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t("results.cost.unit")}
+                            </p>
                           </div>
                           <div className="text-[10px] text-muted-foreground font-mono truncate">
                             {model === "auto" ? "gpt-5.4" : model}
@@ -452,14 +515,23 @@ export default function DemoPage() {
                         </div>
                         <div className="space-y-2">
                           <div>
-                            <p className="text-2xl font-extrabold text-secondary-500 tabular-nums">{result.tokens.optimized}</p>
-                            <p className="text-[10px] text-muted-foreground">{t("results.tokens.unit")}</p>
+                            <p className="text-2xl font-extrabold text-secondary-500 tabular-nums">
+                              {result.tokens.optimized}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t("results.tokens.unit")}
+                            </p>
                           </div>
                           <div>
                             <p className="text-lg font-bold text-secondary-500 tabular-nums">
-                              ${(result.cost_usd - result.cost_saved_usd).toFixed(5)}
+                              $
+                              {(
+                                result.cost_usd - result.cost_saved_usd
+                              ).toFixed(5)}
                             </p>
-                            <p className="text-[10px] text-muted-foreground">{t("results.cost.unit")}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {t("results.cost.unit")}
+                            </p>
                           </div>
                           <div className="text-[10px] text-secondary-500 font-mono truncate">
                             {result.model_used} · {routingReasonLabel}
@@ -471,14 +543,21 @@ export default function DemoPage() {
                     {/* Savings summary */}
                     <div className="rounded-xl border border-border bg-card px-5 py-4 flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <p className="text-xs text-muted-foreground">{t("results.tokens.saved")}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("results.tokens.saved")}
+                        </p>
                         <p className="text-sm font-semibold text-foreground">
-                          {result.tokens.saved} {t("results.tokens.unit")} · ${result.cost_saved_usd.toFixed(5)}
+                          {result.tokens.saved} {t("results.tokens.unit")} · $
+                          {result.cost_saved_usd.toFixed(5)}
                         </p>
                       </div>
                       <div className="text-right space-y-0.5">
-                        <p className="text-xs text-muted-foreground">{t("results.cost.projection")}</p>
-                        <p className="text-sm font-semibold text-secondary-500">${monthlySavings}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("results.cost.projection")}
+                        </p>
+                        <p className="text-sm font-semibold text-secondary-500">
+                          ${monthlySavings}
+                        </p>
                       </div>
                     </div>
 
@@ -486,18 +565,28 @@ export default function DemoPage() {
                     <div className="rounded-xl border border-border bg-card p-5 space-y-3">
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs text-muted-foreground">
-                          <span>{result.tokens.original} {t("results.tokens.unit")}</span>
-                          <span>{result.tokens.optimized} {t("results.tokens.unit")}</span>
+                          <span>
+                            {result.tokens.original} {t("results.tokens.unit")}
+                          </span>
+                          <span>
+                            {result.tokens.optimized} {t("results.tokens.unit")}
+                          </span>
                         </div>
                         <div className="h-2.5 rounded-full bg-muted overflow-hidden">
                           <div
                             className="h-full rounded-full bg-linear-to-r from-secondary-500 to-secondary-400 transition-all duration-700"
-                            style={{ width: `${result.tokens.original > 0 ? Math.round((result.tokens.optimized / result.tokens.original) * 100) : 100}%` }}
+                            style={{
+                              width: `${result.tokens.original > 0 ? Math.round((result.tokens.optimized / result.tokens.original) * 100) : 100}%`,
+                            }}
                           />
                         </div>
                         <div className="flex justify-between text-[10px]">
-                          <span className="text-muted-foreground">{t("results.tokens.withoutGatectr")}</span>
-                          <span className="text-secondary-500 font-semibold">{t("results.tokens.withGatectr")}</span>
+                          <span className="text-muted-foreground">
+                            {t("results.tokens.withoutGatectr")}
+                          </span>
+                          <span className="text-secondary-500 font-semibold">
+                            {t("results.tokens.withGatectr")}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -506,7 +595,9 @@ export default function DemoPage() {
                     {result.optimized_prompt !== prompt && (
                       <div className="rounded-xl border border-border bg-card overflow-hidden">
                         <div className="px-5 py-3 border-b border-border bg-muted/20">
-                          <p className="text-xs font-medium text-foreground">{t("results.tokens.promptAfter")}</p>
+                          <p className="text-xs font-medium text-foreground">
+                            {t("results.tokens.promptAfter")}
+                          </p>
                         </div>
                         <pre className="px-5 py-4 text-xs text-foreground/70 font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-48">
                           {result.optimized_prompt}
@@ -523,9 +614,16 @@ export default function DemoPage() {
                             pct: result.compression_ratio,
                           })}
                         </p>
-                        <p className="text-xs text-muted-foreground">{t("results.tokens.ctaSub")}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("results.tokens.ctaSub")}
+                        </p>
                       </div>
-                      <Button variant="cta-primary" size="sm" className="shrink-0" asChild>
+                      <Button
+                        variant="cta-primary"
+                        size="sm"
+                        className="shrink-0"
+                        asChild
+                      >
                         <a href={appUrl("/sign-up")}>{t("cta.ctaPrimary")}</a>
                       </Button>
                     </div>
@@ -537,7 +635,9 @@ export default function DemoPage() {
                   <div className="space-y-4 max-w-2xl">
                     <div className="rounded-xl border border-border bg-card overflow-hidden">
                       <div className="px-5 py-3 border-b border-border bg-muted/20 flex items-center justify-between">
-                        <p className="text-xs font-medium text-foreground">{t("results.response.label")}</p>
+                        <p className="text-xs font-medium text-foreground">
+                          {t("results.response.label")}
+                        </p>
                         <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono">
                           <span>{result.model_used}</span>
                           <span>·</span>
@@ -545,14 +645,21 @@ export default function DemoPage() {
                         </div>
                       </div>
                       <div className="px-5 py-4">
-                        <p className="text-sm text-foreground leading-relaxed">{result.content}</p>
+                        <p className="text-sm text-foreground leading-relaxed">
+                          {result.content}
+                        </p>
                       </div>
                     </div>
                     <div className="rounded-xl border border-border bg-card px-5 py-3 flex items-center gap-3">
                       <GitBranch className="size-4 text-muted-foreground shrink-0" />
                       <div>
-                        <p className="text-xs font-medium text-foreground">{t("results.response.modelUsed")}: <span className="font-mono">{result.model_used}</span></p>
-                        <p className="text-[10px] text-muted-foreground">{routingReasonLabel}</p>
+                        <p className="text-xs font-medium text-foreground">
+                          {t("results.response.modelUsed")}:{" "}
+                          <span className="font-mono">{result.model_used}</span>
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {routingReasonLabel}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -563,20 +670,38 @@ export default function DemoPage() {
                   <div className="space-y-4 max-w-2xl">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="rounded-xl border border-secondary-500/20 bg-secondary-500/5 p-5">
-                        <p className="text-[10px] text-muted-foreground mb-1">{t("results.cost.saved")}</p>
-                        <p className="text-2xl font-extrabold text-secondary-500 tabular-nums">${result.cost_saved_usd.toFixed(5)}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{t("results.cost.unit")}</p>
+                        <p className="text-[10px] text-muted-foreground mb-1">
+                          {t("results.cost.saved")}
+                        </p>
+                        <p className="text-2xl font-extrabold text-secondary-500 tabular-nums">
+                          ${result.cost_saved_usd.toFixed(5)}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                          {t("results.cost.unit")}
+                        </p>
                       </div>
                       <div className="rounded-xl border border-border bg-card p-5">
-                        <p className="text-[10px] text-muted-foreground mb-1">{t("results.cost.perRequest")}</p>
-                        <p className="text-2xl font-extrabold text-foreground tabular-nums">${result.cost_usd.toFixed(5)}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{t("results.cost.unit")}</p>
+                        <p className="text-[10px] text-muted-foreground mb-1">
+                          {t("results.cost.perRequest")}
+                        </p>
+                        <p className="text-2xl font-extrabold text-foreground tabular-nums">
+                          ${result.cost_usd.toFixed(5)}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                          {t("results.cost.unit")}
+                        </p>
                       </div>
                     </div>
                     <div className="rounded-xl border border-border bg-card p-5 space-y-1">
-                      <p className="text-xs text-muted-foreground">{t("results.cost.projection")}</p>
-                      <p className="text-3xl font-extrabold text-secondary-500 tabular-nums">${monthlySavings}</p>
-                      <p className="text-xs text-muted-foreground">{t("results.cost.projectionSaved")}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("results.cost.projection")}
+                      </p>
+                      <p className="text-3xl font-extrabold text-secondary-500 tabular-nums">
+                        ${monthlySavings}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("results.cost.projectionSaved")}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -584,7 +709,9 @@ export default function DemoPage() {
 
               {/* Bottom CTA strip */}
               <div className="border-t border-border bg-background/80 backdrop-blur-sm px-6 py-4 flex items-center justify-end gap-4">
-                <p className="text-xs text-muted-foreground hidden sm:block">{t("cta.headline")}</p>
+                <p className="text-xs text-muted-foreground hidden sm:block">
+                  {t("cta.headline")}
+                </p>
                 <Button variant="cta-secondary" size="sm" asChild>
                   <a href={appUrl("/pricing")}>{t("cta.ctaSecondary")}</a>
                 </Button>
