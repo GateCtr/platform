@@ -12,27 +12,57 @@ const ROWS: { key: string; cells: Record<(typeof COLS)[number], CellValue> }[] =
   [
     {
       key: "budget",
-      cells: { gatectr: "yes", direct: "no", openrouter: "partial", langsmith: "partial" },
+      cells: {
+        gatectr: "yes",
+        direct: "no",
+        openrouter: "partial",
+        langsmith: "partial",
+      },
     },
     {
       key: "optimizer",
-      cells: { gatectr: "yes", direct: "no", openrouter: "no", langsmith: "no" },
+      cells: {
+        gatectr: "yes",
+        direct: "no",
+        openrouter: "no",
+        langsmith: "no",
+      },
     },
     {
       key: "routing",
-      cells: { gatectr: "yes", direct: "no", openrouter: "yes", langsmith: "no" },
+      cells: {
+        gatectr: "yes",
+        direct: "no",
+        openrouter: "yes",
+        langsmith: "no",
+      },
     },
     {
       key: "analytics",
-      cells: { gatectr: "yes", direct: "no", openrouter: "partial", langsmith: "yes" },
+      cells: {
+        gatectr: "yes",
+        direct: "no",
+        openrouter: "partial",
+        langsmith: "yes",
+      },
     },
     {
       key: "codeChanges",
-      cells: { gatectr: "yes", direct: "no", openrouter: "yes", langsmith: "no" },
+      cells: {
+        gatectr: "yes",
+        direct: "no",
+        openrouter: "yes",
+        langsmith: "no",
+      },
     },
     {
       key: "price",
-      cells: { gatectr: "free", direct: "tokens", openrouter: "markup", langsmith: "paid" },
+      cells: {
+        gatectr: "free",
+        direct: "tokens",
+        openrouter: "markup",
+        langsmith: "paid",
+      },
     },
   ];
 
@@ -110,7 +140,9 @@ export function ComparisonTable() {
                       key={col}
                       className={cn(
                         "px-4 py-3.5 text-center",
-                        col === "gatectr" ? "bg-primary/5 border-x border-primary/20" : "",
+                        col === "gatectr"
+                          ? "bg-primary/5 border-x border-primary/20"
+                          : "",
                       )}
                     >
                       <Cell value={row.cells[col]} t={t} />

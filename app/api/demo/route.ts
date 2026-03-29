@@ -43,7 +43,10 @@ function detectProvider(apiKey: string, model: string): Provider {
 
 const ipStore = new Map<string, { count: number; resetAt: number }>();
 
-function checkLimit(ip: string, quota: number): { allowed: boolean; remaining: number } {
+function checkLimit(
+  ip: string,
+  quota: number,
+): { allowed: boolean; remaining: number } {
   // Always bypass in development
   if (process.env.NODE_ENV === "development") {
     return { allowed: true, remaining: quota };
@@ -62,7 +65,9 @@ function checkLimit(ip: string, quota: number): { allowed: boolean; remaining: n
 // ── Key validation ────────────────────────────────────────────────────────────
 
 function isValidApiKey(key: string): boolean {
-  return /^sk-[A-Za-z0-9_-]{20,}$/.test(key) || /^AIza[A-Za-z0-9_-]{35,}$/.test(key);
+  return (
+    /^sk-[A-Za-z0-9_-]{20,}$/.test(key) || /^AIza[A-Za-z0-9_-]{35,}$/.test(key)
+  );
 }
 
 // ── Cost helpers ──────────────────────────────────────────────────────────────
@@ -85,7 +90,11 @@ function routeForDemo(
   if (provider === "gemini") {
     return complexity === "high"
       ? { model: "gemini-2.5-pro", routingReason: "high_complexity" }
-      : { model: "gemini-2.5-flash", routingReason: complexity === "low" ? "low_complexity" : "medium_complexity" };
+      : {
+          model: "gemini-2.5-flash",
+          routingReason:
+            complexity === "low" ? "low_complexity" : "medium_complexity",
+        };
   }
   // OpenAI
   return complexity === "low"
@@ -144,9 +153,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Sandbox: truncate prompt to keep costs bounded ───────────────────────────
-  const prompt = isSandbox
-    ? rawPrompt.slice(0, SANDBOX_MAX_PROMPT)
-    : rawPrompt;
+  const prompt = isSandbox ? rawPrompt.slice(0, SANDBOX_MAX_PROMPT) : rawPrompt;
 
   // ── Resolve API key + provider ───────────────────────────────────────────────
   const apiKey = isSandbox
@@ -160,13 +167,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const provider: Provider = isSandbox ? "openai" : detectProvider(apiKey, requestedModel);
+  const provider: Provider = isSandbox
+    ? "openai"
+    : detectProvider(apiKey, requestedModel);
 
   // ── Build gateway request ────────────────────────────────────────────────────
   const baseModel = isSandbox
     ? SANDBOX_MODEL
     : requestedModel === "auto"
-      ? (provider === "gemini" ? "gemini-2.5-flash" : "gpt-5.4-mini")
+      ? provider === "gemini"
+        ? "gemini-2.5-flash"
+        : "gpt-5.4-mini"
       : requestedModel;
 
   const gatewayReq: GatewayRequest = {
@@ -198,14 +209,16 @@ export async function POST(req: NextRequest) {
   const optimizedTokens = optimizeResult.optimizedTokens;
   const savedTokens = optimizeResult.savedTokens;
   const compressionRatio =
-    originalTokens > 0
-      ? Math.round((savedTokens / originalTokens) * 100)
-      : 0;
+    originalTokens > 0 ? Math.round((savedTokens / originalTokens) * 100) : 0;
 
   // ── Route (sandbox always uses SANDBOX_MODEL, skip routing) ──────────────────
   const { model: routedModel, routingReason } = isSandbox
     ? { model: SANDBOX_MODEL, routingReason: "sandbox_fixed" }
-    : routeForDemo({ ...optimizedReq, model: requestedModel }, requestedModel, provider);
+    : routeForDemo(
+        { ...optimizedReq, model: requestedModel },
+        requestedModel,
+        provider,
+      );
 
   const finalReq: GatewayRequest = {
     ...optimizedReq,
@@ -221,7 +234,10 @@ export async function POST(req: NextRequest) {
     const timeoutPromise = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("timeout")), REQUEST_TIMEOUT),
     );
-    llmResponse = await Promise.race([callFn(finalReq, apiKey), timeoutPromise]);
+    llmResponse = await Promise.race([
+      callFn(finalReq, apiKey),
+      timeoutPromise,
+    ]);
   } catch (err) {
     if (err instanceof ProviderError) {
       const status = err.status === 401 ? 401 : err.status === 429 ? 429 : 502;
@@ -241,7 +257,10 @@ export async function POST(req: NextRequest) {
     }
     if (err instanceof Error && err.message === "timeout") {
       return NextResponse.json(
-        { error: "timeout", message: "Request timed out. Try a shorter prompt." },
+        {
+          error: "timeout",
+          message: "Request timed out. Try a shorter prompt.",
+        },
         { status: 504 },
       );
     }
@@ -253,7 +272,8 @@ export async function POST(req: NextRequest) {
   // ── Cost calculation ──────────────────────────────────────────────────────────
   const realPromptTokens = llmResponse.promptTokens || optimizedTokens;
   const realCompletionTokens = llmResponse.completionTokens;
-  const costUsd = estimateCost(realPromptTokens, routedModel) +
+  const costUsd =
+    estimateCost(realPromptTokens, routedModel) +
     estimateCost(realCompletionTokens, routedModel) * 2;
   const costSavedUsd = estimateCost(savedTokens, routedModel);
 
