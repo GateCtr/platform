@@ -50,7 +50,7 @@ jobs:
             type=sha,prefix=sha-,suffix=-amd64
 
       - name: Build and push amd64
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker/Dockerfile
@@ -63,7 +63,7 @@ jobs:
 
       - name: Build development image
         if: github.ref == 'refs/heads/develop'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker/Dockerfile.dev
@@ -108,7 +108,7 @@ jobs:
             type=sha,prefix=sha-,suffix=-arm64
 
       - name: Build and push arm64
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker/Dockerfile
