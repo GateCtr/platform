@@ -1,8 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
 import { PRODUCT } from "@/config/product";
 import { interpolate } from "@/lib/interpolate";
+import { ArrowRight } from "lucide-react";
 
 const STEP_VARS = { tokenReduction: PRODUCT.metrics.tokenReduction };
 
@@ -34,12 +36,10 @@ export function HowItWorks() {
         </div>
 
         <div className="relative">
-          {/* Connector line */}
           <div
             aria-hidden
             className="absolute left-8 top-10 bottom-10 w-px bg-border hidden md:block"
           />
-
           <div className="flex flex-col gap-8">
             {steps.map((step, i) => (
               <div key={i} className="flex gap-6 items-start">
@@ -57,6 +57,17 @@ export function HowItWorks() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Demo CTA */}
+        <div className="mt-12 flex justify-center">
+          <Link
+            href="/demo"
+            className="inline-flex items-center gap-2 rounded-full border border-secondary-500/30 bg-secondary-500/5 px-5 py-2.5 text-sm font-medium text-secondary-500 hover:bg-secondary-500/10 transition-colors"
+          >
+            {t("demoCta")}
+            <ArrowRight className="size-3.5" />
+          </Link>
         </div>
       </div>
     </section>

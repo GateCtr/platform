@@ -12,6 +12,11 @@
   "plans": {
     "popular": "Le plus populaire",
     "perMonth": "/mois",
+    "perYear": "/mois facturé annuellement",
+    "annualToggle": "Mensuel",
+    "annualToggleActive": "Annuel — économisez 17%",
+    "annualBadge": "2 mois offerts",
+    "roiAnchor": "Pro à 29 $/mois. Économies tokens moyennes : 80–120 $/mois. ROI positif dès le premier jour.",
     "ctaFree": "Démarrer gratuitement",
     "ctaPro": "Démarrer gratuitement",
     "ctaTeam": "Démarrer gratuitement",
@@ -34,11 +39,11 @@
       {
         "name": "Pro",
         "price": "{price}",
-        "description": "Pour les devs qui livrent des features LLM en production.",
+        "description": "Pour les devs qui dépensent 50 $/mois+ en appels LLM.",
         "features": [
           "Jusqu'à {tokenLimit} tokens/mois",
           "{projects} projets",
-          "Context Optimizer — {tokenReduction} de tokens",
+          "Context Optimizer — économisez 80 $/mois+ en moyenne",
           "Model Router basique",
           "Analytics avancées",
           "Webhooks illimités",
@@ -48,7 +53,7 @@
       {
         "name": "Team",
         "price": "{price}",
-        "description": "Pour les équipes qui ont besoin de visibilité et de gouvernance.",
+        "description": "Pour les équipes où les coûts IA deviennent une ligne budgétaire.",
         "features": [
           "Jusqu'à {tokenLimit} tokens/mois",
           "Projets illimités",
@@ -92,11 +97,6 @@
         "model": "Usage-based add-on",
         "description": "Facturation par tranche de 10M tokens routés au-delà du plan.",
         "segment": "Pro & Team"
-      },
-      {
-        "model": "Savings sharing",
-        "description": "Option premium : % des économies tokens réalisées via l'optimizer.",
-        "segment": "Enterprise"
       },
       {
         "model": "Sièges supplémentaires",

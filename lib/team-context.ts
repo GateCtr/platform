@@ -18,12 +18,28 @@ export async function resolveTeamContext(
   });
   if (!dbUser) return null;
 
+  return resolveTeamContextByUserId(dbUser.id);
+}
+
+/**
+ * Same as resolveTeamContext but takes a DB userId directly.
+ * Used when auth is already resolved (e.g. API key auth).
+ */
+export async function resolveTeamContextByUserId(
+  userId: string,
+): Promise<TeamContext | null> {
+  const dbUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { metadata: true },
+  });
+  if (!dbUser) return null;
+
   const meta = (dbUser.metadata ?? {}) as Record<string, unknown>;
   let teamId = meta.activeTeamId as string | undefined;
 
   if (!teamId) {
     const membership = await prisma.teamMember.findFirst({
-      where: { userId: dbUser.id },
+      where: { userId },
       orderBy: { createdAt: "asc" },
       select: { teamId: true },
     });
@@ -32,5 +48,5 @@ export async function resolveTeamContext(
 
   if (!teamId) return null;
 
-  return { userId: dbUser.id, teamId };
+  return { userId, teamId };
 }

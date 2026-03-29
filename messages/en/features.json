@@ -5,8 +5,8 @@
   },
   "hero": {
     "badge": "Six features. One endpoint swap.",
-    "headline": "Full control over every LLM request.",
-    "description": "Budget caps, token optimization, intelligent routing, real-time analytics — all active from day one. No code changes.",
+    "headline": "Six features. One endpoint swap. Up to 40% fewer tokens from day one.",
+    "description": "Stop overpaying for LLM calls. GateCtr compresses, routes, and caps — automatically.",
     "ctaPrimary": "Start free",
     "ctaSecondary": "View docs"
   },
@@ -19,7 +19,7 @@
         "plan": "Free",
         "title": "Budget Firewall",
         "tagline": "Hard caps. Soft alerts. No surprise invoices.",
-        "description": "Every request passes through the firewall before reaching the LLM. Hit the cap — request blocked, zero tokens consumed.",
+        "description": "Never exceed your AI budget again. Requests blocked at the cap — zero tokens consumed.",
         "metric": "-100%",
         "metricLabel": "surprise invoices"
       },
@@ -27,8 +27,8 @@
         "id": "optimizer",
         "plan": "Pro",
         "title": "Context Optimizer",
-        "tagline": "Compresses your prompts. -40% tokens. Same output.",
-        "description": "Automatic prompt compression before every request. No prompt engineering. No code changes. Just savings.",
+        "tagline": "Compresses your prompts. Up to 40% fewer tokens. Same output.",
+        "description": "Your prompts, compressed. Up to 40% fewer tokens. Same output. Measured on every call.",
         "metric": "-40%",
         "metricLabel": "token usage"
       },
@@ -37,7 +37,7 @@
         "plan": "Pro",
         "title": "Model Router",
         "tagline": "Picks the right LLM for each request automatically.",
-        "description": "Simple tasks go to cheaper models. Complex ones go to the best. You pay the right price every time.",
+        "description": "Always use the cheapest model that gets the job done. Automatically.",
         "metric": "4",
         "metricLabel": "LLM providers"
       },
@@ -46,7 +46,7 @@
         "plan": "Free",
         "title": "Usage Dashboard",
         "tagline": "Every token. Every cost. Real-time.",
-        "description": "Token usage, costs, and trends per project, per user, per model. Export to CSV. Query via API.",
+        "description": "See exactly where your money goes. Per request, per project, per model.",
         "metric": "Real-time",
         "metricLabel": "visibility"
       },
@@ -83,7 +83,7 @@
       "headline": "Hard caps. Zero surprise invoices.",
       "description": "Set token or cost limits per project. GateCtr blocks requests the moment the cap is hit — no tokens consumed, no cost incurred. Soft alerts fire before you reach the limit.",
       "points": [
-        "Blocks requests at the cap — HTTP 429, zero tokens consumed",
+        "Hit the cap → request blocked → $0 cost incurred. Every time.",
         "Soft alerts at configurable threshold (e.g. 80%)",
         "Resets daily, monthly, or lifetime",
         "Available on Free plan and above"
@@ -92,8 +92,8 @@
       "code": "curl -X PATCH https://api.gatectr.com/v1/budget \\\n  -H \"Authorization: Bearer $GATECTR_API_KEY\" \\\n  -d '{ \"project_id\": \"proj_123\", \"limit_tokens\": 100000, \"alert_at_percent\": 80, \"period\": \"day\" }'"
     },
     "optimizer": {
-      "headline": "-40% tokens. Same output quality.",
-      "description": "Before forwarding your request, GateCtr compresses the prompt — removes filler, condenses instructions, trims history. Average reduction: -40%. Output quality maintained.",
+      "headline": "Up to 40% fewer tokens. Same output quality.",
+      "description": "Before forwarding your request, GateCtr compresses the prompt — removes filler, condenses instructions, trims history. Average reduction: up to 40%. Output quality maintained.",
       "points": [
         "Enabled by default on Pro plans",
         "Per-request override: gatectr: { optimize: false }",

@@ -2,12 +2,15 @@
   "sidebar": {
     "overview": "Overview",
     "users": "Users",
+    "teams": "Teams",
     "plans": "Plans",
     "featureFlags": "Feature Flags",
     "auditLogs": "Audit Logs",
     "systemHealth": "System Health",
     "waitlist": "Waitlist",
-    "billing": "Billing"
+    "billing": "Billing",
+    "analytics": "Analytics",
+    "notifications": "Notifications"
   },
   "groups": {
     "platform": "Platform",

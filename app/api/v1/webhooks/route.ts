@@ -1,18 +1,28 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkQuota } from "@/lib/plan-guard";
 import { quotaExceededResponse } from "@/lib/quota-response";
-import { resolveTeamContext } from "@/lib/team-context";
+import { resolveTeamContextByUserId } from "@/lib/team-context";
+import { resolveAuth, checkScope } from "@/lib/api-auth";
 import { randomBytes } from "crypto";
 
 export async function POST(req: NextRequest) {
-  const { userId: clerkId } = await auth();
-  if (!clerkId)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = await resolveAuth(req);
+  if ("error" in auth)
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
-  const ctx = await resolveTeamContext(clerkId);
+  const scopeErr = checkScope(auth.scopes, "admin");
+  if (scopeErr)
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403 },
+    );
+
+  const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json({ error: "No active team" }, { status: 404 });
 
@@ -26,31 +36,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  if (!body.name || typeof body.name !== "string") {
+  if (!body.name || typeof body.name !== "string")
     return NextResponse.json({ error: "name is required" }, { status: 400 });
-  }
-  if (!body.url || typeof body.url !== "string") {
+  if (!body.url || typeof body.url !== "string")
     return NextResponse.json({ error: "url is required" }, { status: 400 });
-  }
 
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(body.url);
   } catch {
-    return NextResponse.json(
-      { error: "url_invalid", message: "URL must be a valid HTTPS URL" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "url_invalid" }, { status: 400 });
   }
-  if (parsedUrl.protocol !== "https:") {
-    return NextResponse.json(
-      { error: "url_must_be_https", message: "Webhook URL must use HTTPS" },
-      { status: 400 },
-    );
-  }
+  if (parsedUrl.protocol !== "https:")
+    return NextResponse.json({ error: "url_must_be_https" }, { status: 400 });
 
   const secret = `whsec_${randomBytes(24).toString("hex")}`;
-
   const webhook = await prisma.webhook.create({
     data: {
       userId: ctx.userId,
@@ -65,12 +65,22 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(webhook, { status: 201 });
 }
 
-export async function GET(_req: NextRequest) {
-  const { userId: clerkId } = await auth();
-  if (!clerkId)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function GET(req: NextRequest) {
+  const auth = await resolveAuth(req);
+  if ("error" in auth)
+    return NextResponse.json(
+      { error: auth.error },
+      { status: auth.httpStatus },
+    );
 
-  const ctx = await resolveTeamContext(clerkId);
+  const scopeErr = checkScope(auth.scopes, "read");
+  if (scopeErr)
+    return NextResponse.json(
+      { error: scopeErr.error, required: "read" },
+      { status: 403 },
+    );
+
+  const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json({ error: "No active team" }, { status: 404 });
 

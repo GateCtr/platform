@@ -402,7 +402,61 @@ describe("P14: Fallback Tracking Invariant", () => {
   });
 });
 
-// ─── Provider error → 502 ────────────────────────────────────────────────────
+// ─── Test mode (gct_test_ keys) ──────────────────────────────────────────────
+
+describe("/complete: test mode", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns 200 mock response without hitting LLM when environment=test", async () => {
+    mockAuthenticateApiKey.mockResolvedValue({
+      userId: "user_1",
+      apiKeyId: "key_1",
+      scopes: ["complete", "chat", "read", "admin"],
+      environment: "test",
+    });
+    mockRequireScope.mockReturnValue(undefined);
+
+    const { POST } = await import("@/app/api/v1/complete/route");
+    const req = makeRequest({ model: "gpt-4o", prompt: "hi" }, "gct_test_abc");
+    const res = await POST(req);
+
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Record<string, unknown>;
+    expect(body.test_mode).toBe(true);
+    expect((body.id as string).startsWith("cmpl_test_")).toBe(true);
+    expect(res.headers.get("X-GateCtr-Test-Mode")).toBe("true");
+    // No LLM adapter called — budget/rate checks skipped
+    expect(mockCheckBudget).not.toHaveBeenCalled();
+  });
+});
+
+describe("/chat: test mode", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns 200 mock response without hitting LLM when environment=test", async () => {
+    mockAuthenticateApiKey.mockResolvedValue({
+      userId: "user_1",
+      apiKeyId: "key_1",
+      scopes: ["complete", "chat", "read", "admin"],
+      environment: "test",
+    });
+    mockRequireScope.mockReturnValue(undefined);
+
+    const { POST } = await import("@/app/api/v1/chat/route");
+    const req = makeChatRequest(
+      { model: "gpt-4o", messages: [{ role: "user", content: "hi" }] },
+      "gct_test_abc",
+    );
+    const res = await POST(req);
+
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as Record<string, unknown>;
+    expect(body.test_mode).toBe(true);
+    expect((body.id as string).startsWith("chatcmpl_test_")).toBe(true);
+    expect(res.headers.get("X-GateCtr-Test-Mode")).toBe("true");
+    expect(mockCheckBudget).not.toHaveBeenCalled();
+  });
+});
 
 describe("pipeline: provider error handling", () => {
   beforeEach(() => vi.clearAllMocks());

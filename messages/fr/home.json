@@ -6,16 +6,16 @@
     "ogDescription": "Réduisez vos coûts LLM de 40%. Sans toucher à votre code."
   },
   "hero": {
-    "badge": "Middleware LLM · Zéro modification de code",
-    "headline": "Réduisez vos coûts LLM de 40%.",
-    "headlineSub": "Sans toucher à votre code.",
-    "description": "Changez votre endpoint. GateCtr optimise, route et applique les budgets — de façon transparente.",
-    "ctaPrimary": "Démarrer gratuitement",
-    "ctaSecondary": "Voir comment ça marche",
-    "trust": "Votre clé API reste la vôtre. Toujours.",
-    "statsTokens": "{tokenReduction} de tokens",
+    "badge": "Infrastructure de coût IA · Zéro modification de code",
+    "headline": "Réduisez vos coûts LLM jusqu'à 40%.",
+    "headlineSub": "Un seul changement d'endpoint.",
+    "description": "Compresse chaque prompt, route vers le modèle le moins cher, et bloque les requêtes avant qu'elles dépassent votre budget. Zéro modification de code.",
+    "ctaPrimary": "Voir vos économies — gratuit",
+    "ctaSecondary": "Comment ça marche en 90s",
+    "trust": "Votre clé API va directement à OpenAI. GateCtr ne touche jamais à votre facturation.",
+    "statsTokens": "{tokenReduction} de tokens économisés",
     "statsSetup": "{setupTime} de setup",
-    "statsLatency": "{latency} de latence",
+    "statsLatency": "{latency} de latence ajoutée",
     "codeTabBefore": "Avant",
     "codeTabAfter": "Après GateCtr",
     "codeCommentBefore": "// Avant",
@@ -56,25 +56,25 @@
         "title": "Budget Firewall",
         "description": "Limites strictes. Alertes douces. Zéro facture surprise.",
         "metric": "Plan Free",
-        "detail": "Définissez des limites de tokens par projet ou utilisateur. Recevez des alertes Slack avant d'atteindre le plafond."
+        "detail": "Définissez une limite. Atteinte → requête bloquée → $0 de coût engagé. À chaque fois."
       },
       {
         "title": "Context Optimizer",
         "description": "Compresse vos prompts. {tokenReduction} de tokens. Même résultat.",
         "metric": "Plan Pro",
-        "detail": "Compression automatique des prompts. Aucune ingénierie de prompt requise."
+        "detail": "Économise en moyenne 312 tokens par requête. Mesuré sur chaque appel."
       },
       {
         "title": "Model Router",
         "description": "Sélectionne le bon LLM pour chaque requête.",
         "metric": "Plan Pro",
-        "detail": "GPT-3.5 pour les tâches simples. GPT-4o pour les complexes. Vous payez le juste prix."
+        "detail": "Utilisez toujours le modèle le moins cher qui fait le travail. Automatiquement."
       },
       {
         "title": "Usage Dashboard",
         "description": "Chaque token. Chaque coût. En temps réel.",
         "metric": "Plan Free",
-        "detail": "Utilisation des tokens, coûts et tendances. Par projet, par utilisateur, par modèle."
+        "detail": "Voyez exactement où va votre argent. Par requête, par projet, par modèle."
       },
       {
         "title": "Webhooks Engine",
@@ -110,7 +110,9 @@
         "title": "Vous économisez. Vous voyez tout.",
         "description": "Dashboard en temps réel. Alertes budgétaires. {tokenReduction} de coût dès le premier jour."
       }
-    ]
+    ],
+    "demoCta": "Essayez en 30s — collez votre prompt, voyez les économies",
+    "demoCtaLink": "Démo live →"
   },
   "codePreview": {
     "label": "Intégration",
@@ -136,12 +138,12 @@
       {
         "value": "{latency}",
         "label": "Latence ajoutée",
-        "description": "Middleware transparent"
+        "description": "Moins qu'un aller-retour réseau"
       },
       {
         "value": "{setupTime}",
         "label": "Temps de setup",
-        "description": "Changement d'endpoint, zéro code"
+        "description": "Changement d'endpoint — voir le quickstart"
       },
       {
         "value": "{providers} LLMs",
@@ -154,6 +156,10 @@
     "label": "Tarifs",
     "headline": "Payez pour le contrôle. Pas pour les tokens.",
     "description": "Vous payez votre fournisseur LLM directement. GateCtr facture la valeur ajoutée — optimisation, routage, analytics.",
+    "annualToggle": "Mensuel",
+    "annualToggleActive": "Annuel — économisez 17%",
+    "annualBadge": "2 mois offerts",
+    "roiAnchor": "Pro à 29 $/mois. Économies tokens moyennes : 80–120 $/mois. ROI positif dès le premier jour.",
     "ctaFree": "Démarrer gratuitement",
     "ctaPro": "Démarrer — passer à Pro à tout moment",
     "ctaTeam": "Démarrer — passer à Team à tout moment",
@@ -161,6 +167,7 @@
     "popular": "Le plus populaire",
     "custom": "Sur devis",
     "perMonth": "/mois",
+    "perYear": "/mois facturé annuellement",
     "plans": [
       {
         "name": "Free",

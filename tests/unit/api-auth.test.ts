@@ -61,13 +61,13 @@ function sha256Hex(input: string): string {
   return crypto.createHash("sha256").update(input).digest("hex");
 }
 
-function makeToken(): string {
-  return "gct_" + crypto.randomBytes(24).toString("hex");
+function makeToken(env: "live" | "test" = "live"): string {
+  return `gct_${env}_` + crypto.randomBytes(24).toString("hex");
 }
 
 function makeRequest(token?: string, ip = "1.2.3.4") {
   const headers = new Headers();
-  if (token !== undefined) headers.set("authorization", token); // pass raw header value
+  if (token !== undefined) headers.set("authorization", token);
   headers.set("x-forwarded-for", ip);
   return { headers } as unknown as import("next/server").NextRequest;
 }
@@ -86,17 +86,24 @@ function makeRecord(
     expiresAt: Date | null;
     scopes: string[];
     projectId: string | null;
+    environment: string;
   }> = {},
 ) {
+  const env = token.startsWith("gct_test_") ? "test" : "live";
+  const prefix =
+    token.startsWith("gct_live_") || token.startsWith("gct_test_")
+      ? token.slice(0, 15)
+      : token.slice(0, 12);
   return {
     id: "key_1",
     userId: "user_1",
-    prefix: token.slice(0, 12),
+    prefix,
     keyHash: sha256Hex(token),
     isActive: true,
     expiresAt: null,
     scopes: ["complete", "chat"],
     projectId: null,
+    environment: env,
     ...overrides,
   };
 }
@@ -246,7 +253,7 @@ describe("authenticateApiKey: success", () => {
 
   it("returns correct AuthContext on valid token", async () => {
     setupNotBlocked();
-    const token = makeToken();
+    const token = makeToken("live");
     mockFindFirst.mockResolvedValue(
       makeRecord(token, { scopes: ["complete", "chat"], projectId: "proj_1" }),
     );
@@ -256,6 +263,25 @@ describe("authenticateApiKey: success", () => {
     expect(ctx.apiKeyId).toBe("key_1");
     expect(ctx.scopes).toEqual(["complete", "chat"]);
     expect(ctx.projectId).toBe("proj_1");
+    expect(ctx.environment).toBe("live");
+  });
+
+  it("returns environment=test for gct_test_ keys", async () => {
+    setupNotBlocked();
+    const token = makeToken("test");
+    mockFindFirst.mockResolvedValue(makeRecord(token));
+    mockUpdateApiKey.mockResolvedValue({});
+    const ctx = await authenticateApiKey(makeBearerRequest(token));
+    expect(ctx.environment).toBe("test");
+  });
+
+  it("returns environment=live for gct_live_ keys", async () => {
+    setupNotBlocked();
+    const token = makeToken("live");
+    mockFindFirst.mockResolvedValue(makeRecord(token));
+    mockUpdateApiKey.mockResolvedValue({});
+    const ctx = await authenticateApiKey(makeBearerRequest(token));
+    expect(ctx.environment).toBe("live");
   });
 
   it("fires lastUsedAt update as fire-and-forget (does not await)", async () => {
@@ -388,36 +414,45 @@ describe("ApiAuthError", () => {
 // For any generated API key K: K.raw matches /^gct_[0-9a-f]{48}$/, SHA-256(K.raw) === K.keyHash, K.raw.slice(0, 12) === K.prefix
 // Validates: Requirements 1.1, 1.2, 1.3, 1.11, 1.12
 describe("Property 1: API Key Structural Invariants", () => {
-  it("generated key format, hash, and prefix invariants hold for arbitrary key material", () => {
+  it("generated key format, hash, and prefix invariants hold for live keys", () => {
     fc.assert(
       fc.property(
-        // Generate 24 random bytes (48 hex chars) as key material
         fc.uint8Array({ minLength: 24, maxLength: 24 }),
         (keyBytes) => {
-          // Simulate key generation: gct_ + 48 hex chars
-          const rawKey = "gct_" + Buffer.from(keyBytes).toString("hex");
+          const secret = Buffer.from(keyBytes).toString("hex");
+          const rawKey = `gct_live_${secret}`;
 
-          // Invariant 1: format matches /^gct_[0-9a-f]{48}$/
-          expect(rawKey).toMatch(/^gct_[0-9a-f]{48}$/);
+          // format: gct_live_ + 48 hex chars
+          expect(rawKey).toMatch(/^gct_live_[0-9a-f]{48}$/);
 
-          // Invariant 2: SHA-256(raw) === keyHash
-          const keyHash = crypto
-            .createHash("sha256")
-            .update(rawKey)
-            .digest("hex");
-          const recomputed = crypto
-            .createHash("sha256")
-            .update(rawKey)
-            .digest("hex");
-          expect(keyHash).toBe(recomputed);
+          // hash determinism
+          const h1 = crypto.createHash("sha256").update(rawKey).digest("hex");
+          const h2 = crypto.createHash("sha256").update(rawKey).digest("hex");
+          expect(h1).toBe(h2);
 
-          // Invariant 3: prefix === first 12 chars of raw key
-          const prefix = rawKey.slice(0, 12);
-          expect(prefix).toBe(rawKey.slice(0, 12));
-          expect(prefix).toHaveLength(12);
-          expect(prefix).toBe(
-            "gct_" + Buffer.from(keyBytes).toString("hex").slice(0, 8),
-          );
+          // prefix = gct_live_ + first 6 chars of secret = 15 chars total
+          const prefix = `gct_live_${secret.slice(0, 6)}`;
+          expect(prefix).toHaveLength(15);
+          expect(rawKey.startsWith(prefix)).toBe(true);
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
+
+  it("generated key format, hash, and prefix invariants hold for test keys", () => {
+    fc.assert(
+      fc.property(
+        fc.uint8Array({ minLength: 24, maxLength: 24 }),
+        (keyBytes) => {
+          const secret = Buffer.from(keyBytes).toString("hex");
+          const rawKey = `gct_test_${secret}`;
+
+          expect(rawKey).toMatch(/^gct_test_[0-9a-f]{48}$/);
+
+          const prefix = `gct_test_${secret.slice(0, 6)}`;
+          expect(prefix).toHaveLength(15);
+          expect(rawKey.startsWith(prefix)).toBe(true);
         },
       ),
       { numRuns: 100 },
@@ -428,14 +463,15 @@ describe("Property 1: API Key Structural Invariants", () => {
     fc.assert(
       fc.property(
         fc.uint8Array({ minLength: 24, maxLength: 24 }),
-        (keyBytes) => {
-          const rawKey = "gct_" + Buffer.from(keyBytes).toString("hex");
+        fc.constantFrom("live" as const, "test" as const),
+        (keyBytes, env) => {
+          const secret = Buffer.from(keyBytes).toString("hex");
+          const rawKey = `gct_${env}_${secret}`;
           const keyHash = crypto
             .createHash("sha256")
             .update(rawKey)
             .digest("hex");
 
-          // Verify: timingSafeEqual(sha256(rawKey), Buffer.from(keyHash, "hex")) === true
           const providedHash = crypto
             .createHash("sha256")
             .update(rawKey)
@@ -456,7 +492,7 @@ describe("Property 1: API Key Structural Invariants", () => {
 describe("Property 2: Authentication Round-Trip", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("authenticateApiKey returns correct userId and scopes for any valid key and scope set", async () => {
+  it("authenticateApiKey returns correct userId, scopes and environment for any valid key", async () => {
     await fc.assert(
       fc.asyncProperty(
         fc
@@ -466,20 +502,22 @@ describe("Property 2: Authentication Round-Trip", () => {
           minLength: 1,
           maxLength: 4,
         }),
-        async (userId, scopes) => {
+        fc.constantFrom("live" as const, "test" as const),
+        async (userId, scopes, env) => {
           vi.clearAllMocks();
           setupNotBlocked();
 
-          const token = makeToken();
+          const token = makeToken(env);
           const record = {
             id: "key_roundtrip",
             userId,
-            prefix: token.slice(0, 12),
+            prefix: token.slice(0, 16),
             keyHash: sha256Hex(token),
             isActive: true,
             expiresAt: null,
             scopes,
             projectId: null,
+            environment: env,
           };
           mockFindFirst.mockResolvedValue(record);
           mockUpdateApiKey.mockResolvedValue({});
@@ -489,6 +527,7 @@ describe("Property 2: Authentication Round-Trip", () => {
           expect(ctx.userId).toBe(userId);
           expect(ctx.scopes).toEqual(scopes);
           expect(ctx.apiKeyId).toBe("key_roundtrip");
+          expect(ctx.environment).toBe(env);
         },
       ),
       { numRuns: 100 },

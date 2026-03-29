@@ -14,9 +14,9 @@
     "body1": "We believe every developer building with LLMs deserves full visibility and control over their AI infrastructure — without changing a line of code or switching providers.",
     "body2": "GateCtr is the middleware layer that sits between your app and any LLM. One endpoint swap. Budget enforcement, prompt optimization, intelligent routing, and real-time analytics — all transparent, all measurable.",
     "stat1": {
-      "value": "-40%",
+      "value": "40%",
       "label": "Token reduction",
-      "desc": "Average savings via Context Optimizer"
+      "desc": "Up to 40% savings via Context Optimizer on verbose prompts"
     },
     "stat2": {
       "value": "~20ms",
@@ -50,7 +50,7 @@
       },
       {
         "title": "Measurable impact",
-        "body": "We don't make vague promises. -40% tokens is a number we stand behind. Every feature ships with a metric."
+        "body": "We don't make vague promises. Up to 40% fewer tokens is a number we stand behind — measured on verbose production prompts. Every feature ships with a metric."
       },
       {
         "title": "Reliability over features",

@@ -48,7 +48,7 @@ inclusion: always
 
 | Feature            | EN one-liner                                           | FR one-liner                                                      |
 | ------------------ | ------------------------------------------------------ | ----------------------------------------------------------------- |
-| Context Optimizer  | Compresses your prompts. -40% tokens. Same output.     | Compresse vos prompts. -40% de tokens. Même résultat.             |
+| Context Optimizer  | Compresses your prompts. Up to 40% fewer tokens. Same output.     | Compresse vos prompts. Jusqu'à 40% de tokens en moins. Même résultat.             |
 | Model Router       | Picks the right LLM for each request. Semantic complexity scoring. Cost + latency optimized. | Sélectionne le bon LLM. Scoring sémantique. Optimisé coût + latence. |
 | Budget Firewall    | Hard caps. Soft alerts. No surprise invoices.          | Limites strictes. Alertes douces. Zéro facture surprise.          |
 | Webhooks Engine    | Push events to Slack, Teams, or any URL.               | Envoyez les événements vers Slack, Teams ou n'importe quelle URL. |

@@ -100,7 +100,7 @@ All CTA variants handle dark mode automatically via CSS tokens in `globals.css`:
 <Button variant="cta-accent">Go to dashboard</Button>
 
 // ✅ Accent for upsell only
-<Button variant="cta-accent">Upgrade — save 40% on tokens</Button>
+<Button variant="cta-accent">Upgrade — up to 40% fewer tokens</Button>
 
 // ❌ Vague danger label
 <Button variant="cta-danger">Confirm</Button>

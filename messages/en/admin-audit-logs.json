@@ -22,6 +22,13 @@
     "search": "Search email...",
     "resource": "All resources",
     "status": "All statuses",
+    "actor": "Actor email...",
+    "action": "Action keyword...",
+    "dateRange": "Date range",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "applyDateRange": "Apply",
+    "clearDateRange": "Clear dates",
     "clearAll": "Clear filters",
     "export": "Export CSV"
   },

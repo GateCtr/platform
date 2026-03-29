@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "title": "Feature Flags — Admin"
+  },
+  "title": "Feature Flags",
+  "subtitle": "Control feature rollout across plans and users.",
+  "table": {
+    "key": "Key",
+    "name": "Name",
+    "enabled": "Enabled",
+    "rollout": "Rollout",
+    "plans": "Plans",
+    "overrides": "Overrides"
+  },
+  "rollout": {
+    "label": "Rollout %",
+    "error": "Must be 0–100"
+  },
+  "overrides": {
+    "title": "User Overrides",
+    "add": "Add override",
+    "remove": "Remove",
+    "user": "User email",
+    "value": "Value",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "empty": "No overrides yet."
+  },
+  "actions": {
+    "toggle": "Toggle flag",
+    "save": "Save changes"
+  },
+  "empty": "No feature flags configured.",
+  "errors": {
+    "invalidRollout": "Rollout must be an integer between 0 and 100.",
+    "userNotFound": "No user found with that email.",
+    "forbidden": "Insufficient permissions."
+  }
+}

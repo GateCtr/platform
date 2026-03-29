@@ -29,6 +29,12 @@ vi.mock("@/components/admin/header", () => ({
   AdminHeader: () => <header data-testid="admin-header" />,
 }));
 
+vi.mock("@/components/admin/admin-store-provider", () => ({
+  AdminStoreProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
+
 vi.mock("@/components/idle-timeout-dialog", () => ({
   IdleTimeoutDialog: () => null,
 }));

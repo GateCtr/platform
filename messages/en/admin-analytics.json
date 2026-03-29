@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "title": "Analytics — Admin"
+  },
+  "title": "Platform Analytics",
+  "subtitle": "Token usage, model breakdown, and active users across the platform.",
+  "range": {
+    "label": "Range",
+    "7d": "7d",
+    "30d": "30d",
+    "90d": "90d"
+  },
+  "kpi": {
+    "currentPeriod": "Current period",
+    "previousPeriod": "Previous period",
+    "pctChange": "vs previous period",
+    "savedByOptimizer": "Saved by optimizer",
+    "dau": "Daily active users",
+    "mau": "Monthly active users",
+    "tokens": "tokens"
+  },
+  "charts": {
+    "dailyTrend": "Daily token usage",
+    "providerBreakdown": "Usage by provider",
+    "tokens": "Tokens"
+  },
+  "tables": {
+    "modelBreakdown": {
+      "title": "Top models",
+      "model": "Model",
+      "provider": "Provider",
+      "tokens": "Tokens",
+      "pctOfTotal": "% of total",
+      "empty": "No model data for this period."
+    },
+    "topUsers": {
+      "title": "Top users",
+      "user": "User",
+      "email": "Email",
+      "plan": "Plan",
+      "tokens": "Tokens",
+      "empty": "No usage data for this period."
+    }
+  },
+  "export": {
+    "button": "Export CSV",
+    "exporting": "Exporting..."
+  },
+  "errors": {
+    "loadFailed": "Failed to load analytics data.",
+    "exportFailed": "Export failed. Try again.",
+    "forbidden": "Insufficient permissions."
+  },
+  "loading": "Loading analytics...",
+  "noData": "No data"
+}

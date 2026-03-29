@@ -6,6 +6,7 @@ import { Link } from "@/i18n/routing";
 import { ArrowRight, Zap } from "lucide-react";
 import { PRODUCT } from "@/config/product";
 import { CodeSnippet } from "@/components/ui/code-snippet";
+import { appUrl } from "@/lib/app-url";
 
 export function Hero() {
   const t = useTranslations("home.hero");
@@ -75,10 +76,10 @@ export function Hero() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
           <Button variant="cta-primary" size="lg" asChild>
-            <Link href="/sign-up">
+            <a href={appUrl("/sign-up")}>
               {t("ctaPrimary")}
               <ArrowRight className="size-4" />
-            </Link>
+            </a>
           </Button>
           <Button variant="cta-secondary" size="lg" asChild>
             <Link href="/#how-it-works">{t("ctaSecondary")}</Link>

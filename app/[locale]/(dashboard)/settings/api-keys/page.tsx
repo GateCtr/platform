@@ -17,6 +17,7 @@ export default async function ApiKeysSettingsPage() {
     id: string;
     name: string;
     prefix: string;
+    environment: string;
     scopes: string[];
     projectId: string | null;
     isActive: boolean;
@@ -34,6 +35,7 @@ export default async function ApiKeysSettingsPage() {
             id: true,
             name: true,
             prefix: true,
+            environment: true,
             scopes: true,
             projectId: true,
             isActive: true,

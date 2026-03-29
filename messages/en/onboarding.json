@@ -9,7 +9,7 @@
     "tagline": "Swap your endpoint. Keep your keys.\nGateCtr controls. You save.",
     "features": {
       "optimizer": {
-        "label": "-40% tokens",
+        "label": "Up to 40% tokens saved",
         "sub": "Context Optimizer on every request."
       },
       "firewall": {

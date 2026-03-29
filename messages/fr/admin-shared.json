@@ -2,12 +2,15 @@
   "sidebar": {
     "overview": "Vue d'ensemble",
     "users": "Utilisateurs",
+    "teams": "Équipes",
     "plans": "Plans",
     "featureFlags": "Indicateurs de fonctionnalité",
     "auditLogs": "Journaux d'audit",
     "systemHealth": "Santé du système",
     "waitlist": "Liste d'attente",
-    "billing": "Facturation"
+    "billing": "Facturation",
+    "analytics": "Analytics",
+    "notifications": "Notifications"
   },
   "groups": {
     "platform": "Plateforme",

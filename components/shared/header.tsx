@@ -25,33 +25,59 @@ export interface HeaderProps {
   className?: string;
 }
 
-const NAV_LINKS = [
+import { appUrl } from "@/lib/app-url";
+
+type NavLink = {
+  key: string;
+  href: string;
+  external?: boolean;
+  highlight?: boolean;
+};
+
+const NAV_LINKS: NavLink[] = [
   { key: "features", href: "/features" },
   { key: "pricing", href: "/pricing" },
+  { key: "demo", href: "/demo", highlight: true },
+  { key: "blog", href: "https://blog.gatectr.com", external: true },
   { key: "docs", href: "/docs" },
   { key: "changelog", href: "/changelog" },
-] as const;
-
-/** Returns absolute URL for app routes — handles gatectr.com → app.gatectr.com in prod */
-function appUrl(path: string): string {
-  const base = process.env.NEXT_PUBLIC_APP_URL;
-  if (base) return `${base}${path}`;
-  return path; // dev: relative
-}
+];
 
 function DesktopNav() {
   const t = useTranslations("common.nav");
   return (
     <nav className="hidden md:flex items-center gap-1">
-      {NAV_LINKS.map(({ key, href }) => (
-        <Link
-          key={key}
-          href={href}
-          className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/50 transition-colors"
-        >
-          {t(key)}
-        </Link>
-      ))}
+      {NAV_LINKS.map(({ key, href, external, highlight }) =>
+        external ? (
+          <a
+            key={key}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/50 transition-colors"
+          >
+            {t(key)}
+          </a>
+        ) : (
+          <Link
+            key={key}
+            href={href}
+            className={cn(
+              "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
+              highlight
+                ? "text-secondary-500 hover:text-secondary-500 hover:bg-secondary-500/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+            )}
+          >
+            {t(key)}
+            {highlight && (
+              <span className="ml-1.5 inline-flex items-center rounded-full bg-secondary-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-secondary-500 leading-none">
+                Live
+              </span>
+            )}
+          </Link>
+        ),
+      )}
     </nav>
   );
 }
@@ -100,16 +126,39 @@ function MobileSheet() {
           </SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col px-3 py-4 gap-1">
-          {NAV_LINKS.map(({ key, href }) => (
-            <SheetClose key={key} asChild>
-              <Link
-                href={href}
-                className="px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/50 transition-colors"
-              >
-                {t(key)}
-              </Link>
-            </SheetClose>
-          ))}
+          {NAV_LINKS.map(({ key, href, external, highlight }) =>
+            external ? (
+              <SheetClose key={key} asChild>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-accent/50 transition-colors"
+                >
+                  {t(key)}
+                </a>
+              </SheetClose>
+            ) : (
+              <SheetClose key={key} asChild>
+                <Link
+                  href={href}
+                  className={cn(
+                    "px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
+                    highlight
+                      ? "text-secondary-500 hover:bg-secondary-500/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                  )}
+                >
+                  {t(key)}
+                  {highlight && (
+                    <span className="ml-1.5 inline-flex items-center rounded-full bg-secondary-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-secondary-500 leading-none">
+                      Live
+                    </span>
+                  )}
+                </Link>
+              </SheetClose>
+            ),
+          )}
         </nav>
         <div className="px-4 pb-6 mt-auto border-t border-border flex flex-col gap-2">
           <div className="flex items-center gap-2 py-3">

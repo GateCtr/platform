@@ -58,65 +58,65 @@ Complete the GateCtr admin control plane by implementing pure utility functions 
 - [x] 2. Checkpoint — Ensure all utility tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. Implement admin API routes — Overview KPIs
+- [x] 3. Implement admin API routes — Overview KPIs
   - Create `app/api/admin/overview/route.ts`
   - GET handler: parallel `Promise.all` fetching active user count, active subscription count, MRR (from plan counts × plan price constants in `config/product.ts`), and tokens this month from `usageLog.aggregate`
   - Enforce `requirePermission('analytics:read')` before any DB query
   - Return typed JSON payload; log no audit entry (read-only)
   - _Requirements: 1.1, 11.1, 11.6_
 
-- [ ] 4. Implement admin API routes — Feature Flags CRUD
-  - [ ] 4.1 Create `app/api/admin/feature-flags/route.ts`
+- [x] 4. Implement admin API routes — Feature Flags CRUD
+  - [x] 4.1 Create `app/api/admin/feature-flags/route.ts`
     - GET: `prisma.featureFlag.findMany` with `_count: { overrides: true }`, ordered by key
     - Enforce `requirePermission('system:read')`
     - _Requirements: 6.1, 11.4_
-  - [ ] 4.2 Create `app/api/admin/feature-flags/[id]/route.ts`
+  - [x] 4.2 Create `app/api/admin/feature-flags/[id]/route.ts`
     - PATCH: accepts `{ enabled?, rolloutPct?, enabledPlans? }`, validates rollout with `validateRolloutPct`, updates DB, invalidates Redis cache keys (`feature_flag:{userId}:{flagKey}`), calls `logAudit()`
     - Enforce `requirePermission('system:write')`
     - Return typed `ActionResult<FeatureFlag>`
     - _Requirements: 6.2, 6.3, 6.4, 6.7, 11.8_
-  - [ ] 4.3 Create `app/api/admin/feature-flags/[id]/overrides/route.ts`
+  - [x] 4.3 Create `app/api/admin/feature-flags/[id]/overrides/route.ts`
     - GET: list overrides for flag; POST: resolve user by email, create `FeatureFlagOverride`; DELETE: remove override by id
     - Enforce `requirePermission('system:write')` on POST/DELETE
     - _Requirements: 6.5, 6.6, 11.8_
 
-- [ ] 5. Implement admin API routes — System Health
-  - [ ] 5.1 Create `app/api/admin/system/stats/route.ts`
+- [-] 5. Implement admin API routes — System Health
+  - [x] 5.1 Create `app/api/admin/system/stats/route.ts`
     - GET: return total API requests (24h), p50/p95 latency, error rate %, cache hit rate % from `SystemHealth` aggregates
     - Enforce `requirePermission('system:read')`
     - _Requirements: 8.6_
-  - [ ] 5.2 Create `app/api/admin/system/history/route.ts`
+  - [x] 5.2 Create `app/api/admin/system/history/route.ts`
     - GET: `prisma.systemHealth.findMany` for last 24h, ordered by `checkedAt` asc; group by service in application code
     - Enforce `requirePermission('system:read')`
     - _Requirements: 8.4_
 
-- [ ] 6. Implement admin API routes — Teams
-  - [ ] 6.1 Create `app/api/admin/teams/route.ts`
+- [x] 6. Implement admin API routes — Teams
+  - [x] 6.1 Create `app/api/admin/teams/route.ts`
     - GET: paginated team list with `skip`/`take`, optional search across name/slug/owner email, include owner email + plan + member/project counts
     - Enforce `requirePermission('users:read')`
     - _Requirements: 3.1, 3.2_
-  - [ ] 6.2 Create `app/api/admin/teams/[teamId]/route.ts`
+  - [x] 6.2 Create `app/api/admin/teams/[teamId]/route.ts`
     - GET: full team detail (metadata, owner, members with roles, pending invitations, projects)
     - DELETE: cascade-delete team + members + invitations + projects + API keys, call `logAudit()`
     - Enforce `requirePermission('users:read')` on GET, `requirePermission('users:delete')` on DELETE
     - _Requirements: 3.3, 3.6, 11.8_
-  - [ ] 6.3 Create `app/api/admin/teams/[teamId]/members/[memberId]/route.ts`
+  - [x] 6.3 Create `app/api/admin/teams/[teamId]/members/[memberId]/route.ts`
     - DELETE: remove `TeamMember` record, call `logAudit()`
     - Enforce `requirePermission('users:write')`
     - _Requirements: 3.4, 11.8_
-  - [ ] 6.4 Create `app/api/admin/teams/[teamId]/invitations/[invitationId]/route.ts`
+  - [x] 6.4 Create `app/api/admin/teams/[teamId]/invitations/[invitationId]/route.ts`
     - DELETE: set `revokedAt` on `TeamInvitation`, call `logAudit()`
     - Enforce `requirePermission('users:write')`
     - _Requirements: 3.5, 11.8_
 
-- [ ] 7. Implement admin API routes — Analytics
+- [x] 7. Implement admin API routes — Analytics
   - Create `app/api/admin/analytics/route.ts`
   - GET: accepts `range` query param (7d/30d/90d); returns single JSON payload with daily token trend (raw SQL), provider breakdown (`groupBy`), top 10 models, top 10 users, DAU/MAU counts, tokens saved by optimizer
   - Supports `export=csv` query param to stream CSV response
   - Enforce `requirePermission('analytics:read')`
   - _Requirements: 9.1–9.9_
 
-- [ ] 8. Implement admin API routes — Notifications/Alerts
+- [x] 8. Implement admin API routes — Notifications/Alerts
   - Create `app/api/admin/notifications/route.ts`
   - GET: unacknowledged alerts (sorted via `sortAlertsBySeverity`) + paginated history (last 100), filterable by severity and acknowledged state via query params
   - PATCH: acknowledge single alert — set `acknowledged`, `acknowledgedAt`, `acknowledgedBy`, call `logAudit()`
@@ -124,7 +124,7 @@ Complete the GateCtr admin control plane by implementing pure utility functions 
   - Enforce `requirePermission('analytics:read')` on GET, `requirePermission('analytics:write')` on PATCH/POST
   - _Requirements: 10.1–10.6, 11.8_
 
-- [ ] 9. Extend audit logs API route
+- [x] 9. Extend audit logs API route
   - Modify `app/api/admin/audit-logs/route.ts` to add `from`, `to`, `actor`, `action` query params
   - Add `createdAt: { gte: from, lte: to }` where clause for date range
   - Resolve `actor` email to `actorId` via subquery on `User.email`
@@ -134,30 +134,30 @@ Complete the GateCtr admin control plane by implementing pure utility functions 
 - [ ] 10. Checkpoint — Ensure all API routes compile and return correct shapes
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 11. Enhance Overview page with KPI widgets and charts
+- [x] 11. Enhance Overview page with KPI widgets and charts
   - Modify `app/[locale]/(admin)/admin/overview/page.tsx`
-  - [ ] 11.1 Create `components/admin/overview/kpi-card.tsx`
+  - [x] 11.1 Create `components/admin/overview/kpi-card.tsx`
     - Accepts `value`, `label`, `trend` (delta vs last month), `isLoading`; renders skeleton when loading
     - _Requirements: 1.1, 1.6_
-  - [ ] 11.2 Create `components/admin/overview/kpi-grid.tsx`
+  - [x] 11.2 Create `components/admin/overview/kpi-grid.tsx`
     - 4-column grid rendering four `KpiCard` instances (total users, active subscriptions, MRR, tokens this month)
     - Wraps each card in an independent `ErrorBoundary` for widget-level isolation
     - _Requirements: 1.1, 1.7_
-  - [ ] 11.3 Create `components/admin/overview/system-health-summary.tsx`
+  - [x] 11.3 Create `components/admin/overview/system-health-summary.tsx`
     - Compact widget: overall status badge + per-service dot indicators; links to `/admin/system`
     - Fetches from existing `GET /api/v1/system/health`
     - _Requirements: 1.2_
-  - [ ] 11.4 Create `components/admin/overview/signup-trend-chart.tsx`
+  - [x] 11.4 Create `components/admin/overview/signup-trend-chart.tsx`
     - Recharts `AreaChart` of 7-day new user signups; data passed as prop from RSC using `fillTrendGaps`
     - _Requirements: 1.3_
-  - [ ] 11.5 Create `components/admin/overview/plan-distribution-chart.tsx`
+  - [x] 11.5 Create `components/admin/overview/plan-distribution-chart.tsx`
     - Recharts `PieChart` of user count per plan using `computePlanDistribution`
     - _Requirements: 1.4_
-  - [ ] 11.6 Wire all new widgets into `overview/page.tsx`
+  - [x] 11.6 Wire all new widgets into `overview/page.tsx`
     - Parallel `Promise.all([fetchOverviewKpis(), fetchSystemHealth()])` in RSC; pass data as props
     - _Requirements: 1.1–1.8_
 
-- [ ] 12. Enhance Audit Logs page with new filters
+- [x] 12. Enhance Audit Logs page with new filters
   - Modify `app/[locale]/(admin)/admin/audit-logs/page.tsx` and its `AuditFilters` client component
   - Add date range picker (Radix Popover + two `<input type="date">`) for `from`/`to` params
   - Add actor email search input for `actor` param
@@ -165,100 +165,100 @@ Complete the GateCtr admin control plane by implementing pure utility functions 
   - Update URL search params handling to include new params alongside existing ones
   - _Requirements: 7.3, 7.4_
 
-- [ ] 13. Build Feature Flags page
+- [x] 13. Build Feature Flags page
   - Create `app/[locale]/(admin)/admin/feature-flags/page.tsx` (RSC, fetches flag list server-side)
-  - [ ] 13.1 Create `components/admin/feature-flags/feature-flags-table.tsx`
+  - [x] 13.1 Create `components/admin/feature-flags/feature-flags-table.tsx`
     - TanStack Table: columns key, name, description, enabled toggle, rollout slider, plans badges, override count
     - Optimistic updates on toggle/rollout/plans changes via server actions
     - _Requirements: 6.1–6.4_
-  - [ ] 13.2 Create `components/admin/feature-flags/flag-overrides-sheet.tsx`
+  - [x] 13.2 Create `components/admin/feature-flags/flag-overrides-sheet.tsx`
     - Radix Sheet listing existing overrides with remove button; "Add override" form with user email search + enabled/disabled select
     - _Requirements: 6.5, 6.6_
-  - [ ] 13.3 Create `components/admin/feature-flags/rollout-input.tsx`
+  - [x] 13.3 Create `components/admin/feature-flags/rollout-input.tsx`
     - Controlled number input using `validateRolloutPct`; shows error state for out-of-range values
     - _Requirements: 6.3_
-  - [ ] 13.4 Create `app/[locale]/(admin)/admin/feature-flags/_actions.ts`
+  - [x] 13.4 Create `app/[locale]/(admin)/admin/feature-flags/_actions.ts`
     - Server actions: `toggleFlag`, `updateRollout`, `updateEnabledPlans`, `addOverride`, `removeOverride`
     - Each calls `requirePermission('system:write')`, updates DB, invalidates Redis, calls `logAudit()`
     - Returns typed `ActionResult<T>`
     - _Requirements: 6.2–6.7, 11.7, 11.8_
 
-- [ ] 14. Build System Health page
+- [x] 14. Build System Health page
   - Create `app/[locale]/(admin)/admin/system/page.tsx` (client component with `useQuery` + `refetchInterval: 30_000`)
-  - [ ] 14.1 Create `components/admin/system/overall-status-banner.tsx`
+  - [x] 14.1 Create `components/admin/system/overall-status-banner.tsx`
     - Top-of-page banner using `computeOverallStatus`; shows "Status unavailable" + last-known timestamp on fetch error
     - _Requirements: 8.2, 8.7_
-  - [ ] 14.2 Create `components/admin/system/service-status-table.tsx`
+  - [x] 14.2 Create `components/admin/system/service-status-table.tsx`
     - Table of 5 services: status badge, latency ms, last checked; highlights DEGRADED/DOWN rows
     - _Requirements: 8.1, 8.3_
-  - [ ] 14.3 Create `components/admin/system/service-sparkline.tsx`
+  - [x] 14.3 Create `components/admin/system/service-sparkline.tsx`
     - SVG row of colored segments (green/yellow/red) for 24h status history per service
     - _Requirements: 8.4_
-  - [ ] 14.4 Create `components/admin/system/platform-stats-grid.tsx`
+  - [x] 14.4 Create `components/admin/system/platform-stats-grid.tsx`
     - 4 stat cards: total API requests (24h), p50/p95 latency, error rate %, cache hit rate %
     - _Requirements: 8.6_
 
-- [ ] 15. Build Teams management pages
-  - [ ] 15.1 Create `app/[locale]/(admin)/admin/teams/page.tsx`
+- [x] 15. Build Teams management pages
+  - [x] 15.1 Create `app/[locale]/(admin)/admin/teams/page.tsx`
     - RSC; fetches paginated team list; renders `TeamsTable` client component
     - _Requirements: 3.1_
-  - [ ] 15.2 Create `components/admin/teams/teams-table.tsx`
+  - [x] 15.2 Create `components/admin/teams/teams-table.tsx`
     - TanStack Table with server-side pagination; columns: name, slug, owner email, member count, plan badge, project count, created date
     - Debounced search (300ms) updates URL params; row click navigates to detail
     - _Requirements: 3.1, 3.2_
-  - [ ] 15.3 Create `app/[locale]/(admin)/admin/teams/[teamId]/page.tsx`
+  - [x] 15.3 Create `app/[locale]/(admin)/admin/teams/[teamId]/page.tsx`
     - RSC; parallel fetch of team detail, members, invitations, projects
     - _Requirements: 3.3_
-  - [ ] 15.4 Create `components/admin/teams/team-meta-card.tsx`, `team-members-table.tsx`, `team-invitations-table.tsx`, `team-projects-list.tsx`
+  - [x] 15.4 Create `components/admin/teams/team-meta-card.tsx`, `team-members-table.tsx`, `team-invitations-table.tsx`, `team-projects-list.tsx`
     - Members table has "Remove" button (requires `users:write`); invitations table has "Revoke" button
     - _Requirements: 3.3, 3.4, 3.5_
-  - [ ] 15.5 Create `components/admin/teams/delete-team-button.tsx`
+  - [x] 15.5 Create `components/admin/teams/delete-team-button.tsx`
     - Danger button with confirmation dialog; calls `DELETE /api/admin/teams/[teamId]`; redirects to `/admin/teams` on success
     - Requires `users:delete` permission check before rendering
     - _Requirements: 3.6, 3.7_
 
-- [ ] 16. Build Platform Analytics page
+- [x] 16. Build Platform Analytics page
   - Create `app/[locale]/(admin)/admin/analytics/page.tsx` (client component)
-  - [ ] 16.1 Create `components/admin/analytics/analytics-date-range-picker.tsx`
+  - [x] 16.1 Create `components/admin/analytics/analytics-date-range-picker.tsx`
     - Segmented control: 7d / 30d / 90d; updates `range` URL param; all charts re-fetch on change
     - _Requirements: 9.8_
-  - [ ] 16.2 Create `components/admin/analytics/token-kpi-row.tsx`
+  - [x] 16.2 Create `components/admin/analytics/token-kpi-row.tsx`
     - 3 stat cards: current period tokens, previous period tokens, percentage change (using `computePctChange`) with up/down arrow
     - _Requirements: 9.1_
-  - [ ] 16.3 Create `components/admin/analytics/daily-token-trend-chart.tsx`
+  - [x] 16.3 Create `components/admin/analytics/daily-token-trend-chart.tsx`
     - Recharts `AreaChart` of daily token usage using `fillTrendGaps`
     - _Requirements: 9.3_
-  - [ ] 16.4 Create `components/admin/analytics/provider-breakdown-chart.tsx`
+  - [x] 16.4 Create `components/admin/analytics/provider-breakdown-chart.tsx`
     - Recharts `BarChart` of token usage by provider
     - _Requirements: 9.4_
-  - [ ] 16.5 Create `components/admin/analytics/model-breakdown-table.tsx`
+  - [x] 16.5 Create `components/admin/analytics/model-breakdown-table.tsx`
     - Top 10 models: model name, provider, token count, % of total
     - _Requirements: 9.5_
-  - [ ] 16.6 Create `components/admin/analytics/top-users-table.tsx`
+  - [x] 16.6 Create `components/admin/analytics/top-users-table.tsx`
     - Top 10 users by token consumption using `topN`; columns: avatar, name, email, plan badge, token count
     - _Requirements: 9.7_
-  - [ ] 16.7 Create `components/admin/analytics/export-button.tsx`
+  - [x] 16.7 Create `components/admin/analytics/export-button.tsx`
     - Triggers `GET /api/admin/analytics?export=csv&range=...`
     - _Requirements: 9.9_
-  - [ ] 16.8 Wire all analytics components into `analytics/page.tsx`
+  - [x] 16.8 Wire all analytics components into `analytics/page.tsx`
     - Single `useQuery` call to `GET /api/admin/analytics?range=...`; pass data to all child components
     - _Requirements: 9.1–9.9_
 
-- [ ] 17. Build Notifications/Alerts page
+- [x] 17. Build Notifications/Alerts page
   - Create `app/[locale]/(admin)/admin/notifications/page.tsx` (client component)
-  - [ ] 17.1 Create `components/admin/notifications/unacknowledged-alerts-list.tsx`
+  - [x] 17.1 Create `components/admin/notifications/unacknowledged-alerts-list.tsx`
     - Sorted list using `sortAlertsBySeverity`; severity badge per row; "Acknowledge" button per row
     - _Requirements: 10.1, 10.2_
-  - [ ] 17.2 Create `components/admin/notifications/acknowledge-all-button.tsx`
+  - [x] 17.2 Create `components/admin/notifications/acknowledge-all-button.tsx`
     - Bulk action; shows confirmation count in toast on success
     - _Requirements: 10.3_
-  - [ ] 17.3 Create `components/admin/notifications/alert-history-table.tsx`
+  - [x] 17.3 Create `components/admin/notifications/alert-history-table.tsx`
     - TanStack Table of last 100 alerts; columns: severity, message, rule name, created at, acknowledged state
     - _Requirements: 10.4_
-  - [ ] 17.4 Create `components/admin/notifications/severity-filter.tsx` and `acknowledged-filter.tsx`
+  - [x] 17.4 Create `components/admin/notifications/severity-filter.tsx` and `acknowledged-filter.tsx`
     - Segmented controls updating URL params `severity` and `acknowledged`
     - _Requirements: 10.5_
-  - [ ] 17.5 Create `app/[locale]/(admin)/admin/notifications/_actions.ts`
+  - [x] 17.5 Create `app/[locale]/(admin)/admin/notifications/_actions.ts`
     - Server actions: `acknowledgeAlert(id)`, `acknowledgeAllAlerts()`
     - Each calls `requirePermission('analytics:write')`, updates DB, calls `logAudit()`
     - Returns typed `ActionResult<T>`
@@ -267,13 +267,13 @@ Complete the GateCtr admin control plane by implementing pure utility functions 
 - [ ] 18. Checkpoint — Ensure all page components compile and render correctly
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 19. Add Zustand slice for unacknowledged alert count
+- [x] 19. Add Zustand slice for unacknowledged alert count
   - Create or extend a Zustand store (e.g., `lib/stores/admin-store.ts`) with `unacknowledgedCount` state
   - Populate via a TanStack Query hook (`useUnacknowledgedCount`) with 60s refetch interval
   - Share the value between the sidebar badge and the notifications page without double-fetching
   - _Requirements: 10.6_
 
-- [ ] 20. Update admin sidebar with new nav items and badge
+- [x] 20. Update admin sidebar with new nav items and badge
   - Modify `components/admin/sidebar.tsx`
   - Add Teams nav item to the users group: `{ key: "sidebar.teams", href: "/admin/teams", permission: "users:read", icon: Building2 }`
   - Add Analytics nav item to the platform group: `{ key: "sidebar.analytics", href: "/admin/analytics", permission: "analytics:read", icon: BarChart3 }`
@@ -334,7 +334,7 @@ Complete the GateCtr admin control plane by implementing pure utility functions 
   - Use `deepKeyStructureEqual` from task 1.15 and `fast-check` to assert parity across all new admin translation files
   - **Validates: Requirements 12.5**
 
-- [~] 25. Checkpoint — Ensure all tests pass and both EN/FR routes render correctly
+- [ ] 25. Checkpoint — Ensure all tests pass and both EN/FR routes render correctly
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 26. Write E2E tests (Playwright)

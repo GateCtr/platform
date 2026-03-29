@@ -55,3 +55,15 @@ process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
 process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test";
 process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_test";
 process.env.CLERK_SECRET_KEY = "sk_test_test";
+process.env.REDIS_URL = "redis://localhost:6379"; // prevent undefined
+
+// Mock BullMQ queues globally — prevents IORedis from connecting in tests
+vi.mock("@/lib/queues", () => ({
+  analyticsQueue: { add: vi.fn().mockResolvedValue(undefined) },
+  webhooksQueue: { add: vi.fn().mockResolvedValue(undefined) },
+  emailQueue: { add: vi.fn().mockResolvedValue(undefined) },
+  dailyReportQueue: { add: vi.fn().mockResolvedValue(undefined) },
+  healthQueue: { add: vi.fn().mockResolvedValue(undefined) },
+  redisConnection: {},
+  bullmqDefaults: { skipVersionCheck: true },
+}));

@@ -1,0 +1,27 @@
+{
+  "label": "How we compare",
+  "headline": "Competitors observe. GateCtr controls.",
+  "description": "Routing or logging alone won't cut your bill. GateCtr combines prompt compression, intelligent routing, and hard budget caps — in one endpoint swap.",
+  "colFeature": "Feature",
+  "col": {
+    "gatectr": "GateCtr",
+    "direct": "Direct API",
+    "openrouter": "OpenRouter",
+    "langsmith": "LangSmith"
+  },
+  "row": {
+    "budget": "Budget enforcement",
+    "optimizer": "Token optimization",
+    "routing": "Model routing",
+    "analytics": "Usage analytics",
+    "codeChanges": "Zero code changes",
+    "price": "Pricing"
+  },
+  "cell": {
+    "free": "Free plan",
+    "tokens": "You pay tokens",
+    "markup": "Token markup",
+    "paid": "Paid only"
+  },
+  "footnote": "Comparison based on publicly available information. March 2026."
+}

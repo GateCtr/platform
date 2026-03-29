@@ -11,6 +11,10 @@ interface AuditPaginationProps {
   resource?: string;
   status?: string;
   search?: string;
+  actor?: string;
+  action?: string;
+  from?: string;
+  to?: string;
   labels: {
     previous: string;
     next: string;
@@ -30,6 +34,10 @@ export function AuditPagination({
   resource,
   status,
   search,
+  actor,
+  action,
+  from,
+  to,
   labels,
 }: AuditPaginationProps) {
   const buildHref = (p: number) => {
@@ -38,6 +46,10 @@ export function AuditPagination({
     if (resource) params.set("resource", resource);
     if (status) params.set("status", status);
     if (search) params.set("search", search);
+    if (actor) params.set("actor", actor);
+    if (action) params.set("action", action);
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
     const prefix = locale === "en" ? "" : `/${locale}`;
     return `${prefix}/admin/audit-logs?${params.toString()}`;
   };

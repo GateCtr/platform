@@ -34,6 +34,18 @@ export default getRequestConfig(async ({ requestLocale }) => {
       .default,
     adminWaitlist: (await import(`../messages/${locale}/admin-waitlist.json`))
       .default,
+    adminFeatureFlags: (
+      await import(`../messages/${locale}/admin-feature-flags.json`)
+    ).default,
+    adminSystem: (await import(`../messages/${locale}/admin-system.json`))
+      .default,
+    adminTeams: (await import(`../messages/${locale}/admin-teams.json`))
+      .default,
+    adminAnalytics: (await import(`../messages/${locale}/admin-analytics.json`))
+      .default,
+    adminNotifications: (
+      await import(`../messages/${locale}/admin-notifications.json`)
+    ).default,
     settings: (await import(`../messages/${locale}/settings.json`)).default,
     settingsProfile: (
       await import(`../messages/${locale}/settings-profile.json`)
@@ -70,6 +82,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
     legal: (await import(`../messages/${locale}/legal.json`)).default,
     about: (await import(`../messages/${locale}/about.json`)).default,
     careers: (await import(`../messages/${locale}/careers.json`)).default,
+    demo: (await import(`../messages/${locale}/demo.json`)).default,
+    comparison: (await import(`../messages/${locale}/comparison.json`)).default,
   };
 
   return {

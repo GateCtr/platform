@@ -1,9 +1,9 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encrypt } from "@/lib/encryption";
-import { resolveTeamContext } from "@/lib/team-context";
+import { resolveTeamContextByUserId } from "@/lib/team-context";
+import { resolveAuth, checkScope } from "@/lib/api-auth";
 import { randomBytes } from "crypto";
 
 const VALID_PROVIDERS = ["openai", "anthropic", "mistral", "gemini"] as const;
@@ -13,18 +13,25 @@ function requestId(): string {
   return randomBytes(8).toString("hex");
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const rid = requestId();
   const headers = { "X-GateCtr-Request-Id": rid };
 
-  const { userId: clerkId } = await auth();
-  if (!clerkId)
+  const auth = await resolveAuth(req);
+  if ("error" in auth)
     return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401, headers },
+      { error: auth.error },
+      { status: auth.httpStatus, headers },
     );
 
-  const ctx = await resolveTeamContext(clerkId);
+  const scopeErr = checkScope(auth.scopes, "read");
+  if (scopeErr)
+    return NextResponse.json(
+      { error: scopeErr.error, required: "read" },
+      { status: 403, headers },
+    );
+
+  const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json(
       { error: "No active team" },
@@ -54,14 +61,21 @@ export async function POST(req: NextRequest) {
   const rid = requestId();
   const headers = { "X-GateCtr-Request-Id": rid };
 
-  const { userId: clerkId } = await auth();
-  if (!clerkId)
+  const auth = await resolveAuth(req);
+  if ("error" in auth)
     return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401, headers },
+      { error: auth.error },
+      { status: auth.httpStatus, headers },
     );
 
-  const ctx = await resolveTeamContext(clerkId);
+  const scopeErr = checkScope(auth.scopes, "admin");
+  if (scopeErr)
+    return NextResponse.json(
+      { error: scopeErr.error, required: "admin" },
+      { status: 403, headers },
+    );
+
+  const ctx = await resolveTeamContextByUserId(auth.userId);
   if (!ctx)
     return NextResponse.json(
       { error: "No active team" },
@@ -74,27 +88,22 @@ export async function POST(req: NextRequest) {
     name?: string;
   };
 
-  if (!body.provider || !VALID_PROVIDERS.includes(body.provider as Provider)) {
+  if (!body.provider || !VALID_PROVIDERS.includes(body.provider as Provider))
     return NextResponse.json(
       { error: "invalid_provider", allowed: VALID_PROVIDERS },
       { status: 400, headers },
     );
-  }
-
-  if (!body.apiKey) {
+  if (!body.apiKey)
     return NextResponse.json(
       { error: "apiKey is required" },
       { status: 400, headers },
     );
-  }
 
   const name = body.name ?? "Default";
-
-  // Check for duplicate (teamId, provider, name)
   const existing = await prisma.lLMProviderKey.findFirst({
     where: { teamId: ctx.teamId, provider: body.provider, name },
   });
-  if (existing) {
+  if (existing)
     return NextResponse.json(
       {
         error: "conflict",
@@ -102,10 +111,8 @@ export async function POST(req: NextRequest) {
       },
       { status: 409, headers },
     );
-  }
 
   const encryptedApiKey = encrypt(body.apiKey);
-
   const providerKey = await prisma.lLMProviderKey.create({
     data: {
       userId: ctx.userId,

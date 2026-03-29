@@ -34,6 +34,7 @@ export function ModelBreakdownTable({
   data,
   labels,
 }: ModelBreakdownTableProps) {
+  "use no memo";
   const columns = [
     col.accessor("model", { header: labels.model }),
     col.accessor("provider", { header: labels.provider }),

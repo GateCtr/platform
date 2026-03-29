@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "title": "Teams — Admin"
+  },
+  "title": "Teams",
+  "subtitle": "Manage all teams and their members across the platform.",
+  "table": {
+    "name": "Name",
+    "slug": "Slug",
+    "owner": "Owner",
+    "members": "Members",
+    "plan": "Plan",
+    "projects": "Projects",
+    "created": "Created",
+    "actions": "Actions"
+  },
+  "search": {
+    "placeholder": "Search by name, slug, or owner email..."
+  },
+  "detail": {
+    "title": "Team Details",
+    "metadata": "Metadata",
+    "owner": "Owner",
+    "plan": "Plan",
+    "created": "Created",
+    "slug": "Slug"
+  },
+  "members": {
+    "title": "Members",
+    "empty": "No members.",
+    "columns": {
+      "user": "User",
+      "role": "Role",
+      "joined": "Joined"
+    },
+    "remove": "Remove",
+    "removeConfirm": "Remove this member from the team?",
+    "removeSuccess": "Member removed.",
+    "removeError": "Failed to remove member."
+  },
+  "invitations": {
+    "title": "Pending Invitations",
+    "empty": "No pending invitations.",
+    "columns": {
+      "email": "Email",
+      "role": "Role",
+      "expires": "Expires"
+    },
+    "revoke": "Revoke",
+    "revokeConfirm": "Revoke this invitation?",
+    "revokeSuccess": "Invitation revoked.",
+    "revokeError": "Failed to revoke invitation."
+  },
+  "projects": {
+    "title": "Projects",
+    "empty": "No projects.",
+    "columns": {
+      "name": "Name",
+      "slug": "Slug",
+      "status": "Status",
+      "created": "Created"
+    },
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "actions": {
+    "viewDetail": "View details",
+    "deleteTeam": "Delete team",
+    "deleteConfirmTitle": "Delete team",
+    "deleteConfirmDescription": "This will permanently delete the team and all associated members, invitations, projects, and API keys. This action cannot be undone.",
+    "deleteConfirmButton": "Delete team",
+    "deleteSuccess": "Team deleted.",
+    "deleteError": "Failed to delete team."
+  },
+  "empty": "No teams found.",
+  "errors": {
+    "forbidden": "Insufficient permissions.",
+    "notFound": "Team not found.",
+    "loadFailed": "Failed to load teams."
+  }
+}
