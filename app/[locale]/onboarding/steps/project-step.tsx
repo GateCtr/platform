@@ -167,18 +167,23 @@ export function ProjectStep({
           className="w-full group"
           disabled={isSubmitting || isFinishing}
         >
-          {isSubmitting || isFinishing ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {isFinishing ? t("finishing") : t("submitting")}
-            </>
-          ) : (
-            <>
-              <Sparkles className="mr-2 h-4 w-4" />
-              {t("submit")}
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </>
-          )}
+          <span className="inline-flex w-full min-w-0 items-center justify-center gap-2">
+            {isSubmitting || isFinishing ? (
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+            ) : (
+              <Sparkles className="h-4 w-4 shrink-0" />
+            )}
+            <span className="min-w-0">
+              {isFinishing
+                ? t("finishing")
+                : isSubmitting
+                  ? t("submitting")
+                  : t("submit")}
+            </span>
+            {!isSubmitting && !isFinishing && (
+              <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+            )}
+          </span>
         </Button>
 
         <div className="flex gap-2">

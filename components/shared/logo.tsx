@@ -22,12 +22,14 @@ export function Logo({
         isStacked ? "flex-col gap-2" : "gap-3",
         className,
       )}
+      translate="no"
     >
-      {/* Icon SVG */}
+      {/* Icon SVG — translate="no" avoids translator extensions mutating the DOM before hydrate */}
       <svg
         viewBox="0 0 363.13 361.9"
         className={cn("w-8 h-8", iconClassName)}
         aria-label="GateCtr Logo"
+        translate="no"
       >
         {/* Main circle part - primary color */}
         <path
@@ -49,6 +51,8 @@ export function Logo({
             "text-foreground transition-colors",
             textClassName,
           )}
+          translate="no"
+          suppressHydrationWarning
         >
           Gate<span className="text-accent">C</span>tr
         </span>

@@ -191,8 +191,10 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
           className="w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {t("submit")}
+          <span className="inline-flex items-center justify-center gap-2">
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            <span>{t("submit")}</span>
+          </span>
         </Button>
       </form>
     </Form>
