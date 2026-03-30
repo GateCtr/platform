@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Fonctionnalités — GateCtr",
-    "description": "Budget Firewall, Context Optimizer, Model Router, Analytics, Webhooks et RBAC. Une passerelle. Contrôle total."
+    "title": "Fonctionnalités — Réduisez vos coûts LLM jusqu'à 40%. GateCtr",
+    "description": "Budget Firewall, Context Optimizer, Model Router, analytics temps réel, webhooks et RBAC. Un seul changement d'endpoint. Zéro modification de code."
   },
   "hero": {
     "badge": "Six fonctionnalités. Un seul changement d'endpoint.",
@@ -142,8 +142,8 @@
   },
   "cta": {
     "headline": "Six fonctionnalités. Gratuit pour démarrer.",
-    "description": "Sans carte bancaire. Configuration en 5 min. Budget Firewall et Analytics actifs sur le plan gratuit.",
-    "ctaPrimary": "Démarrer gratuitement",
+    "description": "Sans carte bancaire. Opérationnel en 5 min. Budget Firewall et Analytics actifs sur le plan gratuit.",
+    "ctaPrimary": "Voir vos économies — gratuit",
     "ctaSecondary": "Voir les tarifs",
     "trust": "Sans carte bancaire · Annulez à tout moment"
   }

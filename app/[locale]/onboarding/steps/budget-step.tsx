@@ -52,6 +52,7 @@ export function BudgetStep({
 }: BudgetStepProps) {
   const t = useTranslations("onboarding.budget");
   const tNav = useTranslations("onboarding.nav");
+  const tErr = useTranslations("onboarding.errors");
 
   const planLimit = PLAN_TOKEN_LIMIT.FREE ?? 50_000;
 
@@ -68,10 +69,19 @@ export function BudgetStep({
     fd.set("monthlyTokenLimit", String(monthlyLimit));
     fd.set("alertThreshold", String(alertThreshold));
     fd.set("hardStop", String(hardStop));
-    const res = await setupBudget(fd);
+    let res: Awaited<ReturnType<typeof setupBudget>>;
+    try {
+      res = await setupBudget(fd);
+    } catch {
+      setIsSubmitting(false);
+      setError(t("errors.failed"));
+      return;
+    }
     setIsSubmitting(false);
     if (res?.error) {
-      setError(t("errors.failed"));
+      setError(
+        res.error === "csrf_invalid" ? tErr("csrfInvalid") : t("errors.failed"),
+      );
       return;
     }
     onComplete();

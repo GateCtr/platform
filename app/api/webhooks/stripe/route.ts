@@ -13,6 +13,7 @@ import {
   sendBillingCancellationEmail,
   sendBillingRenewalReminderEmail,
 } from "@/lib/resend";
+import { emailAppLocaleUrl } from "@/lib/email-urls";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -535,8 +536,8 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   });
 
   try {
-    const portalUrl = `${process.env.NEXT_PUBLIC_APP_URL}/billing`;
     const { email, locale } = await getUserEmailLocale(subscription.userId);
+    const portalUrl = emailAppLocaleUrl(locale, "/billing");
     if (email) {
       const result = await sendBillingPaymentFailedEmail(
         email,

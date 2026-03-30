@@ -1,0 +1,21 @@
+{
+  "generic": "Une erreur est survenue. Réessayez.",
+  "signUpIncomplete": "La création du compte n’a pas pu être finalisée. Revenez en arrière, vérifiez vos informations et réessayez. Si le problème persiste, contactez le support.",
+  "network": "Erreur réseau. Vérifiez votre connexion.",
+  "inviteNotFound": "Ce code d’invitation est invalide.",
+  "inviteExpired": "Cette invitation a expiré. Demandez-en une nouvelle.",
+  "inviteUsed": "Cette invitation a déjà été utilisée.",
+  "inviteEmailMismatch": "Cet email ne correspond pas à l’adresse invitée.",
+  "form_identifier_not_found": "Aucun compte avec cet email.",
+  "form_password_incorrect": "Mot de passe incorrect.",
+  "form_param_format_invalid": "Format invalide. Vérifiez vos informations.",
+  "form_password_length_too_short": "Mot de passe trop court.",
+  "form_password_pwned": "Ce mot de passe est jugé trop faible. Choisissez-en un autre.",
+  "form_code_incorrect": "Code invalide ou expiré.",
+  "form_param_nil": "Veuillez remplir tous les champs obligatoires.",
+  "captcha_invalid": "La vérification de sécurité a échoué. Actualisez la page et réessayez.",
+  "captcha_missing_token": "Vérification de sécurité incomplète. Actualisez la page et réessayez.",
+  "session_exists": "Vous êtes déjà connecté.",
+  "oauth_access_denied": "Connexion annulée.",
+  "user_locked": "Compte temporairement verrouillé. Réessayez plus tard ou contactez le support."
+}

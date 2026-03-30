@@ -1,5 +1,21 @@
 import { headers } from "next/headers";
 
+/** Comma-separated extra base URLs allowed as `Origin` (tunnels, preview hosts). Server-only. */
+function extraAllowedHosts(): Set<string> {
+  const raw = process.env.CSRF_EXTRA_ORIGINS ?? "";
+  const hosts = new Set<string>();
+  for (const part of raw.split(",")) {
+    const s = part.trim();
+    if (!s) continue;
+    try {
+      hosts.add(new URL(s).host);
+    } catch {
+      /* ignore invalid entries */
+    }
+  }
+  return hosts;
+}
+
 /**
  * CSRF protection for Next.js Server Actions.
  *
@@ -7,12 +23,21 @@ import { headers } from "next/headers";
  * the `Origin` header check. This helper adds an explicit layer for
  * defense-in-depth: it verifies the request origin matches the app URL.
  *
+ * In **development** (`NODE_ENV=development`), this check is skipped so tunnels
+ * and alternate hosts work without `CSRF_EXTRA_ORIGINS`. In production, if you
+ * open the app via another host (e.g. Cloudflare Tunnel) while
+ * `NEXT_PUBLIC_APP_URL` points elsewhere, set `CSRF_EXTRA_ORIGINS` to that
+ * tunnel base URL so server actions are not rejected.
+ *
  * Usage in server actions:
  *   await validateCsrf();
  *
  * @throws Error if the origin is invalid (should be caught and returned as 403)
  */
 export async function validateCsrf(): Promise<void> {
+  // En dev, l’origine diffère souvent (tunnel, autre host) ; Next.js valide déjà l’action.
+  if (process.env.NODE_ENV === "development") return;
+
   const headersList = await headers();
   const origin = headersList.get("origin");
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
@@ -25,8 +50,9 @@ export async function validateCsrf(): Promise<void> {
   try {
     const originHost = new URL(origin).host;
     const appHost = new URL(appUrl).host;
+    const allowed = new Set([appHost, ...extraAllowedHosts()]);
 
-    if (originHost !== appHost) {
+    if (!allowed.has(originHost)) {
       throw new Error(`CSRF: invalid origin ${origin}`);
     }
   } catch (err) {

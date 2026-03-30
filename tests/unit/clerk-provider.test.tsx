@@ -13,7 +13,6 @@ import { ClerkProvider } from "@/components/clerk-provider";
 
 // Mock @clerk/nextjs to avoid needing real Clerk credentials
 vi.mock("@clerk/nextjs", () => ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ClerkProvider: ({
     children,
     appearance,

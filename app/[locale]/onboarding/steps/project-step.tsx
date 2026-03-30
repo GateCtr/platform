@@ -45,6 +45,7 @@ export function ProjectStep({
 }: ProjectStepProps) {
   const t = useTranslations("onboarding.project");
   const tNav = useTranslations("onboarding.nav");
+  const tErr = useTranslations("onboarding.errors");
 
   const schema = z.object({
     projectName: z
@@ -63,12 +64,20 @@ export function ProjectStep({
   async function onSubmit(values: ProjectValues) {
     const fd = new FormData();
     fd.set("projectName", values.projectName);
-    const res = await createFirstProject(fd);
+    let res: Awaited<ReturnType<typeof createFirstProject>>;
+    try {
+      res = await createFirstProject(fd);
+    } catch {
+      form.setError("root", { message: t("errors.failed") });
+      return;
+    }
     if (res?.error) {
       const msg =
-        res.error === "quota_exceeded"
-          ? t("errors.quotaExceeded")
-          : t("errors.failed");
+        res.error === "csrf_invalid"
+          ? tErr("csrfInvalid")
+          : res.error === "quota_exceeded"
+            ? t("errors.quotaExceeded")
+            : t("errors.failed");
       form.setError("root", { message: msg });
       return;
     }

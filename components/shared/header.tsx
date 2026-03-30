@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetClose,
 } from "@/components/ui/sheet";
-import { Link } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -39,16 +39,19 @@ const NAV_LINKS: NavLink[] = [
   { key: "pricing", href: "/pricing" },
   { key: "demo", href: "/demo", highlight: true },
   { key: "blog", href: "https://blog.gatectr.com", external: true },
-  { key: "docs", href: "/docs" },
+  { key: "docs", href: "https://docs.gatectr.com", external: true },
   { key: "changelog", href: "/changelog" },
 ];
 
 function DesktopNav() {
   const t = useTranslations("common.nav");
+  const pathname = usePathname();
+
   return (
     <nav className="hidden md:flex items-center gap-1">
-      {NAV_LINKS.map(({ key, href, external, highlight }) =>
-        external ? (
+      {NAV_LINKS.map(({ key, href, external, highlight }) => {
+        const isActive = !external && pathname === href;
+        return external ? (
           <a
             key={key}
             href={href}
@@ -65,9 +68,14 @@ function DesktopNav() {
             className={cn(
               "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
               highlight
-                ? "text-secondary-500 hover:text-secondary-500 hover:bg-secondary-500/10"
-                : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                ? isActive
+                  ? "text-secondary-500 bg-secondary-500/10"
+                  : "text-secondary-500 hover:text-secondary-500 hover:bg-secondary-500/10"
+                : isActive
+                  ? "text-foreground bg-accent/60"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
             )}
+            aria-current={isActive ? "page" : undefined}
           >
             {t(key)}
             {highlight && (
@@ -76,8 +84,8 @@ function DesktopNav() {
               </span>
             )}
           </Link>
-        ),
-      )}
+        );
+      })}
     </nav>
   );
 }
@@ -102,6 +110,7 @@ function DesktopActions() {
 
 function MobileSheet() {
   const t = useTranslations("common.nav");
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
@@ -126,8 +135,9 @@ function MobileSheet() {
           </SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col px-3 py-4 gap-1">
-          {NAV_LINKS.map(({ key, href, external, highlight }) =>
-            external ? (
+          {NAV_LINKS.map(({ key, href, external, highlight }) => {
+            const isActive = !external && pathname === href;
+            return external ? (
               <SheetClose key={key} asChild>
                 <a
                   href={href}
@@ -142,11 +152,16 @@ function MobileSheet() {
               <SheetClose key={key} asChild>
                 <Link
                   href={href}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "px-3 py-2.5 text-sm font-medium rounded-md transition-colors",
                     highlight
-                      ? "text-secondary-500 hover:bg-secondary-500/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                      ? isActive
+                        ? "text-secondary-500 bg-secondary-500/10"
+                        : "text-secondary-500 hover:bg-secondary-500/10"
+                      : isActive
+                        ? "text-foreground bg-accent/60"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                   )}
                 >
                   {t(key)}
@@ -157,8 +172,8 @@ function MobileSheet() {
                   )}
                 </Link>
               </SheetClose>
-            ),
-          )}
+            );
+          })}
         </nav>
         <div className="px-4 pb-6 mt-auto border-t border-border flex flex-col gap-2">
           <div className="flex items-center gap-2 py-3">

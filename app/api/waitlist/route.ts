@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { sendWelcomeWaitlistEmail } from "@/lib/resend";
 import { isAdmin } from "@/lib/auth";
 import { redis } from "@/lib/redis";
+import { localeFromAcceptLanguage, normalizeLocale } from "@/lib/user-locale";
 
 // ─── Rate limit: 3 submissions per IP per hour ────────────────────────────────
 async function checkRateLimit(ip: string): Promise<boolean> {
@@ -19,6 +20,7 @@ const waitlistSchema = z.object({
   company: z.string().optional(),
   useCase: z.enum(["saas", "agent", "enterprise", "dev"]).optional(),
   referralCode: z.string().optional(),
+  locale: z.enum(["en", "fr"]).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -81,6 +83,11 @@ export async function POST(request: NextRequest) {
     const { nanoid } = await import("nanoid");
     const newReferralCode = nanoid(8);
 
+    const entryLocale =
+      validatedData.locale != null
+        ? normalizeLocale(validatedData.locale)
+        : localeFromAcceptLanguage(request.headers.get("accept-language"));
+
     // Create waitlist entry
     const entry = await prisma.waitlistEntry.create({
       data: {
@@ -88,6 +95,7 @@ export async function POST(request: NextRequest) {
         name: validatedData.name,
         company: validatedData.company,
         useCase: validatedData.useCase,
+        locale: entryLocale,
         ipAddress,
         userAgent,
         referralCode: newReferralCode,
@@ -96,9 +104,12 @@ export async function POST(request: NextRequest) {
     });
 
     // Send welcome email (async, don't wait)
-    sendWelcomeWaitlistEmail(entry.email, entry.name, entry.position).catch(
-      (err) => console.error("Failed to send welcome email:", err),
-    );
+    sendWelcomeWaitlistEmail(
+      entry.email,
+      entry.name,
+      entry.position,
+      entryLocale,
+    ).catch((err) => console.error("Failed to send welcome email:", err));
 
     return NextResponse.json({
       success: true,

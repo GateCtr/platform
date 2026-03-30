@@ -1,14 +1,14 @@
 {
   "metadata": {
-    "title": "Early Access",
-    "description": "Cut LLM costs by 40%. Without changing a line of code. Join the GateCtr waitlist.",
+    "title": "Early Access — GateCtr",
+    "description": "Cut LLM costs by up to 40%. Without changing a line of code. Join the GateCtr waitlist.",
     "ogTitle": "Join the GateCtr Waitlist",
-    "ogDescription": "Cut LLM costs by 40%. One endpoint swap. Request early access."
+    "ogDescription": "Cut LLM costs by up to 40%. One endpoint swap. Request early access."
   },
   "page": {
-    "title": "Cut LLM costs by 40%.",
-    "subtitle": "Without changing a line of code.",
-    "description": "One endpoint swap. Full control over tokens, budgets, and routing."
+    "title": "Cut LLM costs by up to 40%.",
+    "subtitle": "One endpoint swap. No code changes.",
+    "description": "GateCtr compresses prompts, routes to the cheapest model, and enforces budgets — automatically."
   },
   "section": {
     "contact": "Your details",

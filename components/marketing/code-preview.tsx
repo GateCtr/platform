@@ -81,7 +81,7 @@ const openai = new OpenAI({
 client = GateCtr(
     api_key=os.environ["GATECTR_API_KEY"],
     budget={"max_tokens_per_day": 500_000},  # hard cap — blocks when reached
-    optimizer={"enabled": True},              # -40% tokens automatically
+    optimizer={"enabled": True},              # up to 40% fewer tokens automatically
     router={"prefer": "cost"},               # "cost" | "performance" | "balanced"
 )
 

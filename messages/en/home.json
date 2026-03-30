@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "title": "One gateway. Every LLM.",
-    "description": "Cut LLM costs by 40%. One endpoint swap. Full control over tokens, budgets, and routing. No code changes.",
-    "ogTitle": "GateCtr — One gateway. Every LLM.",
-    "ogDescription": "Cut LLM costs by 40%. Without changing a line of code."
+    "title": "Cut LLM costs by up to 40%. One endpoint swap.",
+    "description": "GateCtr compresses every prompt, routes to the cheapest model, and blocks requests before they exceed your budget. No code changes.",
+    "ogTitle": "GateCtr — Cut LLM costs by up to 40%.",
+    "ogDescription": "Compress prompts, route to the cheapest model, enforce budgets. One endpoint swap. No code changes."
   },
   "hero": {
     "badge": "AI Cost Infrastructure · Zero code changes",
@@ -186,7 +186,7 @@
       {
         "name": "Pro",
         "price": "{price}",
-        "description": "For devs shipping LLM features in production.",
+        "description": "For devs spending $50+/mo on LLM calls.",
         "features": [
           "Up to {tokenLimit} tokens/month",
           "{projects} projects",
@@ -200,7 +200,7 @@
       {
         "name": "Team",
         "price": "{price}",
-        "description": "For teams that need visibility and governance.",
+        "description": "For teams where AI costs are becoming a line item.",
         "features": [
           "Up to {tokenLimit} tokens/month",
           "Unlimited projects",
@@ -228,10 +228,10 @@
     ]
   },
   "finalCta": {
-    "headline": "Start saving on LLM costs today.",
-    "description": "Free plan. No credit card. Setup in {setupTime}.",
-    "ctaPrimary": "Start free",
-    "ctaSecondary": "Book a demo",
+    "headline": "Your LLM bill is higher than it needs to be.",
+    "description": "Free plan. No credit card. Up and running in {setupTime}.",
+    "ctaPrimary": "See your savings — free",
+    "ctaSecondary": "Try the live demo",
     "trust": "No credit card required · Cancel anytime"
   }
 }

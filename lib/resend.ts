@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { render } from "@react-email/render";
+import { emailSubject } from "@/lib/email-subjects";
 import WaitlistWelcomeEmail from "@/components/emails/waitlist-welcome";
 import WaitlistInviteEmail from "@/components/emails/waitlist-invite";
 import UserWelcomeEmail from "@/components/emails/user-welcome";
@@ -21,16 +22,24 @@ export async function sendWelcomeWaitlistEmail(
   email: string,
   name: string | null,
   position: number,
+  locale: "en" | "fr" = "en",
 ) {
   try {
     const emailHtml = await render(
-      WaitlistWelcomeEmail({ email, name: name || undefined, position }),
+      WaitlistWelcomeEmail({
+        email,
+        name: name || undefined,
+        position,
+        locale,
+      }),
     );
 
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject: `You're #${position} on the GateCtr waitlist!`,
+      subject: emailSubject(locale, "waitlistWelcome", {
+        position: String(position),
+      }),
       html: emailHtml,
     });
 
@@ -47,6 +56,7 @@ export async function sendInviteEmail(
   inviteCode: string,
   expiresAt: Date,
   expiryDays: number = 7,
+  locale: "en" | "fr" = "en",
 ) {
   try {
     const emailHtml = await render(
@@ -56,13 +66,14 @@ export async function sendInviteEmail(
         inviteCode,
         expiresAt,
         expiryDays,
+        locale,
       }),
     );
 
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject: "Your GateCtr invite is ready!",
+      subject: emailSubject(locale, "waitlistInvite"),
       html: emailHtml,
     });
 
@@ -94,13 +105,10 @@ export async function sendUserWelcomeEmail(
       }),
     );
 
-    const subject =
-      locale === "fr" ? "Bienvenue sur GateCtr" : "Welcome to GateCtr";
-
     const result = await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "userWelcome"),
       html: emailHtml,
     });
 
@@ -132,14 +140,12 @@ export async function sendOnboardingCompleteEmail(
         locale,
       }),
     );
-    const subject =
-      locale === "fr"
-        ? `${workspaceName} est prêt — GateCtr est actif`
-        : `${workspaceName} is ready — GateCtr is live`;
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "onboardingComplete", {
+        workspace: workspaceName,
+      }),
       html,
     });
     return { success: true };
@@ -166,14 +172,10 @@ export async function sendBillingUpgradeEmail(
 ) {
   try {
     const html = await render(BillingUpgradeEmail({ email, planName, locale }));
-    const subject =
-      locale === "fr"
-        ? `Votre plan ${planName} est actif`
-        : `Your ${planName} plan is active`;
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "billingUpgrade", { plan: planName }),
       html,
     });
     return { success: true };
@@ -194,12 +196,10 @@ export async function sendBillingReceiptEmail(
     const html = await render(
       BillingReceiptEmail({ email, amount, invoicePdfUrl, locale }),
     );
-    const subject =
-      locale === "fr" ? "Votre reçu GateCtr" : "Your GateCtr receipt";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "billingReceipt"),
       html,
     });
     return { success: true };
@@ -219,14 +219,10 @@ export async function sendBillingPaymentFailedEmail(
     const html = await render(
       BillingPaymentFailedEmail({ email, portalUrl, locale }),
     );
-    const subject =
-      locale === "fr"
-        ? "Paiement échoué — action requise"
-        : "Payment failed — action required";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "billingPaymentFailed"),
       html,
     });
     return { success: true };
@@ -247,14 +243,10 @@ export async function sendBillingRenewalReminderEmail(
     const html = await render(
       BillingRenewalReminderEmail({ email, renewalDate, amount, locale }),
     );
-    const subject =
-      locale === "fr"
-        ? "Votre abonnement se renouvelle dans 7 jours"
-        : "Your subscription renews in 7 days";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "billingRenewalReminder"),
       html,
     });
     return { success: true };
@@ -275,14 +267,16 @@ export async function sendBillingCancellationEmail(
     const html = await render(
       BillingCancellationEmail({ email, planName, accessUntil, locale }),
     );
-    const subject =
-      locale === "fr"
-        ? `Annulation programmée — accès jusqu'au ${accessUntil.toLocaleDateString("fr-FR")}`
-        : `Cancellation scheduled — access until ${accessUntil.toLocaleDateString("en-US")}`;
+    const dateStr = accessUntil.toLocaleDateString(
+      locale === "fr" ? "fr-FR" : "en-US",
+    );
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "billingCancellation", {
+        plan: planName,
+        date: dateStr,
+      }),
       html,
     });
     return { success: true };
@@ -302,12 +296,10 @@ export async function sendBillingDowngradeEmail(
     const html = await render(
       BillingDowngradeEmail({ email, lostFeatures, locale }),
     );
-    const subject =
-      locale === "fr" ? "Votre plan a été modifié" : "Your plan has changed";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "billingDowngrade"),
       html,
     });
     return { success: true };
@@ -334,14 +326,10 @@ export async function sendUserSuspendedEmail(
     const html = await render(
       UserSuspendedEmail({ email, name: name || undefined, locale }),
     );
-    const subject =
-      locale === "fr"
-        ? "Votre compte GateCtr a été suspendu"
-        : "Your GateCtr account has been suspended";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "userSuspended"),
       html,
     });
     return { success: true };
@@ -367,14 +355,10 @@ export async function sendUserBannedEmail(
         locale,
       }),
     );
-    const subject =
-      locale === "fr"
-        ? "Votre compte GateCtr a été banni"
-        : "Your GateCtr account has been banned";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "userBanned"),
       html,
     });
     return { success: true };
@@ -394,14 +378,10 @@ export async function sendUserReactivatedEmail(
     const html = await render(
       UserReactivatedEmail({ email, name: name || undefined, locale }),
     );
-    const subject =
-      locale === "fr"
-        ? "Votre compte GateCtr a été réactivé"
-        : "Your GateCtr account has been reactivated";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "userReactivated"),
       html,
     });
     return { success: true };
@@ -421,14 +401,10 @@ export async function sendUserDeletedEmail(
     const html = await render(
       UserDeletedEmail({ email, name: name || undefined, locale }),
     );
-    const subject =
-      locale === "fr"
-        ? "Votre compte GateCtr a été supprimé"
-        : "Your GateCtr account has been deleted";
     await resend.emails.send({
       from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
       to: email,
-      subject,
+      subject: emailSubject(locale, "userDeleted"),
       html,
     });
     return { success: true };

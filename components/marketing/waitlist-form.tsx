@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -46,6 +46,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Logo } from "@/components/shared/logo";
 import { RequiredFormLabel } from "@/components/shared/required-form-label";
+import { normalizeLocale } from "@/lib/user-locale";
 
 // ─── Success state ─────────────────────────────────────────────────────────────
 
@@ -274,6 +275,7 @@ function FeaturesStrip() {
 
 export function WaitlistForm() {
   const t = useTranslations("waitlist");
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const [position, setPosition] = useState<number | null>(null);
   const [referralCode, setReferralCode] = useState<string | null>(null);
@@ -316,7 +318,10 @@ export function WaitlistForm() {
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          locale: normalizeLocale(locale),
+        }),
       });
 
       const data = await response.json();

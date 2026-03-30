@@ -8,6 +8,7 @@ import {
 } from "@/lib/seo";
 import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
+import { AnnouncementBar } from "@/components/marketing/announcement-bar";
 
 export async function generateMetadata({
   params,
@@ -46,13 +47,17 @@ export async function generateMetadata({
   };
 }
 
-export default function MarketingLayout({
+export default async function MarketingLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <AnnouncementBar locale={locale} />
       <Header variant="marketing" />
       <main className="flex-1 flex items-center justify-center px-4 pt-8 pb-12">
         {children}

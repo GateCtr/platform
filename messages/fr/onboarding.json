@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "title": "Configuration",
-    "description": "30 secondes. Votre espace est prêt."
+    "title": "Configuration — GateCtr",
+    "description": "Connectez votre LLM. Définissez votre budget. Opérationnel en 30 secondes."
   },
   "panel": {
-    "eyebrow": "Configuration",
-    "headline": "Une passerelle.\nTous les LLMs.",
+    "eyebrow": "Infrastructure de coût IA",
+    "headline": "Réduisez vos coûts LLM\njusqu'à 40%.",
     "tagline": "Un seul endpoint. Vos clés restent les vôtres.\nGateCtr contrôle. Vous économisez.",
     "features": {
       "optimizer": {
@@ -36,6 +36,11 @@
   },
   "nav": {
     "back": "Retour"
+  },
+  "errors": {
+    "csrfInvalid": "Requête refusée : l’origine de la page ne correspond pas à NEXT_PUBLIC_APP_URL. Avec un tunnel ou une URL de prévisualisation, ajoutez cette URL de base à CSRF_EXTRA_ORIGINS dans .env.local (voir .env.local.example).",
+    "finalizeFailed": "La finalisation a échoué. Vérifiez la connexion et réessayez. Avec un tunnel (ex. Cloudflare), ajoutez son URL dans CSRF_EXTRA_ORIGINS dans .env.",
+    "csrfHint": "Si l’URL dans le navigateur diffère de NEXT_PUBLIC_APP_URL, ajoutez-la à CSRF_EXTRA_ORIGINS (voir .env.local.example)."
   },
   "workspace": {
     "title": "Créez votre espace.",
@@ -83,7 +88,7 @@
   },
   "budget": {
     "title": "Définissez votre budget.",
-    "subtitle": "Zéro facture surprise.",
+    "subtitle": "Bloqué avant d'atteindre le LLM.",
     "monthlyLimit": {
       "label": "Limite mensuelle de tokens",
       "unit": "tokens / mois",

@@ -394,3 +394,53 @@
 [data-sidebar]::-webkit-scrollbar {
   display: none;
 }
+
+/* ─── Auth loading skeletons (shimmer, Stripe/Linear-style) ───────────────── */
+@keyframes auth-skeleton-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.auth-skeleton-bar {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 2px);
+  background-color: color-mix(in srgb, var(--muted) 88%, var(--foreground));
+}
+
+.auth-skeleton-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  animation: auth-skeleton-sweep 1.35s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--card-foreground) 10%, transparent),
+    transparent
+  );
+}
+
+[data-theme="dark"] .auth-skeleton-bar {
+  background-color: color-mix(in srgb, var(--muted) 55%, var(--foreground));
+}
+
+[data-theme="dark"] .auth-skeleton-bar::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--foreground) 14%, transparent),
+    transparent
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-skeleton-bar::after {
+    animation: none;
+  }
+}

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { ArrowRight } from "lucide-react";
 import { PRODUCT } from "@/config/product";
+import { appUrl } from "@/lib/app-url";
 
 export function FinalCta() {
   const t = useTranslations("home.finalCta");
@@ -21,13 +22,13 @@ export function FinalCta() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
           <Button variant="cta-primary" size="lg" asChild>
-            <Link href="/sign-up">
+            <a href={appUrl("/sign-up")}>
               {t("ctaPrimary")}
               <ArrowRight className="size-4" />
-            </Link>
+            </a>
           </Button>
           <Button variant="cta-secondary" size="lg" asChild>
-            <Link href="/contact">{t("ctaSecondary")}</Link>
+            <Link href="/demo">{t("ctaSecondary")}</Link>
           </Button>
         </div>
 

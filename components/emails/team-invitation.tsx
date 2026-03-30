@@ -1,27 +1,48 @@
+import type { CSSProperties } from "react";
 import {
   Body,
-  Button,
   Container,
   Head,
-  Hr,
+  Heading,
   Html,
   Link,
   Preview,
   Section,
   Text,
 } from "@react-email/components";
+import {
+  emailFmt,
+  getEmailMessages,
+  type EmailLocale,
+} from "@/lib/email-messages";
+import { EmailFooter } from "./email-footer";
+import { EmailHeaderCard } from "./email-logo";
+import { EmailPrimaryCta } from "./email-primitives";
+import {
+  EMAIL_ACCENT,
+  emailCanvas,
+  emailCaption,
+  emailCardProminent,
+  emailColors,
+  emailGreeting,
+  emailParagraph,
+  emailSectionContentCompact,
+  emailTitleLarge,
+} from "./email-theme";
 
 interface TeamInvitationEmailProps {
+  email: string;
   inviteeName?: string;
   inviterName: string;
   teamName: string;
   role: string;
   acceptUrl: string;
   expiryDays?: number;
-  locale?: "en" | "fr";
+  locale?: EmailLocale;
 }
 
 export default function TeamInvitationEmail({
+  email,
   inviteeName,
   inviterName,
   teamName,
@@ -30,225 +51,92 @@ export default function TeamInvitationEmail({
   expiryDays = 7,
   locale = "en",
 }: TeamInvitationEmailProps) {
-  const isFr = locale === "fr";
+  const t = getEmailMessages(locale).teamInvitation;
 
-  const preview = isFr
-    ? `${inviterName} vous invite à rejoindre ${teamName} sur GateCtr`
-    : `${inviterName} invited you to join ${teamName} on GateCtr`;
-
+  const daysLabel = expiryDays === 1 ? t.day : t.days;
+  const preview = emailFmt(t.preview, { inviter: inviterName, team: teamName });
   const greeting = inviteeName
-    ? isFr
-      ? `Bonjour ${inviteeName},`
-      : `Hi ${inviteeName},`
-    : isFr
-      ? "Bonjour,"
-      : "Hi,";
-
-  const headline = isFr
-    ? `Vous avez été invité à rejoindre ${teamName}`
-    : `You've been invited to join ${teamName}`;
-
-  const body = isFr
-    ? `${inviterName} vous invite à rejoindre l'équipe ${teamName} en tant que ${role}. Connectez-vous en 5 min. Votre clé API reste la vôtre.`
-    : `${inviterName} invited you to join the ${teamName} team as ${role}. Connect in 5 min. Your API key stays yours.`;
-
-  const ctaLabel = isFr ? "Accepter l'invitation" : "Accept invitation";
-
-  const expiry = isFr
-    ? `Cette invitation expire dans ${expiryDays} ${expiryDays === 1 ? "jour" : "jours"}.`
-    : `This invitation expires in ${expiryDays} ${expiryDays === 1 ? "day" : "days"}.`;
-
-  const hint = isFr
-    ? "Des questions ? Répondez à cet email."
-    : "Questions? Reply to this email.";
-
-  const directLink = isFr ? "Lien direct :" : "Direct link:";
+    ? emailFmt(t.greetingNamed, { name: inviteeName })
+    : t.greeting;
+  const headline = emailFmt(t.headline, { team: teamName });
+  const body = emailFmt(t.body, {
+    inviter: inviterName,
+    team: teamName,
+    role,
+  });
+  const expiry = emailFmt(t.expiry, {
+    days: String(expiryDays),
+    daysLabel,
+  });
 
   return (
     <Html lang={locale}>
       <Head />
       <Preview>{preview}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          {/* Logo */}
-          <Section style={logoSection}>
-            <Text style={logoText}>
-              Gate<span style={logoAccent}>Ctr</span>
-            </Text>
-          </Section>
+      <Body style={emailCanvas}>
+        <Container style={emailCardProminent}>
+          <EmailHeaderCard />
 
-          <Hr style={divider} />
+          <Section style={emailSectionContentCompact}>
+            <Text style={emailGreeting}>{greeting}</Text>
+            <Heading as="h1" style={emailTitleLarge}>
+              {headline}
+            </Heading>
+            <Text style={emailParagraph}>{body}</Text>
 
-          {/* Body */}
-          <Section style={bodySection}>
-            <Text style={greetingStyle}>{greeting}</Text>
-            <Text style={h1}>{headline}</Text>
-            <Text style={subtext}>{body}</Text>
-
-            {/* CTA */}
-            <Section style={ctaSection}>
-              <Button href={acceptUrl} style={ctaButton}>
-                {ctaLabel}
-              </Button>
-            </Section>
+            <EmailPrimaryCta href={acceptUrl}>{t.cta}</EmailPrimaryCta>
 
             <Text style={orText}>
-              {directLink}{" "}
+              {t.directLink}{" "}
               <Link href={acceptUrl} style={link}>
                 {acceptUrl}
               </Link>
             </Text>
 
-            <Hr style={dividerLight} />
-
-            {/* Expiry */}
             <Section style={expiryBox}>
               <Text style={expiryText}>{expiry}</Text>
             </Section>
 
-            <Text style={hintStyle}>{hint}</Text>
+            <Text style={emailCaption}>{t.hint}</Text>
           </Section>
 
-          <Hr style={divider} />
-
-          {/* Footer */}
-          <Section style={footer}>
-            <Text style={footerText}>GateCtr — One gateway. Every LLM.</Text>
-            <Text style={footerText}>
-              <Link href="https://gatectr.com" style={footerLink}>
-                gatectr.com
-              </Link>
-            </Text>
-          </Section>
+          <EmailFooter
+            locale={locale}
+            email={email}
+            variant="card"
+            showUnsubscribe={false}
+          />
         </Container>
       </Body>
     </Html>
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
-const main: React.CSSProperties = {
-  backgroundColor: "#f4f7fb",
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-};
-
-const container: React.CSSProperties = {
-  backgroundColor: "#ffffff",
-  margin: "32px auto",
-  maxWidth: "560px",
-  borderRadius: "12px",
-  overflow: "hidden",
-  border: "1px solid #e2e8f0",
-};
-
-const logoSection: React.CSSProperties = { padding: "28px 40px" };
-
-const logoText: React.CSSProperties = {
-  fontSize: "22px",
-  fontWeight: "800",
-  color: "#1B4F82",
-  margin: "0",
-  letterSpacing: "-0.5px",
-};
-
-const logoAccent: React.CSSProperties = { color: "#00B4C8" };
-
-const divider: React.CSSProperties = { borderColor: "#e2e8f0", margin: "0" };
-
-const dividerLight: React.CSSProperties = {
-  borderColor: "#f1f5f9",
-  margin: "24px 0",
-};
-
-const bodySection: React.CSSProperties = { padding: "36px 40px 32px" };
-
-const greetingStyle: React.CSSProperties = {
-  color: "#64748b",
-  fontSize: "15px",
-  margin: "0 0 6px",
-};
-
-const h1: React.CSSProperties = {
-  color: "#0f172a",
-  fontSize: "26px",
-  fontWeight: "700",
-  lineHeight: "1.25",
-  margin: "0 0 12px",
-};
-
-const subtext: React.CSSProperties = {
-  color: "#475569",
-  fontSize: "15px",
-  lineHeight: "1.65",
+const orText: CSSProperties = {
+  color: emailColors.textCaption,
+  fontSize: "12px",
+  textAlign: "center",
   margin: "0 0 28px",
 };
 
-const ctaSection: React.CSSProperties = {
-  textAlign: "center",
-  margin: "0 0 16px",
-};
-
-const ctaButton: React.CSSProperties = {
-  backgroundColor: "#1B4F82",
-  borderRadius: "8px",
-  color: "#ffffff",
-  fontSize: "15px",
-  fontWeight: "600",
-  padding: "13px 36px",
-  textDecoration: "none",
-  display: "inline-block",
-};
-
-const orText: React.CSSProperties = {
-  color: "#94a3b8",
-  fontSize: "12px",
-  textAlign: "center",
-  margin: "0",
-};
-
-const link: React.CSSProperties = {
-  color: "#00B4C8",
+const link: CSSProperties = {
+  color: EMAIL_ACCENT,
   textDecoration: "none",
   wordBreak: "break-all",
 };
 
-const expiryBox: React.CSSProperties = {
-  backgroundColor: "#fffbeb",
-  border: "1px solid #fde68a",
+const expiryBox: CSSProperties = {
+  backgroundColor: emailColors.warningBg,
+  border: `1px solid ${emailColors.warningBorder}`,
   borderRadius: "6px",
-  padding: "11px 16px",
-  margin: "0 0 20px",
+  padding: "12px 16px",
+  margin: "0 0 8px",
   textAlign: "center",
 };
 
-const expiryText: React.CSSProperties = {
-  color: "#92400e",
+const expiryText: CSSProperties = {
+  color: emailColors.warningText,
   fontSize: "13px",
-  fontWeight: "600",
+  fontWeight: 600,
   margin: "0",
-};
-
-const hintStyle: React.CSSProperties = {
-  color: "#94a3b8",
-  fontSize: "13px",
-  margin: "0",
-};
-
-const footer: React.CSSProperties = {
-  padding: "20px 40px",
-  textAlign: "center",
-};
-
-const footerText: React.CSSProperties = {
-  color: "#94a3b8",
-  fontSize: "12px",
-  lineHeight: "1.6",
-  margin: "0 0 2px",
-};
-
-const footerLink: React.CSSProperties = {
-  color: "#94a3b8",
-  textDecoration: "underline",
 };

@@ -48,6 +48,7 @@ import {
   Building2,
   BarChart3,
   Bell,
+  Megaphone,
   ChevronsUpDown,
   LogOut,
   ExternalLink,
@@ -145,6 +146,12 @@ const NAV_GROUPS: NavGroup[] = [
   {
     groupKey: "groups.system",
     items: [
+      {
+        key: "sidebar.announcement",
+        href: "/admin/announcement",
+        permission: "system:read",
+        icon: Megaphone,
+      },
       {
         key: "sidebar.featureFlags",
         href: "/admin/feature-flags",

@@ -1,6 +1,7 @@
 import { Worker, type Job } from "bullmq";
 import { render } from "@react-email/render";
 import * as Sentry from "@sentry/nextjs";
+import { emailSubject } from "@/lib/email-subjects";
 import { redisConnection, type EmailJobData } from "@/lib/queues";
 import TeamInvitationEmail from "@/components/emails/team-invitation";
 
@@ -13,22 +14,24 @@ async function processJob(job: Job<EmailJobData>): Promise<void> {
     const { Resend } = await import("resend");
     const resend = new Resend(process.env.RESEND_API_KEY!);
 
+    const locale = data.locale ?? "en";
     const html = await render(
       TeamInvitationEmail({
+        email: data.to,
         inviteeName: data.inviteeName,
         inviterName: data.inviterName,
         teamName: data.teamName,
         role: data.role,
         acceptUrl: data.acceptUrl,
         expiryDays: data.expiryDays ?? 7,
-        locale: data.locale ?? "en",
+        locale,
       }),
     );
 
-    const isFr = data.locale === "fr";
-    const subject = isFr
-      ? `${data.inviterName} vous invite à rejoindre ${data.teamName}`
-      : `${data.inviterName} invited you to join ${data.teamName}`;
+    const subject = emailSubject(locale, "teamInvitation", {
+      inviter: data.inviterName,
+      team: data.teamName,
+    });
 
     const result = await resend.emails.send({
       from: FROM,

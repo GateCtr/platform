@@ -114,6 +114,8 @@ model WaitlistEntry {
   email        String          @unique
   name         String?
   company      String?
+  /// UI / email locale when the user joined: "en" | "fr"
+  locale       String?
   useCase      String? // "saas"|"agent"|"enterprise"|"dev"
   referralCode String?
   referredBy   String?

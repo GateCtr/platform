@@ -9,6 +9,18 @@ import { isValidProvider } from "@/lib/providers";
 import { sendOnboardingCompleteEmail } from "@/lib/resend";
 import { validateCsrf } from "@/lib/csrf";
 
+/** Ne pas laisser validateCsrf throw : le client verrait une erreur Next.js (HTTP 200 quand même). */
+async function csrfGuard(): Promise<
+  { ok: true } | { ok: false; error: "csrf_invalid" }
+> {
+  try {
+    await validateCsrf();
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "csrf_invalid" };
+  }
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function slugify(text: string): string {
@@ -41,7 +53,9 @@ async function getDbUser(clerkId: string) {
 // ─── Step 1 — Workspace ───────────────────────────────────────────────────────
 
 export async function createWorkspace(formData: FormData) {
-  await validateCsrf();
+  const csrf = await csrfGuard();
+  if (!csrf.ok) return { error: csrf.error };
+
   const { userId } = await auth();
   if (!userId) return { error: "not_authenticated" };
 
@@ -100,7 +114,9 @@ export async function createWorkspace(formData: FormData) {
 // ─── Step 2 — Connect LLM Provider ───────────────────────────────────────────
 
 export async function connectProvider(formData: FormData) {
-  await validateCsrf();
+  const csrf = await csrfGuard();
+  if (!csrf.ok) return { error: csrf.error };
+
   const { userId } = await auth();
   if (!userId) return { error: "not_authenticated" };
 
@@ -197,7 +213,9 @@ export async function setupBudget(formData: FormData) {
 // ─── Step 4 — First Project ───────────────────────────────────────────────────
 
 export async function createFirstProject(formData: FormData) {
-  await validateCsrf();
+  const csrf = await csrfGuard();
+  if (!csrf.ok) return { error: csrf.error };
+
   const { userId } = await auth();
   if (!userId) return { error: "not_authenticated" };
 
@@ -246,6 +264,9 @@ export async function createFirstProject(formData: FormData) {
 // ─── Finalize — mark complete + send email ────────────────────────────────────
 
 export async function finalizeOnboarding(formData: FormData) {
+  const csrf = await csrfGuard();
+  if (!csrf.ok) return { error: csrf.error };
+
   const { userId } = await auth();
   if (!userId) return { error: "not_authenticated" };
 

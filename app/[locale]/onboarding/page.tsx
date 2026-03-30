@@ -10,6 +10,8 @@ import { BudgetStep } from "./steps/budget-step";
 import { ProjectStep } from "./steps/project-step";
 import { finalizeOnboarding } from "./_actions";
 import type { OnboardingStep } from "@/types/onboarding";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const STEPS: OnboardingStep[] = ["workspace", "provider", "budget", "project"];
 const STORAGE_KEY = "gatectr_onboarding_step";
@@ -28,6 +30,7 @@ export default function OnboardingPage() {
   const [animating, setAnimating] = useState(false);
   const [redirectTo] = useState<string | null>(null);
   const [isFinishing, setIsFinishing] = useState(false);
+  const [finishError, setFinishError] = useState<string | null>(null);
 
   // Persist step to localStorage
   useEffect(() => {
@@ -66,12 +69,25 @@ export default function OnboardingPage() {
   }
 
   async function finish() {
+    setFinishError(null);
     setIsFinishing(true);
     const fd = new FormData();
     fd.set("locale", locale);
-    const result = await finalizeOnboarding(fd);
+    let result: Awaited<ReturnType<typeof finalizeOnboarding>>;
+    try {
+      result = await finalizeOnboarding(fd);
+    } catch {
+      setIsFinishing(false);
+      setFinishError(t("errors.finalizeFailed"));
+      return;
+    }
     if (result?.error) {
       setIsFinishing(false);
+      setFinishError(
+        result.error === "csrf_invalid"
+          ? t("errors.csrfInvalid")
+          : t("errors.finalizeFailed"),
+      );
       return;
     }
 
@@ -100,6 +116,15 @@ export default function OnboardingPage() {
 
   return (
     <div className="space-y-8">
+      {finishError ? (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="space-y-2">
+            <p>{finishError}</p>
+            <p className="text-xs opacity-90">{t("errors.csrfHint")}</p>
+          </AlertDescription>
+        </Alert>
+      ) : null}
       {/* Progress */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">

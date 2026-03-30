@@ -1,0 +1,21 @@
+{
+  "generic": "Something went wrong. Try again.",
+  "signUpIncomplete": "We couldn’t finish creating your account. Go back, check your details, and try again. If this keeps happening, contact support.",
+  "network": "Network error. Check your connection.",
+  "inviteNotFound": "This invite code is invalid.",
+  "inviteExpired": "This invite has expired. Request a new one.",
+  "inviteUsed": "This invite was already used.",
+  "inviteEmailMismatch": "This email doesn’t match the invited address.",
+  "form_identifier_not_found": "No account found with this email.",
+  "form_password_incorrect": "Incorrect password.",
+  "form_param_format_invalid": "Invalid format. Check your input.",
+  "form_password_length_too_short": "Password is too short.",
+  "form_password_pwned": "This password is known to be unsafe. Choose another.",
+  "form_code_incorrect": "Invalid or expired code.",
+  "form_param_nil": "Please fill in all required fields.",
+  "captcha_invalid": "Security check failed. Refresh the page and try again.",
+  "captcha_missing_token": "Security check incomplete. Refresh the page and try again.",
+  "session_exists": "You’re already signed in.",
+  "oauth_access_denied": "Sign-in was cancelled.",
+  "user_locked": "Your account is temporarily locked. Try again later or contact support."
+}

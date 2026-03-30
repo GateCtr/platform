@@ -52,6 +52,7 @@ interface WorkspaceStepProps {
 
 export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
   const t = useTranslations("onboarding.workspace");
+  const tErr = useTranslations("onboarding.errors");
 
   const schema = z.object({
     workspaceName: z
@@ -72,9 +73,17 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
     const fd = new FormData();
     fd.set("workspaceName", values.workspaceName);
     fd.set("usageType", values.usageType);
-    const res = await createWorkspace(fd);
-    if (res?.error) {
+    let res: Awaited<ReturnType<typeof createWorkspace>>;
+    try {
+      res = await createWorkspace(fd);
+    } catch {
       form.setError("root", { message: t("errors.failed") });
+      return;
+    }
+    if (res?.error) {
+      const message =
+        res.error === "csrf_invalid" ? tErr("csrfInvalid") : t("errors.failed");
+      form.setError("root", { message });
       return;
     }
     onComplete();
