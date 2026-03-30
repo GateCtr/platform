@@ -1,5 +1,5 @@
 packages:
-  - '.'
+  - "."
 
 allowBuilds:
-  '@sentry/cli': false
+  "@sentry/cli": false

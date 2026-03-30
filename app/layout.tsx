@@ -38,10 +38,20 @@ export const metadata: Metadata = {
   alternates: {
     canonical: process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
   },
-  title: "GateCtr - Control Your LLM Costs",
+  title: "GateCtr — One gateway. Every LLM.",
   description:
-    "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
-  keywords: ["LLM", "AI", "cost control", "token optimization", "API gateway"],
+    "Up to 40% fewer tokens on your LLM bill. From the first call. One endpoint swap. No code changes.",
+  keywords: [
+    "LLM cost reduction",
+    "AI cost infrastructure",
+    "token optimization",
+    "LLM budget control",
+    "prompt compression",
+    "model router",
+    "OpenAI cost",
+    "Anthropic cost",
+    "API gateway",
+  ],
   authors: [{ name: "GateCtr" }],
   manifest: "/manifest.json",
   appleWebApp: {
@@ -50,9 +60,9 @@ export const metadata: Metadata = {
     title: "GateCtr",
   },
   openGraph: {
-    title: "GateCtr - Control Your LLM Costs",
+    title: "GateCtr — One gateway. Every LLM.",
     description:
-      "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
+      "Up to 40% fewer tokens. Hard budget caps. Cost-aware routing. One endpoint swap.",
     type: "website",
     images: [
       {
@@ -65,9 +75,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GateCtr - Control Your LLM Costs",
+    title: "GateCtr — One gateway. Every LLM.",
     description:
-      "Universal middleware hub for controlling, optimizing, and securing API calls to LLMs",
+      "Up to 40% fewer tokens. Hard budget caps. Cost-aware routing. One endpoint swap.",
     images: [
       `${process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com"}/opengraph-image`,
     ],

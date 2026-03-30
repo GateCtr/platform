@@ -14,7 +14,8 @@
     "userBanned": "Your GateCtr account has been banned",
     "userReactivated": "Your GateCtr account has been reactivated",
     "userDeleted": "Your GateCtr account has been deleted",
-    "teamInvitation": "{inviter} invited you to join {team}"
+    "teamInvitation": "{inviter} invited you to join {team}",
+    "waitlistBetaCoupon": "Pro — free for 1 month. Your beta access is ready."
   },
   "brand": {
     "productName": "GateCtr",
@@ -129,6 +130,10 @@
         "description": "Swap your endpoint URL. Keep your existing code. Done."
       },
       {
+        "title": "Install the SDK",
+        "description": "npm install @gatectr/sdk — or use the REST API. Quickstart: docs.gatectr.com/docs/getting-started/quickstart"
+      },
+      {
         "title": "Watch the dashboard",
         "description": "Every token, every cost — real-time."
       },
@@ -140,11 +145,15 @@
     "stepsWithoutProvider": [
       {
         "title": "Connect a provider",
-        "description": "Add your OpenAI, Anthropic, or Mistral key in Settings."
+        "description": "Add your OpenAI, Anthropic, or Mistral key in Settings → Providers."
       },
       {
         "title": "Make your first API call",
         "description": "Swap your endpoint URL. Keep your existing code."
+      },
+      {
+        "title": "Install the SDK",
+        "description": "npm install @gatectr/sdk — or use the REST API. Quickstart: docs.gatectr.com/docs/getting-started/quickstart"
       },
       {
         "title": "Watch the dashboard",
@@ -241,5 +250,21 @@
     "body": "Your GateCtr account and all associated data have been permanently deleted. All active sessions have been terminated.",
     "dataNote": "In accordance with GDPR and our data retention policy, any residual data will be purged within 30 days.",
     "contact": "If you did not request this or have questions, contact us at"
+  },
+  "waitlistBetaCoupon": {
+    "preview": "You're in the first 100. Pro is on us — 1 month, $0.",
+    "greetingNamed": "Hi {name},",
+    "greeting": "Hi,",
+    "headline": "Beta access. Pro plan. Free.",
+    "body": "You joined as ##{position} on the waitlist. You're in the first 100 — so Pro is on us for a full month. No card needed. No catch.",
+    "couponLabel": "YOUR PROMO CODE",
+    "inviteCodeLabel": "YOUR INVITE CODE",
+    "couponMeta": "100% off · Pro plan · 1 month · Single use",
+    "cta": "Create your account",
+    "detailsHeading": "What's included",
+    "detail1": "Context Optimizer — up to 40% fewer tokens",
+    "detail2": "Model Router — cheapest model per request",
+    "detail3": "Unlimited webhooks + advanced analytics",
+    "hint": "Questions? Reply to this email."
   }
 }

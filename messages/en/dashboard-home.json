@@ -36,5 +36,12 @@
     "createProjectDesc": "Organize requests and set per-project budgets.",
     "setBudget": "Set your budget",
     "setBudgetDesc": "Hard caps. No surprise invoices."
+  },
+  "quickStart": {
+    "title": "Make your first API call.",
+    "subtitle": "Swap your endpoint URL. Keep your existing code.",
+    "docs": "Full docs",
+    "hint": "5 min setup. Step-by-step guide →",
+    "hintLink": "Quick start guide"
   }
 }

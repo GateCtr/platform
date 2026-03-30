@@ -168,7 +168,7 @@ export function ProjectDetail({
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <div
             className="size-4 rounded-full shrink-0"
@@ -203,11 +203,12 @@ export function ProjectDetail({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 flex-wrap sm:shrink-0">
           <Button
             variant="cta-secondary"
             size="sm"
             onClick={() => setShowEdit(true)}
+            className="flex-1 sm:flex-none"
           >
             <Pencil className="size-3.5 mr-1.5" />
             {t("detail.actions.edit")}
@@ -217,6 +218,7 @@ export function ProjectDetail({
             size="sm"
             onClick={handleToggle}
             disabled={isPending}
+            className="flex-1 sm:flex-none"
           >
             <Power className="size-3.5 mr-1.5" />
             {project.isActive
@@ -227,6 +229,7 @@ export function ProjectDetail({
             variant="cta-danger"
             size="sm"
             onClick={() => setShowDelete(true)}
+            className="flex-1 sm:flex-none"
           >
             <Trash2 className="size-3.5 mr-1.5" />
             {t("detail.actions.delete")}

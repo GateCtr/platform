@@ -1,0 +1,22 @@
+{
+  "title": "Cookies",
+  "subtitle": "gatectr.com & subdomains",
+  "description": "We use essential cookies to keep the app running and optional analytics to improve your experience. No ads. No third-party tracking.",
+  "manage": "Manage preferences",
+  "hide": "Hide details",
+  "necessary": {
+    "label": "Necessary",
+    "description": "Authentication, locale, theme — always on",
+    "badge": "Always on"
+  },
+  "analytics": {
+    "label": "Analytics",
+    "description": "Vercel Analytics — anonymous usage stats"
+  },
+  "actions": {
+    "necessaryOnly": "Necessary only",
+    "acceptAll": "Accept all",
+    "savePreferences": "Save preferences",
+    "decline": "Decline optional cookies"
+  }
+}

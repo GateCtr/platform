@@ -473,95 +473,103 @@ function ApiKeyCard({
           : "bg-muted/40 border-border/50 opacity-60",
       )}
     >
-      <div className="flex items-start justify-between gap-4">
-        {/* Left */}
-        <div className="flex items-start gap-3 min-w-0">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted mt-0.5">
-            <KeySquare className="size-4 text-muted-foreground" />
-          </div>
-          <div className="min-w-0 space-y-1.5">
-            {/* Name + status */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-medium">{apiKey.name}</span>
-              <span
-                className={cn(
-                  "inline-flex items-center rounded px-1.5 py-0 text-[10px] font-mono font-medium border",
-                  ENV_STYLES[(apiKey.environment as KeyEnvironment) ?? "live"],
-                )}
-              >
-                gct_{apiKey.environment ?? "live"}_
-              </span>
-              <Badge
-                variant={apiKey.isActive ? "default" : "secondary"}
-                className={cn(
-                  "text-[10px] px-1.5 py-0",
-                  apiKey.isActive &&
-                    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-                )}
-              >
-                {apiKey.isActive ? t("card.active") : t("card.inactive")}
-              </Badge>
+      <div className="flex flex-col gap-3">
+        {/* Top row: icon + info + actions */}
+        <div className="flex items-start justify-between gap-3">
+          {/* Left */}
+          <div className="flex items-start gap-3 min-w-0">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted mt-0.5">
+              <KeySquare className="size-4 text-muted-foreground" />
             </div>
-
-            {/* Prefix */}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Hash className="size-3" />
-              <code className="font-mono">{apiKey.prefix}••••••••</code>
-            </div>
-
-            {/* Scopes */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {apiKey.scopes.map((s) => (
-                <ScopeBadge key={s} scope={s} />
-              ))}
-              {project && (
-                <span className="text-[10px] text-muted-foreground border border-border rounded px-1.5 py-0">
-                  {project.name}
+            <div className="min-w-0 space-y-1.5">
+              {/* Name + status */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-medium truncate max-w-[160px] sm:max-w-none">
+                  {apiKey.name}
                 </span>
-              )}
-            </div>
-
-            {/* Meta */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                <CheckCircle2 className="size-3" />
-                {t("card.created")} {createdOn}
-              </span>
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Clock className="size-3" />
-                {t("card.lastUsed")}: {lastUsed ?? t("card.never")}
-              </span>
-              {expiresAt && (
                 <span
                   className={cn(
-                    "flex items-center gap-1 text-xs",
-                    isExpired ? "text-destructive" : "text-muted-foreground",
+                    "inline-flex items-center rounded px-1.5 py-0 text-[10px] font-mono font-medium border shrink-0",
+                    ENV_STYLES[apiKey.environment as KeyEnvironment] ??
+                      ENV_STYLES["live"],
                   )}
                 >
-                  <Clock className="size-3" />
-                  {isExpired ? t("card.expired") : t("card.expires")}:{" "}
-                  {expiresAt}
+                  gct_{apiKey.environment ?? "live"}_
                 </span>
-              )}
-              {apiKey.usageCount > 0 && (
-                <span className="text-xs text-muted-foreground">
-                  {apiKey.usageCount.toLocaleString()} {t("card.usageCount")}
+                <Badge
+                  variant={apiKey.isActive ? "default" : "secondary"}
+                  className={cn(
+                    "text-[10px] px-1.5 py-0 shrink-0",
+                    apiKey.isActive &&
+                      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+                  )}
+                >
+                  {apiKey.isActive ? t("card.active") : t("card.inactive")}
+                </Badge>
+              </div>
+
+              {/* Prefix */}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Hash className="size-3 shrink-0" />
+                <code className="font-mono truncate">
+                  {apiKey.prefix}••••••••
+                </code>
+              </div>
+
+              {/* Scopes */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {(apiKey.scopes ?? []).map((s) => (
+                  <ScopeBadge key={s} scope={s} />
+                ))}
+                {project && (
+                  <span className="text-[10px] text-muted-foreground border border-border rounded px-1.5 py-0">
+                    {project.name}
+                  </span>
+                )}
+              </div>
+
+              {/* Meta */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <CheckCircle2 className="size-3 shrink-0" />
+                  {t("card.created")} {createdOn}
                 </span>
-              )}
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="size-3 shrink-0" />
+                  {t("card.lastUsed")}: {lastUsed ?? t("card.never")}
+                </span>
+                {expiresAt && (
+                  <span
+                    className={cn(
+                      "flex items-center gap-1 text-xs",
+                      isExpired ? "text-destructive" : "text-muted-foreground",
+                    )}
+                  >
+                    <Clock className="size-3 shrink-0" />
+                    {isExpired ? t("card.expired") : t("card.expires")}:{" "}
+                    {expiresAt}
+                  </span>
+                )}
+                {(apiKey.usageCount ?? 0) > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    {(apiKey.usageCount ?? 0).toLocaleString()}{" "}
+                    {t("card.usageCount")}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Right — actions */}
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Revoke — active keys only */}
+        {/* Actions — full width on mobile, right-aligned on desktop */}
+        <div className="flex items-center gap-2 justify-end border-t border-border/50 pt-3">
           {apiKey.isActive && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
                   variant="cta-ghost"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground flex-1 sm:flex-none"
                 >
                   {t("card.revoke")}
                 </Button>
@@ -589,13 +597,15 @@ function ApiKeyCard({
             </AlertDialog>
           )}
 
-          {/* Delete — always visible */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
                 variant="cta-ghost"
                 size="sm"
-                className="text-destructive hover:text-destructive"
+                className={cn(
+                  "text-destructive hover:text-destructive",
+                  apiKey.isActive ? "flex-1 sm:flex-none" : "w-full sm:w-auto",
+                )}
               >
                 {t("card.delete")}
               </Button>

@@ -94,6 +94,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
     demo: (await import(`../messages/${locale}/demo.json`)).default,
     comparison: (await import(`../messages/${locale}/comparison.json`)).default,
     emails: (await import(`../messages/${locale}/emails.json`)).default,
+    cookieBanner: (await import(`../messages/${locale}/cookie-banner.json`))
+      .default,
   };
 
   return {

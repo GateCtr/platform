@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useState, useTransition, useCallback } from "react";
+import { useRouter } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -228,9 +229,13 @@ function ThresholdSlider({
 
 export function BudgetForm({ globalBudget, plan, projects }: BudgetFormProps) {
   const t = useTranslations("settingsBudget");
+  const router = useRouter();
   const planTokenLimit = PLAN_TOKEN_LIMIT[plan];
 
   const [scope, setScope] = useState<string>("global");
+  // Local cache of budgets so scope switches reflect saved values immediately
+  const [localGlobalBudget, setLocalGlobalBudget] = useState(globalBudget);
+  const [localProjects, setLocalProjects] = useState(projects);
   const [fields, setFields] = useState<FormState>(() =>
     budgetToState(globalBudget),
   );
@@ -258,8 +263,8 @@ export function BudgetForm({ globalBudget, plan, projects }: BudgetFormProps) {
   function handleScopeChange(newScope: string) {
     const budget =
       newScope === "global"
-        ? globalBudget
-        : (projects.find((p) => p.id === newScope)?.budget ?? null);
+        ? localGlobalBudget
+        : (localProjects.find((p) => p.id === newScope)?.budget ?? null);
     const state = budgetToState(budget);
     setScope(newScope);
     setFields(state);
@@ -270,7 +275,8 @@ export function BudgetForm({ globalBudget, plan, projects }: BudgetFormProps) {
   }
 
   // Warn if project budget exceeds global budget on any dimension
-  const globalFields = scope === "global" ? null : budgetToState(globalBudget);
+  const globalFields =
+    scope === "global" ? null : budgetToState(localGlobalBudget);
   const exceedsGlobal =
     globalFields !== null &&
     (() => {
@@ -401,16 +407,29 @@ export function BudgetForm({ globalBudget, plan, projects }: BudgetFormProps) {
         setSubmitError(t(`errors.${result.error}` as Parameters<typeof t>[0]));
         return;
       }
-      setSavedSnapshot({
+      const savedState = {
         maxTokensPerDay,
         maxTokensPerMonth,
         maxCostPerDay,
         maxCostPerMonth,
         alertThresholdPct,
         hardStop,
-      });
+      };
+      setSavedSnapshot(savedState);
+
+      // Update local budget cache so scope switches reflect saved values
+      const savedBudget = result.data;
+      if (scope === "global") {
+        setLocalGlobalBudget(savedBudget);
+      } else {
+        setLocalProjects((prev) =>
+          prev.map((p) => (p.id === scope ? { ...p, budget: savedBudget } : p)),
+        );
+      }
+
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
+      router.refresh(); // re-fetch server data in background
     });
   }
 

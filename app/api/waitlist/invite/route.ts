@@ -2,10 +2,36 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 import { prisma } from "@/lib/prisma";
-import { sendInviteEmail } from "@/lib/resend";
+import { sendInviteEmail, sendBetaCouponEmail } from "@/lib/resend";
 import { isAdmin } from "@/lib/auth";
 import { normalizeLocale } from "@/lib/user-locale";
 import { rateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
+import { stripe } from "@/lib/stripe";
+
+const BETA_LIMIT = 100;
+
+async function createBetaPromoCode(email: string): Promise<string> {
+  const coupon = await stripe.coupons.create({
+    name: "Beta — Pro 1 month free",
+    percent_off: 100,
+    duration: "repeating",
+    duration_in_months: 1,
+    max_redemptions: 1,
+  });
+
+  const customers = await stripe.customers.list({ email, limit: 1 });
+  const customerId = customers.data[0]?.id;
+
+  const promoParams: Parameters<typeof stripe.promotionCodes.create>[0] = {
+    promotion: { type: "coupon", coupon: coupon.id },
+    max_redemptions: 1,
+    restrictions: { first_time_transaction: true },
+  };
+  if (customerId) promoParams.customer = customerId;
+
+  const promo = await stripe.promotionCodes.create(promoParams);
+  return promo.code;
+}
 
 const inviteSchema = z.object({
   entryIds: z.array(z.string()).min(1, "At least one entry must be selected"),
@@ -77,17 +103,57 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        // Send invite email (async, don't wait)
-        sendInviteEmail(
-          entry.email,
-          entry.name,
-          inviteCode,
-          expiresAt,
-          expiryDays,
-          normalizeLocale(entry.locale),
-        ).catch((err) =>
-          console.error(`Failed to send invite to ${entry.email}:`, err),
-        );
+        // Beta users (position <= 100): create Stripe promo code + send beta email
+        // Regular users: send standard invite email
+        if (entry.position <= BETA_LIMIT) {
+          try {
+            const couponCode = await createBetaPromoCode(entry.email);
+            await prisma.waitlistEntry.update({
+              where: { id: entryId },
+              data: {
+                betaCouponCode: couponCode,
+                betaCouponSentAt: new Date(),
+              },
+            });
+            sendBetaCouponEmail(
+              entry.email,
+              entry.name,
+              couponCode,
+              inviteCode,
+              entry.position,
+              normalizeLocale(entry.locale),
+            ).catch((err) =>
+              console.error(`[beta-coupon] Failed for ${entry.email}:`, err),
+            );
+          } catch (err) {
+            // Coupon creation failed — fall back to standard invite
+            console.error(
+              `[beta-coupon] Stripe error for ${entry.email}:`,
+              err,
+            );
+            sendInviteEmail(
+              entry.email,
+              entry.name,
+              inviteCode,
+              expiresAt,
+              expiryDays,
+              normalizeLocale(entry.locale),
+            ).catch((e) =>
+              console.error(`Failed to send invite to ${entry.email}:`, e),
+            );
+          }
+        } else {
+          sendInviteEmail(
+            entry.email,
+            entry.name,
+            inviteCode,
+            expiresAt,
+            expiryDays,
+            normalizeLocale(entry.locale),
+          ).catch((err) =>
+            console.error(`Failed to send invite to ${entry.email}:`, err),
+          );
+        }
 
         results.success.push(entryId);
       } catch (error) {

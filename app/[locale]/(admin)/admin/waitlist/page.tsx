@@ -171,6 +171,13 @@ export default function AdminWaitlistPage() {
 
   const [entries, setEntries] = useState<WaitlistEntry[]>([]);
   const [total, setTotal] = useState(0);
+  const [statusCounts, setStatusCounts] = useState({
+    total: 0,
+    waiting: 0,
+    invited: 0,
+    joined: 0,
+    skipped: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [inviting, setInviting] = useState(false);
   const [filter, setFilter] = useState<FilterValue>("all");
@@ -217,6 +224,7 @@ export default function AdminWaitlistPage() {
       const data = await res.json();
       setEntries(data.entries);
       setTotal(data.pagination.total);
+      if (data.counts) setStatusCounts(data.counts);
       setSelectedIds(new Set());
     } catch {
       setAlert({ type: "error", text: t("messages.loadFailed") });
@@ -312,9 +320,9 @@ export default function AdminWaitlistPage() {
     window.open(`/api/waitlist?${params}`, "_blank");
   };
 
-  const waitingCount = entries.filter((e) => e.status === "WAITING").length;
-  const invitedCount = entries.filter((e) => e.status === "INVITED").length;
-  const joinedCount = entries.filter((e) => e.status === "JOINED").length;
+  const waitingCount = statusCounts.waiting;
+  const invitedCount = statusCounts.invited;
+  const joinedCount = statusCounts.joined;
   const showCheckbox = filter === "all" || filter === "WAITING";
 
   const statusLabel = (s: WaitlistEntry["status"]) =>

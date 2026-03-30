@@ -1,0 +1,22 @@
+{
+  "title": "Cookies",
+  "subtitle": "gatectr.com & sous-domaines",
+  "description": "Nous utilisons des cookies essentiels pour faire fonctionner l'application et des analytics optionnels pour améliorer votre expérience. Pas de publicité. Pas de tracking tiers.",
+  "manage": "Gérer les préférences",
+  "hide": "Masquer les détails",
+  "necessary": {
+    "label": "Nécessaires",
+    "description": "Authentification, langue, thème — toujours actifs",
+    "badge": "Toujours actif"
+  },
+  "analytics": {
+    "label": "Analytics",
+    "description": "Vercel Analytics — statistiques d'usage anonymes"
+  },
+  "actions": {
+    "necessaryOnly": "Nécessaires uniquement",
+    "acceptAll": "Tout accepter",
+    "savePreferences": "Enregistrer les préférences",
+    "decline": "Refuser les cookies optionnels"
+  }
+}

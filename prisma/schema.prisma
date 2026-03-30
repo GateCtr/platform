@@ -1,4 +1,3 @@
-// GateCtr Prisma Schema - Complete v2.0
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,45 +6,40 @@ datasource db {
   provider = "postgresql"
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// USERS & AUTH
-// ═══════════════════════════════════════════════════════════════════════════
-
 model User {
-  id            String    @id @default(cuid())
-  clerkId       String    @unique
-  email         String    @unique
-  name          String?
-  avatarUrl     String?
-  plan          PlanType  @default(FREE)
-  planExpiresAt DateTime?
-  isActive      Boolean   @default(true)
-  isBanned      Boolean   @default(false)
-  bannedReason  String?
-  lastLoginAt   DateTime?
-  authProvider  String?   // "email" | "google" | "github" | "microsoft" | "apple"
-  metadata      Json?     @default("{}")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  apiKeys               ApiKey[]
-  llmProviderKeys       LLMProviderKey[]
-  projects              Project[]
-  webhooks              Webhook[]
-  usageLogs             UsageLog[]
-  dailyUsage            DailyUsageCache[]
-  budget                Budget?
-  subscription          Subscription?
-  emailLogs             EmailLog[]
-  auditLogs             AuditLog[]
-  userRoles             UserRole[]
-  featureFlagOverrides  FeatureFlagOverride[]
-  rateLimits            RateLimit[]
-  ownedTeams            Team[]       @relation("TeamOwner")
-  teamMemberships       TeamMember[]
-  teamMembershipsGiven  TeamMember[] @relation("InvitedByUser")
-  invitationsSent       TeamInvitation[] @relation("InvitationSender")
-  alertRules            AlertRule[]
+  id                   String                @id @default(cuid())
+  clerkId              String                @unique
+  email                String                @unique
+  name                 String?
+  avatarUrl            String?
+  plan                 PlanType              @default(FREE)
+  planExpiresAt        DateTime?
+  isActive             Boolean               @default(true)
+  isBanned             Boolean               @default(false)
+  bannedReason         String?
+  metadata             Json?                 @default("{}")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  lastLoginAt          DateTime?
+  authProvider         String?
+  alertRules           AlertRule[]
+  apiKeys              ApiKey[]
+  auditLogs            AuditLog[]
+  budget               Budget?
+  dailyUsage           DailyUsageCache[]
+  emailLogs            EmailLog[]
+  featureFlagOverrides FeatureFlagOverride[]
+  llmProviderKeys      LLMProviderKey[]
+  projects             Project[]
+  rateLimits           RateLimit[]
+  subscription         Subscription?
+  invitationsSent      TeamInvitation[]      @relation("InvitationSender")
+  teamMembershipsGiven TeamMember[]          @relation("InvitedByUser")
+  teamMemberships      TeamMember[]
+  ownedTeams           Team[]                @relation("TeamOwner")
+  usageLogs            UsageLog[]
+  userRoles            UserRole[]
+  webhooks             Webhook[]
 
   @@index([clerkId])
   @@index([email])
@@ -54,27 +48,26 @@ model User {
 }
 
 model ApiKey {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   userId      String
-  teamId      String?
   name        String
-  environment String    @default("live") // "live" | "test"
-  keyHash     String    @unique // SHA-256 hash of full key
-  prefix      String // e.g. "gct_live_xxx" or "gct_test_xxx"
-  scopes      String[]  @default(["complete", "read"])
+  keyHash     String     @unique
+  prefix      String
+  scopes      String[]   @default(["complete", "read"])
   projectId   String?
   lastUsedAt  DateTime?
   lastUsedIp  String?
   expiresAt   DateTime?
-  isActive    Boolean   @default(true)
-  usageCount  Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team      Team?       @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  project   Project?    @relation(fields: [projectId], references: [id])
-  usageLogs UsageLog[]
+  isActive    Boolean    @default(true)
+  usageCount  Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  teamId      String?
+  environment String     @default("live")
+  project     Project?   @relation(fields: [projectId], references: [id])
+  team        Team?      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageLogs   UsageLog[]
 
   @@index([userId])
   @@index([teamId])
@@ -82,21 +75,19 @@ model ApiKey {
   @@map("api_keys")
 }
 
-// LLM Provider API Keys (user's keys for OpenAI, Anthropic, etc.)
 model LLMProviderKey {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   userId          String
-  teamId          String?
-  provider        String // openai, anthropic, mistral, gemini
-  name            String // User-friendly name
-  encryptedApiKey String // AES encrypted
-  isActive        Boolean  @default(true)
+  provider        String
+  name            String
+  encryptedApiKey String
+  isActive        Boolean   @default(true)
   lastUsedAt      DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team Team? @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  teamId          String?
+  team            Team?     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, provider, name])
   @@index([userId])
@@ -105,29 +96,28 @@ model LLMProviderKey {
   @@map("llm_provider_keys")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// WAITLIST
-// ═══════════════════════════════════════════════════════════════════════════
-
 model WaitlistEntry {
-  id           String          @id @default(cuid())
-  email        String          @unique
-  name         String?
-  company      String?
+  id               String         @id @default(cuid())
+  email            String         @unique
+  name             String?
+  company          String?
+  useCase          String?
+  referralCode     String?
+  referredBy       String?
+  position         Int
+  status           WaitlistStatus @default(WAITING)
+  invitedAt        DateTime?
+  joinedAt         DateTime?
+  ipAddress        String?
+  userAgent        String?
+  createdAt        DateTime       @default(now())
+  inviteCode       String?        @unique
+  inviteExpiresAt  DateTime?
   /// UI / email locale when the user joined: "en" | "fr"
-  locale       String?
-  useCase      String? // "saas"|"agent"|"enterprise"|"dev"
-  referralCode String?
-  referredBy   String?
-  position     Int             @default(autoincrement())
-  status       WaitlistStatus  @default(WAITING)
-  inviteCode   String?         @unique
-  invitedAt    DateTime?
-  inviteExpiresAt DateTime?
-  joinedAt     DateTime?
-  ipAddress    String?
-  userAgent    String?
-  createdAt    DateTime        @default(now())
+  locale           String?
+  /// Stripe promo code sent to beta users (positions 1–100)
+  betaCouponCode   String?
+  betaCouponSentAt DateTime?
 
   @@index([email])
   @@index([status])
@@ -136,81 +126,67 @@ model WaitlistEntry {
   @@map("waitlist_entries")
 }
 
-enum WaitlistStatus {
-  WAITING
-  INVITED
-  JOINED
-  SKIPPED
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// BILLING & PLANS
-// ═══════════════════════════════════════════════════════════════════════════
-
 model Plan {
-  id                    String         @id @default(cuid())
-  name                  PlanType       @unique
-  displayName           String
-  description           String?
-  stripePriceIdMonthly  String?
-  stripePriceIdYearly   String?
-  isActive              Boolean        @default(true)
-  isPublic              Boolean        @default(true)
-  sortOrder             Int            @default(0)
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime       @updatedAt
-
-  limits        PlanLimit?
-  subscriptions Subscription[]
+  id                   String         @id @default(cuid())
+  name                 PlanType       @unique
+  displayName          String
+  description          String?
+  stripePriceIdMonthly String?
+  stripePriceIdYearly  String?
+  isActive             Boolean        @default(true)
+  isPublic             Boolean        @default(true)
+  sortOrder            Int            @default(0)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  limits               PlanLimit?
+  subscriptions        Subscription[]
 
   @@map("plans")
 }
 
 model PlanLimit {
-  id                       String   @id @default(cuid())
-  planId                   String   @unique
-  maxTokensPerDay          Int?
-  maxTokensPerMonth        Int?
-  maxRequestsPerDay        Int?
-  maxRequestsPerMinute     Int      @default(60)
-  maxProjects              Int?
-  maxApiKeys               Int?
-  maxWebhooks              Int?
-  maxTeamMembers           Int?
-  contextOptimizerEnabled  Boolean  @default(false)
-  modelRouterEnabled       Boolean  @default(false)
-  advancedAnalytics        Boolean  @default(false)
-  auditLogsRetentionDays   Int      @default(7)
-  supportLevel             String   @default("community")
-  createdAt                DateTime @default(now())
-  updatedAt                DateTime @updatedAt
-
-  plan Plan @relation(fields: [planId], references: [id])
+  id                      String   @id @default(cuid())
+  planId                  String   @unique
+  maxTokensPerDay         Int?
+  maxTokensPerMonth       Int?
+  maxRequestsPerDay       Int?
+  maxRequestsPerMinute    Int      @default(60)
+  maxProjects             Int?
+  maxApiKeys              Int?
+  maxWebhooks             Int?
+  maxTeamMembers          Int?
+  contextOptimizerEnabled Boolean  @default(false)
+  modelRouterEnabled      Boolean  @default(false)
+  advancedAnalytics       Boolean  @default(false)
+  auditLogsRetentionDays  Int      @default(7)
+  supportLevel            String   @default("community")
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  plan                    Plan     @relation(fields: [planId], references: [id])
 
   @@map("plan_limits")
 }
 
 model Subscription {
-  id                   String       @id @default(cuid())
-  userId               String       @unique
+  id                   String    @id @default(cuid())
+  userId               String    @unique
   planId               String
-  stripeCustomerId     String?      @unique
-  stripeSubscriptionId String?      @unique
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
   stripePriceId        String?
-  stripeMeteredItemId  String?
-  stripeSeatsItemId    String?
-  status               SubStatus    @default(INCOMPLETE)
+  status               SubStatus @default(INCOMPLETE)
   currentPeriodStart   DateTime?
   currentPeriodEnd     DateTime?
-  cancelAtPeriodEnd    Boolean      @default(false)
+  cancelAtPeriodEnd    Boolean   @default(false)
   canceledAt           DateTime?
   trialStart           DateTime?
   trialEnd             DateTime?
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan Plan @relation(fields: [planId], references: [id])
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  stripeMeteredItemId  String?
+  stripeSeatsItemId    String?
+  plan                 Plan      @relation(fields: [planId], references: [id])
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([stripeCustomerId])
   @@index([stripeSubscriptionId])
@@ -218,7 +194,7 @@ model Subscription {
 }
 
 model StripeEvent {
-  id        String   @id // Stripe event ID for idempotency
+  id        String   @id
   type      String
   processed Boolean  @default(false)
   payload   Json
@@ -228,46 +204,23 @@ model StripeEvent {
   @@map("stripe_events")
 }
 
-enum SubStatus {
-  INCOMPLETE
-  INCOMPLETE_EXPIRED
-  TRIALING
-  ACTIVE
-  PAST_DUE
-  CANCELED
-  UNPAID
-  PAUSED
-}
-
-enum PlanType {
-  FREE
-  PRO
-  TEAM
-  ENTERPRISE
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// PROJECTS & BUDGET
-// ═══════════════════════════════════════════════════════════════════════════
-
 model Team {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  avatarUrl   String?
-  settings    Json?    @default("{}")
-  ownerId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  owner       User           @relation("TeamOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  members     TeamMember[]
-  projects    Project[]
-  invitations TeamInvitation[]
-  apiKeys     ApiKey[]
-  webhooks    Webhook[]
+  id           String           @id @default(cuid())
+  name         String
+  slug         String           @unique
+  description  String?
+  ownerId      String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  avatarUrl    String?
+  settings     Json?            @default("{}")
+  apiKeys      ApiKey[]
   providerKeys LLMProviderKey[]
+  projects     Project[]
+  invitations  TeamInvitation[]
+  members      TeamMember[]
+  owner        User             @relation("TeamOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  webhooks     Webhook[]
 
   @@index([ownerId])
   @@index([slug])
@@ -279,13 +232,12 @@ model TeamMember {
   teamId      String
   userId      String
   role        TeamRole @default(MEMBER)
-  invitedById String?  // Who sent the invitation
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  team      Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  invitedBy User? @relation("InvitedByUser", fields: [invitedById], references: [id], onDelete: SetNull)
+  invitedById String?
+  invitedBy   User?    @relation("InvitedByUser", fields: [invitedById], references: [id])
+  team        Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, userId])
   @@index([teamId])
@@ -299,17 +251,15 @@ model TeamInvitation {
   email       String
   role        TeamRole  @default(MEMBER)
   token       String    @unique
-  invitedById String?
   expiresAt   DateTime
   acceptedAt  DateTime?
-  revokedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  invitedById String?
+  revokedAt   DateTime?
+  invitedBy   User?     @relation("InvitationSender", fields: [invitedById], references: [id])
+  team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  team      Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  invitedBy User? @relation("InvitationSender", fields: [invitedById], references: [id], onDelete: SetNull)
-
-  // Allow re-inviting after expiry/revocation — unique on active invitations enforced in app logic
   @@index([teamId])
   @@index([email])
   @@index([token])
@@ -317,30 +267,22 @@ model TeamInvitation {
   @@map("team_invitations")
 }
 
-enum TeamRole {
-  OWNER
-  ADMIN
-  MEMBER
-  VIEWER
-}
-
 model Project {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   userId      String
   teamId      String?
   name        String
   description String?
-  slug        String   @unique
-  isActive    Boolean  @default(true)
-  color       String?  @default("#1B4F82")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team      Team?       @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  usageLogs UsageLog[]
-  apiKeys   ApiKey[]
-  budget    Budget?
+  slug        String     @unique
+  isActive    Boolean    @default(true)
+  color       String?    @default("#1B4F82")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  apiKeys     ApiKey[]
+  budget      Budget?
+  team        Team?      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageLogs   UsageLog[]
 
   @@index([userId])
   @@index([teamId])
@@ -349,29 +291,24 @@ model Project {
 }
 
 model Budget {
-  id                   String   @id @default(cuid())
-  userId               String?  @unique
-  projectId            String?  @unique
-  maxTokensPerDay      Int?
-  maxTokensPerMonth    Int?
-  maxCostPerDay        Float?
-  maxCostPerMonth      Float?
-  alertThresholdPct    Int      @default(80)
-  hardStop             Boolean  @default(false)
-  notifyOnThreshold    Boolean  @default(true)
-  notifyOnExceeded     Boolean  @default(true)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-
-  user    User?    @relation(fields: [userId], references: [id])
-  project Project? @relation(fields: [projectId], references: [id])
+  id                String   @id @default(cuid())
+  userId            String?  @unique
+  projectId         String?  @unique
+  maxTokensPerDay   Int?
+  maxTokensPerMonth Int?
+  maxCostPerDay     Float?
+  maxCostPerMonth   Float?
+  alertThresholdPct Int      @default(80)
+  hardStop          Boolean  @default(false)
+  notifyOnThreshold Boolean  @default(true)
+  notifyOnExceeded  Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  project           Project? @relation(fields: [projectId], references: [id])
+  user              User?    @relation(fields: [userId], references: [id])
 
   @@map("budgets")
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// USAGE & ANALYTICS
-// ═══════════════════════════════════════════════════════════════════════════
 
 model UsageLog {
   id               String   @id @default(cuid())
@@ -395,10 +332,9 @@ model UsageLog {
   ipAddress        String?
   errorCode        String?
   createdAt        DateTime @default(now())
-
-  user    User     @relation(fields: [userId], references: [id])
-  project Project? @relation(fields: [projectId], references: [id])
-  apiKey  ApiKey?  @relation(fields: [apiKeyId], references: [id])
+  apiKey           ApiKey?  @relation(fields: [apiKeyId], references: [id])
+  project          Project? @relation(fields: [projectId], references: [id])
+  user             User     @relation(fields: [userId], references: [id])
 
   @@index([userId, createdAt])
   @@index([userId, provider, createdAt])
@@ -411,44 +347,38 @@ model DailyUsageCache {
   id            String   @id @default(cuid())
   userId        String
   projectId     String?
-  date          String // "2025-01-15"
+  date          String
   totalTokens   Int      @default(0)
   savedTokens   Int      @default(0)
   totalRequests Int      @default(0)
   totalCostUsd  Float    @default(0)
-  overageTokens Int      @default(0)
   lastUpdated   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  overageTokens Int      @default(0)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, projectId, date])
   @@index([userId, date])
   @@map("daily_usage_cache")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// WEBHOOKS
-// ═══════════════════════════════════════════════════════════════════════════
-
 model Webhook {
-  id           String    @id @default(cuid())
+  id           String            @id @default(cuid())
   userId       String
-  teamId       String?
   name         String
   url          String
   secret       String
   events       String[]
-  headers      Json?     @default("{}")
-  isActive     Boolean   @default(true)
+  headers      Json?             @default("{}")
+  isActive     Boolean           @default(true)
   lastFiredAt  DateTime?
-  failCount    Int       @default(0)
-  successCount Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team       Team?              @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  deliveries WebhookDelivery[]
+  failCount    Int               @default(0)
+  successCount Int               @default(0)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  teamId       String?
+  deliveries   WebhookDelivery[]
+  team         Team?             @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([teamId])
@@ -457,7 +387,6 @@ model Webhook {
 
 model WebhookDelivery {
   id         String   @id @default(cuid())
-  deliveryId String   @default(cuid())
   webhookId  String
   event      String
   payload    Json
@@ -467,37 +396,31 @@ model WebhookDelivery {
   error      String?
   retryCount Int      @default(0)
   createdAt  DateTime @default(now())
-
-  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  deliveryId String   @default(cuid())
+  webhook    Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
 
   @@index([webhookId, createdAt])
   @@map("webhook_deliveries")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// RBAC
-// ═══════════════════════════════════════════════════════════════════════════
-
 model Role {
-  id          String   @id @default(cuid())
-  name        RoleName @unique
-  displayName String
-  description String?
-  isSystem    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-
-  userRoles       UserRole[]
+  id              String           @id @default(cuid())
+  name            RoleName         @unique
+  displayName     String
+  description     String?
+  isSystem        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
   rolePermissions RolePermission[]
+  userRoles       UserRole[]
 
   @@map("roles")
 }
 
 model Permission {
-  id          String   @id @default(cuid())
-  resource    String
-  action      String
-  description String?
-
+  id              String           @id @default(cuid())
+  resource        String
+  action          String
+  description     String?
   rolePermissions RolePermission[]
 
   @@unique([resource, action])
@@ -510,9 +433,8 @@ model UserRole {
   roleId    String
   grantedBy String?
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role Role @relation(fields: [roleId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, roleId])
   @@index([userId])
@@ -523,61 +445,41 @@ model UserRole {
 model RolePermission {
   roleId       String
   permissionId String
-
-  role       Role       @relation(fields: [roleId], references: [id])
-  permission Permission @relation(fields: [permissionId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  role         Role       @relation(fields: [roleId], references: [id])
 
   @@id([roleId, permissionId])
   @@map("role_permissions")
 }
 
-enum RoleName {
-  SUPER_ADMIN
-  ADMIN
-  MANAGER
-  DEVELOPER
-  VIEWER
-  SUPPORT
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// FEATURE FLAGS
-// ═══════════════════════════════════════════════════════════════════════════
-
 model FeatureFlag {
-  id           String   @id @default(cuid())
-  key          String   @unique
+  id           String                @id @default(cuid())
+  key          String                @unique
   name         String
   description  String?
-  enabled      Boolean  @default(false)
-  rolloutPct   Int      @default(0)
-  enabledPlans String[] @default([])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  overrides FeatureFlagOverride[]
+  enabled      Boolean               @default(false)
+  rolloutPct   Int                   @default(0)
+  enabledPlans String[]              @default([])
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  overrides    FeatureFlagOverride[]
 
   @@map("feature_flags")
 }
 
 model FeatureFlagOverride {
-  id            String   @id @default(cuid())
+  id            String      @id @default(cuid())
   featureFlagId String
   userId        String
   enabled       Boolean
   reason        String?
-  createdAt     DateTime @default(now())
-
-  featureFlag FeatureFlag @relation(fields: [featureFlagId], references: [id])
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  featureFlag   FeatureFlag @relation(fields: [featureFlagId], references: [id])
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([featureFlagId, userId])
   @@map("feature_flag_overrides")
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// AUDIT
-// ═══════════════════════════════════════════════════════════════════════════
 
 model AuditLog {
   id         String   @id @default(cuid())
@@ -593,8 +495,7 @@ model AuditLog {
   success    Boolean  @default(true)
   error      String?
   createdAt  DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id])
+  user       User?    @relation(fields: [userId], references: [id])
 
   @@index([userId, createdAt])
   @@index([resource, action])
@@ -602,47 +503,29 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// EMAIL
-// ═══════════════════════════════════════════════════════════════════════════
-
 model EmailLog {
-  id         String       @id @default(cuid())
-  userId     String?
-  resendId   String?      @unique
-  to         String
-  subject    String
-  template   String
-  status     EmailStatus  @default(SENT)
-  openedAt   DateTime?
-  clickedAt  DateTime?
-  bouncedAt  DateTime?
-  error      String?
-  createdAt  DateTime     @default(now())
-
-  user User? @relation(fields: [userId], references: [id])
+  id        String      @id @default(cuid())
+  userId    String?
+  resendId  String?     @unique
+  to        String
+  subject   String
+  template  String
+  status    EmailStatus @default(SENT)
+  openedAt  DateTime?
+  clickedAt DateTime?
+  bouncedAt DateTime?
+  error     String?
+  createdAt DateTime    @default(now())
+  user      User?       @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([template])
   @@map("email_logs")
 }
 
-enum EmailStatus {
-  SENT
-  DELIVERED
-  OPENED
-  CLICKED
-  BOUNCED
-  FAILED
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// MONITORING
-// ═══════════════════════════════════════════════════════════════════════════
-
 model SystemHealth {
   id           String       @id @default(cuid())
-  service      String // app|database|redis|queue|stripe
+  service      String
   status       HealthStatus @default(HEALTHY)
   latencyMs    Int?
   errorMessage String?
@@ -652,12 +535,6 @@ model SystemHealth {
   @@map("system_health")
 }
 
-enum HealthStatus {
-  HEALTHY
-  DEGRADED
-  DOWN
-}
-
 model RateLimit {
   id        String   @id @default(cuid())
   userId    String?
@@ -665,79 +542,68 @@ model RateLimit {
   count     Int      @default(0)
   windowEnd DateTime
   createdAt DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
 
   @@index([key, windowEnd])
   @@map("rate_limits")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// LLM PROVIDER CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════════════
-
 model LLMProviderConfig {
-  id              String   @id @default(cuid())
-  provider        String   @unique // openai, anthropic, mistral, gemini
-  displayName     String
-  baseUrl         String // API endpoint
-  isActive        Boolean  @default(true)
-  defaultTimeout  Int      @default(30000) // milliseconds
-  maxRetries      Int      @default(3)
-  retryDelay      Int      @default(1000) // milliseconds
-  rateLimitRpm    Int? // Requests per minute
-  rateLimitTpm    Int? // Tokens per minute
-  metadata        Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  models ModelCatalog[]
+  id             String         @id @default(cuid())
+  provider       String         @unique
+  displayName    String
+  baseUrl        String
+  isActive       Boolean        @default(true)
+  defaultTimeout Int            @default(30000)
+  maxRetries     Int            @default(3)
+  retryDelay     Int            @default(1000)
+  rateLimitRpm   Int?
+  rateLimitTpm   Int?
+  metadata       Json?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  models         ModelCatalog[]
 
   @@index([provider])
   @@map("llm_provider_configs")
 }
 
 model ModelCatalog {
-  id                   String   @id @default(cuid())
-  providerId           String
-  modelId              String   @unique // e.g., "gpt-4-turbo", "claude-3-opus"
-  displayName          String
-  contextWindow        Int // Max tokens
-  maxOutputTokens      Int
-  inputCostPer1kTokens Float // USD
-  outputCostPer1kTokens Float // USD
-  avgLatencyMs         Int? // Average response time
-  isActive             Boolean  @default(true)
-  capabilities         String[] @default([]) // ["chat", "completion", "vision", "function_calling"]
-  metadata             Json?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-
-  provider LLMProviderConfig @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  id                    String            @id @default(cuid())
+  providerId            String
+  modelId               String            @unique
+  displayName           String
+  contextWindow         Int
+  maxOutputTokens       Int
+  inputCostPer1kTokens  Float
+  outputCostPer1kTokens Float
+  avgLatencyMs          Int?
+  isActive              Boolean           @default(true)
+  capabilities          String[]          @default([])
+  metadata              Json?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  provider              LLMProviderConfig @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@index([providerId])
   @@index([modelId])
   @@map("model_catalog")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// CACHE
-// ═══════════════════════════════════════════════════════════════════════════
-
 model CacheEntry {
-  id           String   @id @default(cuid())
-  requestHash  String   @unique // SHA-256 hash of normalized request
+  id           String    @id @default(cuid())
+  requestHash  String    @unique
   provider     String
   model        String
-  response     Json // Cached LLM response
+  response     Json
   promptTokens Int
   totalTokens  Int
-  hitCount     Int      @default(0)
+  hitCount     Int       @default(0)
   lastHitAt    DateTime?
-  ttl          Int // Time to live in seconds
+  ttl          Int
   expiresAt    DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@index([requestHash])
   @@index([expiresAt])
@@ -745,17 +611,13 @@ model CacheEntry {
   @@map("cache_entries")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// OPTIMIZATION
-// ═══════════════════════════════════════════════════════════════════════════
-
 model OptimizationRule {
   id          String   @id @default(cuid())
   name        String
   description String?
-  ruleType    String // "compression", "rewrite", "pruning"
-  pattern     String? // Regex or pattern to match
-  replacement String? // For rewrite rules
+  ruleType    String
+  pattern     String?
+  replacement String?
   priority    Int      @default(0)
   isActive    Boolean  @default(true)
   metadata    Json?
@@ -774,7 +636,7 @@ model OptimizationLog {
   originalTokens  Int
   optimizedTokens Int
   savedTokens     Int
-  technique       String // "compression", "rewrite", "pruning", "deduplication"
+  technique       String
   metadata        Json?
   createdAt       DateTime @default(now())
 
@@ -784,25 +646,20 @@ model OptimizationLog {
   @@map("optimization_logs")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// ALERTS
-// ═══════════════════════════════════════════════════════════════════════════
-
 model AlertRule {
   id          String   @id @default(cuid())
   userId      String?
   projectId   String?
   name        String
   description String?
-  alertType   String // "budget_threshold", "token_limit", "error_rate", "latency"
-  condition   Json // Threshold configuration
-  channels    String[] @default([]) // ["email", "webhook", "slack"]
+  alertType   String
+  condition   Json
+  channels    String[] @default([])
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  alerts  Alert[]
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alerts      Alert[]
 
   @@index([userId])
   @@index([projectId])
@@ -811,18 +668,17 @@ model AlertRule {
 }
 
 model Alert {
-  id          String    @id @default(cuid())
-  ruleId      String
-  severity    String // "info", "warning", "critical"
-  message     String
-  metadata    Json?
-  acknowledged Boolean  @default(false)
+  id             String    @id @default(cuid())
+  ruleId         String
+  severity       String
+  message        String
+  metadata       Json?
+  acknowledged   Boolean   @default(false)
   acknowledgedAt DateTime?
   acknowledgedBy String?
-  resolvedAt  DateTime?
-  createdAt   DateTime @default(now())
-
-  rule AlertRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  resolvedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  rule           AlertRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
 
   @@index([ruleId])
   @@index([severity])
@@ -831,24 +687,76 @@ model Alert {
   @@map("alerts")
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// INTEGRATIONS
-// ═══════════════════════════════════════════════════════════════════════════
-
 model IntegrationConnector {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   userId          String
-  type            String // "slack", "teams", "discord", "zapier", "custom"
+  type            String
   name            String
-  encryptedConfig Json // Encrypted credentials and config
-  eventMapping    Json? // Map GateCtr events to integration events
-  isActive        Boolean  @default(true)
+  encryptedConfig Json
+  eventMapping    Json?
+  isActive        Boolean   @default(true)
   lastSyncAt      DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@unique([userId, type, name])
   @@index([userId])
   @@index([type])
   @@map("integration_connectors")
+}
+
+enum WaitlistStatus {
+  WAITING
+  INVITED
+  JOINED
+  SKIPPED
+}
+
+enum SubStatus {
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+  PAUSED
+}
+
+enum PlanType {
+  FREE
+  PRO
+  TEAM
+  ENTERPRISE
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum RoleName {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  DEVELOPER
+  VIEWER
+  SUPPORT
+}
+
+enum EmailStatus {
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  FAILED
+}
+
+enum HealthStatus {
+  HEALTHY
+  DEGRADED
+  DOWN
 }

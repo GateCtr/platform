@@ -149,7 +149,7 @@ function AddProviderDialog({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="cta-primary">
+        <Button variant="cta-primary" className="w-full sm:w-auto">
           <Plus className="size-4 mr-2" />
           {t("empty.cta")}
         </Button>
@@ -296,13 +296,13 @@ function ProviderCard({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 rounded-xl border p-4 transition-colors",
+        "flex flex-col gap-3 rounded-xl border p-4 transition-colors",
         providerKey.isActive
           ? "bg-card border-border"
           : "bg-muted/40 border-border/50 opacity-60",
       )}
     >
-      {/* Left — icon + info */}
+      {/* Top — icon + info */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted">
           <ProviderIcon provider={providerKey.provider} />
@@ -320,7 +320,7 @@ function ProviderCard({
             <Badge
               variant={providerKey.isActive ? "default" : "secondary"}
               className={cn(
-                "text-[10px] px-1.5 py-0",
+                "text-[10px] px-1.5 py-0 shrink-0",
                 providerKey.isActive &&
                   "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
               )}
@@ -328,28 +328,28 @@ function ProviderCard({
               {providerKey.isActive ? t("card.active") : t("card.inactive")}
             </Badge>
           </div>
-          <div className="flex items-center gap-3 mt-0.5">
+          <div className="flex items-center gap-3 mt-0.5 flex-wrap">
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <CheckCircle2 className="size-3" />
+              <CheckCircle2 className="size-3 shrink-0" />
               {t("card.added")} {addedOn}
             </span>
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock className="size-3" />
+              <Clock className="size-3 shrink-0" />
               {t("card.lastUsed")}: {lastUsed ?? t("card.never")}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Right — actions */}
-      <div className="flex items-center gap-2 shrink-0">
+      {/* Actions — full width on mobile */}
+      <div className="flex items-center gap-2 border-t border-border/50 pt-3">
         {providerKey.isActive && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
                 variant="cta-ghost"
                 size="sm"
-                className="text-destructive hover:text-destructive"
+                className="text-destructive hover:text-destructive flex-1 sm:flex-none"
               >
                 {t("card.revoke")}
               </Button>
@@ -380,7 +380,12 @@ function ProviderCard({
         {!providerKey.isActive && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="cta-danger" size="sm" disabled={isPending}>
+              <Button
+                variant="cta-danger"
+                size="sm"
+                disabled={isPending}
+                className="flex-1 sm:flex-none"
+              >
                 {t("card.delete")}
               </Button>
             </AlertDialogTrigger>
@@ -457,13 +462,15 @@ export function ProvidersForm({ initialKeys }: { initialKeys: ProviderKey[] }) {
       </div>
 
       {/* Header row */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           {activeKeys.length > 0
             ? `${activeKeys.length} provider${activeKeys.length > 1 ? "s" : ""} connected`
             : t("empty.description")}
         </p>
-        <AddProviderDialog onAdded={handleAdded} />
+        <div className="w-full sm:w-auto">
+          <AddProviderDialog onAdded={handleAdded} />
+        </div>
       </div>
 
       {/* Empty state */}

@@ -4,7 +4,8 @@ import { NextRequest } from "next/server";
 export const runtime = "edge";
 
 const DEFAULT_TITLE = "GateCtr — One gateway. Every LLM.";
-const DEFAULT_DESCRIPTION = "Cut LLM costs by 40%. One endpoint swap.";
+const DEFAULT_DESCRIPTION =
+  "Up to 40% fewer tokens. Hard budget caps. One endpoint swap.";
 
 export async function GET(request: NextRequest): Promise<Response> {
   const { searchParams } = request.nextUrl;
