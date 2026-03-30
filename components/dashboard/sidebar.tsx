@@ -290,7 +290,7 @@ function UserMenu() {
           {isSystemUser && (
             <>
               <DropdownMenuItem asChild className="gap-2.5 mx-1 rounded-md">
-                <Link href="/admin/waitlist">
+                <Link href="/admin/overview">
                   <ShieldAlert className="size-4 text-muted-foreground" />
                   {t("admin")}
                 </Link>

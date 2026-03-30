@@ -13,7 +13,7 @@ export const clerkLocalizationEn: ClerkLocalization = {
     start: {
       ...enUS.signIn?.start,
       title: "Sign in to GateCtr",
-      subtitle: "Welcome back — control your LLM costs",
+      subtitle: "Welcome back — your LLM costs are waiting.",
     },
   },
   signUp: {

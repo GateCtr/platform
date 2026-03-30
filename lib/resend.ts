@@ -119,6 +119,38 @@ export async function sendUserWelcomeEmail(
   }
 }
 
+export async function sendBetaCouponEmail(
+  email: string,
+  name: string | null,
+  couponCode: string,
+  inviteCode: string,
+  position: number,
+  locale: "en" | "fr" = "en",
+) {
+  try {
+    const html = await render(
+      WaitlistBetaCouponEmail({
+        email,
+        name: name || undefined,
+        couponCode,
+        inviteCode,
+        position,
+        locale,
+      }),
+    );
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject: emailSubject(locale, "waitlistBetaCoupon"),
+      html,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to send beta coupon email:", error);
+    return { success: false, error };
+  }
+}
+
 // ─── Onboarding emails ────────────────────────────────────────────────────────
 
 import OnboardingCompleteEmail from "@/components/emails/onboarding-complete";
@@ -157,6 +189,7 @@ export async function sendOnboardingCompleteEmail(
 
 // ─── Billing emails ───────────────────────────────────────────────────────────
 
+import WaitlistBetaCouponEmail from "@/components/emails/waitlist-beta-coupon";
 import BillingUpgradeEmail from "@/components/emails/billing-upgrade";
 import BillingReceiptEmail from "@/components/emails/billing-receipt";
 import BillingPaymentFailedEmail from "@/components/emails/billing-payment-failed";

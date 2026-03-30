@@ -13,5 +13,8 @@ export default defineConfig({
   },
   datasource: {
     url: process.env.DATABASE_URL ?? "",
+    // Shadow DB required by `prisma migrate dev` — use a dedicated Neon branch in production
+    // Create one at: https://console.neon.tech → your project → Branches → New branch
+    shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL,
   },
 });

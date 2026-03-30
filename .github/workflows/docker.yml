@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, develop]
     tags:
-      - 'v*'
+      - "v*"
   pull_request:
     branches: [main]
 
@@ -180,10 +180,10 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:sha-${{ steps.sha.outputs.short }}
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: "sarif"
+          output: "trivy-results.sarif"
 
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: "trivy-results.sarif"

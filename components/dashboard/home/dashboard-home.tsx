@@ -11,6 +11,10 @@ import {
   TrendingUp,
   Activity,
   DollarSign,
+  Terminal,
+  BookOpen,
+  Code2,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -261,6 +265,90 @@ function SetupChecklist({
   );
 }
 
+// ── Quick Start ───────────────────────────────────────────────────────────────
+
+function QuickStart({ t }: { t: ReturnType<typeof useTranslations> }) {
+  const methods = [
+    {
+      icon: <Terminal className="size-4 text-primary" />,
+      label: "Node.js SDK",
+      code: "npm install @gatectr/sdk",
+      href: "https://docs.gatectr.com/docs/sdks/node",
+    },
+    {
+      icon: <Code2 className="size-4 text-primary" />,
+      label: "Python SDK",
+      code: "pip install gatectr",
+      href: "https://docs.gatectr.com/docs/sdks/python",
+    },
+    {
+      icon: <Zap className="size-4 text-primary" />,
+      label: "REST API",
+      code: "POST /api/v1/complete",
+      href: "https://docs.gatectr.com/docs/api-reference/complete",
+    },
+  ];
+
+  return (
+    <div className="rounded-xl border bg-card p-5 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-0.5">
+          <p className="text-sm font-medium">{t("quickStart.title")}</p>
+          <p className="text-xs text-muted-foreground">
+            {t("quickStart.subtitle")}
+          </p>
+        </div>
+        <a
+          href="https://docs.gatectr.com/docs/getting-started/quickstart"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <BookOpen className="size-3.5" />
+          {t("quickStart.docs")}
+          <ExternalLink className="size-3" />
+        </a>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        {methods.map((m) => (
+          <a
+            key={m.label}
+            href={m.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col gap-2 rounded-lg border bg-muted/30 px-3 py-3 hover:bg-accent/50 transition-colors group"
+          >
+            <div className="flex items-center gap-2">
+              {m.icon}
+              <span className="text-xs font-medium">{m.label}</span>
+              <ExternalLink className="size-3 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <code className="text-[11px] font-mono text-muted-foreground bg-background rounded px-2 py-1 truncate">
+              {m.code}
+            </code>
+          </a>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-2 rounded-lg border border-dashed bg-muted/20 px-4 py-3">
+        <div className="size-1.5 rounded-full bg-primary shrink-0" />
+        <p className="text-xs text-muted-foreground">
+          {t("quickStart.hint")}{" "}
+          <a
+            href="https://docs.gatectr.com/docs/getting-started/quickstart"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-2 hover:no-underline"
+          >
+            {t("quickStart.hintLink")}
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export function DashboardHome({
@@ -285,6 +373,11 @@ export function DashboardHome({
   const showSetup =
     !setupSteps.hasProvider || !setupSteps.hasProject || !setupSteps.hasBudget;
   const showStats = setupSteps.hasProvider;
+  const showQuickStart =
+    !showSetup &&
+    setupSteps.hasProvider &&
+    stats.requestsToday === 0 &&
+    stats.tokensMonth === 0;
 
   return (
     <div className="space-y-8">
@@ -309,6 +402,9 @@ export function DashboardHome({
 
       {/* ── Setup checklist ─────────────────────────────────────────────── */}
       {showSetup && <SetupChecklist t={t} steps={setupSteps} />}
+
+      {/* ── Quick start — shown after setup, before first API call ──────── */}
+      {showQuickStart && <QuickStart t={t} />}
 
       {/* ── Stat cards ──────────────────────────────────────────────────── */}
       {showStats && (

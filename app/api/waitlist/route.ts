@@ -89,6 +89,10 @@ export async function POST(request: NextRequest) {
         : localeFromAcceptLanguage(request.headers.get("accept-language"));
 
     // Create waitlist entry
+    // Position = actual rank among non-deleted entries (not autoincrement)
+    const activeCount = await prisma.waitlistEntry.count({
+      where: { status: { not: "SKIPPED" } },
+    });
     const entry = await prisma.waitlistEntry.create({
       data: {
         email: validatedData.email,
@@ -100,6 +104,7 @@ export async function POST(request: NextRequest) {
         userAgent,
         referralCode: newReferralCode,
         referredBy: referredById,
+        position: activeCount + 1,
       },
     });
 
@@ -214,7 +219,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const [entries, total] = await Promise.all([
+    const [entries, total, statusCounts] = await Promise.all([
       prisma.waitlistEntry.findMany({
         where,
         orderBy: { position: "asc" },
@@ -222,7 +227,17 @@ export async function GET(request: NextRequest) {
         take: limit,
       }),
       prisma.waitlistEntry.count({ where }),
+      prisma.waitlistEntry.groupBy({
+        by: ["status"],
+        _count: { status: true },
+      }),
     ]);
+
+    const counts = { WAITING: 0, INVITED: 0, JOINED: 0, SKIPPED: 0 };
+    for (const row of statusCounts) {
+      counts[row.status as keyof typeof counts] = row._count.status;
+    }
+    const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
 
     return NextResponse.json({
       entries,
@@ -231,6 +246,13 @@ export async function GET(request: NextRequest) {
         limit,
         total,
         pages: Math.ceil(total / limit),
+      },
+      counts: {
+        total: totalAll,
+        waiting: counts.WAITING,
+        invited: counts.INVITED,
+        joined: counts.JOINED,
+        skipped: counts.SKIPPED,
       },
     });
   } catch (error) {

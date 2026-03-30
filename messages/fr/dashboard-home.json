@@ -36,5 +36,12 @@
     "createProjectDesc": "Organisez les requêtes et définissez des budgets par projet.",
     "setBudget": "Définir un budget",
     "setBudgetDesc": "Limites strictes. Zéro facture surprise."
+  },
+  "quickStart": {
+    "title": "Faites votre premier appel API.",
+    "subtitle": "Changez l'URL d'endpoint. Gardez votre code.",
+    "docs": "Documentation",
+    "hint": "Configuration en 5 min. Guide pas à pas →",
+    "hintLink": "Guide de démarrage rapide"
   }
 }
