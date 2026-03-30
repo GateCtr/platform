@@ -49,11 +49,11 @@ describe("fillTrendGaps", () => {
         fc.array(
           fc.record({
             day: fc
-              .date({
-                min: new Date("2020-01-01"),
-                max: new Date("2026-12-31"),
+              .integer({
+                min: new Date("2020-01-01").getTime(),
+                max: new Date("2026-12-31").getTime(),
               })
-              .map((d) => d.toISOString().slice(0, 10)),
+              .map((ms) => new Date(ms).toISOString().slice(0, 10)),
             count: fc.nat(),
           }),
         ),
