@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Tarifs — GateCtr",
-    "description": "Plan gratuit pour démarrer. Pro à $29/mois. Team à $99/mois. Enterprise sur devis. Vous payez votre provider LLM directement — GateCtr facture la couche de contrôle."
+    "title": "Tarifs — GateCtr. Zéro commission sur les tokens.",
+    "description": "Plan gratuit pour démarrer. Pro à 29 $/mois — économies moyennes de 80–120 $/mois sur les tokens. Vous payez votre provider LLM directement."
   },
   "hero": {
     "badge": "Zéro commission sur les tokens. Jamais.",
@@ -150,8 +150,8 @@
   "cta": {
     "headline": "Démarrez gratuitement. Upgradez quand vous en avez besoin.",
     "description": "Budget Firewall et Analytics sur le plan gratuit. Sans carte bancaire.",
-    "ctaPrimary": "Démarrer gratuitement",
-    "ctaSecondary": "Réserver une démo",
+    "ctaPrimary": "Voir vos économies — gratuit",
+    "ctaSecondary": "Essayer la démo live",
     "trust": "Sans carte bancaire · Annulez à tout moment"
   }
 }

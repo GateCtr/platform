@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { SignIn } from "@clerk/nextjs";
 import { getTranslations } from "next-intl/server";
+import { SignInForm } from "@/components/auth/sign-in-form";
 
 export async function generateMetadata({
   params,
@@ -18,11 +18,6 @@ export async function generateMetadata({
   };
 }
 
-/**
- * Sign-in page
- * Available at /sign-in (English) and /fr/sign-in (French)
- * Requirements: 1.1, 1.4, 1.8
- */
 export default function SignInPage() {
-  return <SignIn signUpUrl="/sign-up" fallbackRedirectUrl="/dashboard" />;
+  return <SignInForm />;
 }

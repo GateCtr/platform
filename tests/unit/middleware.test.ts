@@ -204,9 +204,11 @@ describe("Public routes allow unauthenticated access (Req 2.2)", () => {
     "/sign-in",
     "/sign-in/sso-callback",
     "/sign-up",
-    "/sign-up/verify",
+    "/forgot-password",
     "/fr/sign-in",
+    "/fr/sign-in/sso-callback",
     "/fr/sign-up",
+    "/fr/forgot-password",
   ];
 
   // Replicate the isPublicRoute logic from proxy.ts
@@ -221,8 +223,10 @@ describe("Public routes allow unauthenticated access (Req 2.2)", () => {
       /^\/api\/health$/,
       /^\/sign-in(\/.*)?$/,
       /^\/sign-up(\/.*)?$/,
+      /^\/forgot-password(\/.*)?$/,
       /^\/fr\/sign-in(\/.*)?$/,
       /^\/fr\/sign-up(\/.*)?$/,
+      /^\/fr\/forgot-password(\/.*)?$/,
     ];
     return patterns.some((p) => p.test(pathname));
   }

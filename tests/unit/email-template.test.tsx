@@ -17,6 +17,7 @@ vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://app.gatectr.com");
 describe("UserWelcomeEmail", () => {
   beforeEach(() => {
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://app.gatectr.com");
+    vi.stubEnv("NEXT_PUBLIC_MARKETING_URL", "https://gatectr.com");
   });
 
   describe("English locale (default)", () => {
@@ -58,8 +59,7 @@ describe("UserWelcomeEmail", () => {
         <UserWelcomeEmail email="alice@example.com" locale="en" />,
       );
 
-      expect(html).toContain("/dashboard");
-      // English locale should NOT have /fr/ prefix
+      expect(html).toContain("https://app.gatectr.com/dashboard");
       expect(html).not.toContain("/fr/dashboard");
     });
 
@@ -121,7 +121,7 @@ describe("UserWelcomeEmail", () => {
         <UserWelcomeEmail email="alice@example.com" locale="fr" />,
       );
 
-      expect(html).toContain("/fr/dashboard");
+      expect(html).toContain("https://app.gatectr.com/fr/dashboard");
     });
 
     it("renders French feature descriptions", async () => {
@@ -150,7 +150,9 @@ describe("UserWelcomeEmail", () => {
       );
 
       expect(html).toContain("unsubscribe");
-      expect(html).toContain("alice@example.com");
+      expect(html).toContain(
+        `email=${encodeURIComponent("alice@example.com")}`,
+      );
     });
 
     it("includes unsubscribe link with encoded email in French", async () => {
@@ -159,7 +161,9 @@ describe("UserWelcomeEmail", () => {
       );
 
       expect(html).toContain("unsubscribe");
-      expect(html).toContain("alice@example.com");
+      expect(html).toContain(
+        `email=${encodeURIComponent("alice@example.com")}`,
+      );
     });
 
     it("unsubscribe link uses the app URL", async () => {
@@ -178,7 +182,26 @@ describe("UserWelcomeEmail", () => {
       );
 
       expect(html).toContain("unsubscribe");
-      expect(html).toContain("user@test.com");
+      expect(html).toContain(`email=${encodeURIComponent("user@test.com")}`);
+      expect(html).toContain("https://app.gatectr.com/unsubscribe");
+    });
+
+    it("footer legal links use marketing origin, not app", async () => {
+      const html = await render(
+        <UserWelcomeEmail email="alice@example.com" locale="en" />,
+      );
+
+      expect(html).toContain("https://gatectr.com/privacy");
+      expect(html).toContain("https://gatectr.com/terms");
+    });
+
+    it("footer legal links use /fr/ for French locale", async () => {
+      const html = await render(
+        <UserWelcomeEmail email="alice@example.com" locale="fr" />,
+      );
+
+      expect(html).toContain("https://gatectr.com/fr/privacy");
+      expect(html).toContain("https://gatectr.com/fr/terms");
     });
   });
 
@@ -193,6 +216,7 @@ describe("UserWelcomeEmail", () => {
       const html = await render(<UserWelcomeEmail email="alice@example.com" />);
 
       expect(html).toContain("gatectr.com");
+      expect(html).toContain("©");
     });
 
     it("defaults to English locale when no locale prop is provided", async () => {

@@ -1,14 +1,14 @@
 {
   "metadata": {
-    "title": "Accès anticipé",
-    "description": "Réduisez vos coûts LLM de 40%. Sans toucher à votre code. Rejoignez la liste d'attente GateCtr.",
+    "title": "Accès anticipé — GateCtr",
+    "description": "Réduisez vos coûts LLM jusqu'à 40%. Sans toucher à votre code. Rejoignez la liste d'attente GateCtr.",
     "ogTitle": "Rejoignez la liste d'attente GateCtr",
-    "ogDescription": "Réduisez vos coûts LLM de 40%. Un seul changement d'endpoint. Demandez un accès anticipé."
+    "ogDescription": "Réduisez vos coûts LLM jusqu'à 40%. Un seul changement d'endpoint. Demandez un accès anticipé."
   },
   "page": {
-    "title": "Réduisez vos coûts LLM de 40%.",
-    "subtitle": "Sans toucher à votre code.",
-    "description": "Un seul changement d'endpoint. Contrôle total sur les tokens, budgets et le routage."
+    "title": "Réduisez vos coûts LLM jusqu'à 40%.",
+    "subtitle": "Un seul changement d'endpoint. Zéro modification de code.",
+    "description": "GateCtr compresse les prompts, route vers le modèle le moins cher, et applique les budgets — automatiquement."
   },
   "section": {
     "contact": "Vos coordonnées",

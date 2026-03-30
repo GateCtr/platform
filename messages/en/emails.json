@@ -1,0 +1,245 @@
+{
+  "subjects": {
+    "waitlistWelcome": "You're #{position} on the GateCtr waitlist!",
+    "waitlistInvite": "Your GateCtr invite is ready!",
+    "userWelcome": "Welcome to GateCtr",
+    "onboardingComplete": "{workspace} is ready — GateCtr is live",
+    "billingUpgrade": "Your {plan} plan is active",
+    "billingReceipt": "Your GateCtr receipt",
+    "billingPaymentFailed": "Payment failed — action required",
+    "billingRenewalReminder": "Your subscription renews in 7 days",
+    "billingCancellation": "Cancellation scheduled — access until {date}",
+    "billingDowngrade": "Your plan has changed",
+    "userSuspended": "Your GateCtr account has been suspended",
+    "userBanned": "Your GateCtr account has been banned",
+    "userReactivated": "Your GateCtr account has been reactivated",
+    "userDeleted": "Your GateCtr account has been deleted",
+    "teamInvitation": "{inviter} invited you to join {team}"
+  },
+  "brand": {
+    "productName": "GateCtr",
+    "tagline": "AI Cost Infrastructure · Zero code changes"
+  },
+  "layout": {
+    "copyright": "© {year} GateCtr SAS. All rights reserved.",
+    "websiteLabel": "gatectr.com",
+    "unsubscribe": "Unsubscribe",
+    "directLink": "Direct link:",
+    "questionsReply": "Questions? Reply to this email.",
+    "supportEmail": "support@gatectr.com",
+    "footerTransactional": "This message is sent by GateCtr SAS in connection with the GateCtr service. If you believe you received it in error, contact {support}.",
+    "privacyLabel": "Privacy Policy",
+    "termsLabel": "Terms of Service"
+  },
+  "marketing": {
+    "features": {
+      "budgetFirewall": {
+        "title": "Budget Firewall",
+        "description": "Hard caps. Soft alerts. No surprise invoices."
+      },
+      "contextOptimizer": {
+        "title": "Context Optimizer",
+        "description": "-40% tokens. Same output quality."
+      },
+      "modelRouter": {
+        "title": "Model Router",
+        "description": "GateCtr picks the right LLM. You pay less."
+      },
+      "usageDashboard": {
+        "title": "Usage Dashboard",
+        "description": "Every token. Every cost. Real-time."
+      }
+    },
+    "waitlistWelcome": {
+      "positionLabel": "YOUR POSITION",
+      "featuresHeading": "What's waiting for you"
+    }
+  },
+  "userWelcome": {
+    "preview": "Your GateCtr workspace is ready.",
+    "hi": "Hi",
+    "hiDefault": "Hi,",
+    "headline": "You're in. Start saving.",
+    "body": "Your account is live. Connect your first LLM provider and GateCtr starts optimizing immediately.",
+    "cta": "Open dashboard",
+    "hint": "Questions? Reply to this email.",
+    "items": [
+      {
+        "title": "Budget Firewall",
+        "description": "Hard caps. Soft alerts. No surprise invoices."
+      },
+      {
+        "title": "Context Optimizer",
+        "description": "-40% tokens. Same output quality."
+      },
+      {
+        "title": "Model Router",
+        "description": "GateCtr picks the right LLM. You pay less."
+      }
+    ]
+  },
+  "waitlistWelcome": {
+    "preview": "Position #{position} on the GateCtr waitlist. We'll email you when your spot opens.",
+    "greetingNamed": "Hi {name},",
+    "greeting": "Hi,",
+    "headline": "You're in. Position #{position}.",
+    "body": "We'll email {email} when your spot opens. No spam. One email."
+  },
+  "waitlistInvite": {
+    "preview": "Your GateCtr spot is open. {days} days left.",
+    "greetingNamed": "Hi {name},",
+    "greeting": "Hi,",
+    "headline": "Your spot is open.",
+    "body": "Connect in 5 min. Your API key stays yours. GateCtr routes, optimizes, and controls — you just save.",
+    "inviteCodeLabel": "INVITE CODE",
+    "cta": "Create your account",
+    "stepsHeading": "5 min setup",
+    "step1": "Create your account with {email}",
+    "step2": "Add your LLM API keys (OpenAI, Anthropic, Mistral…)",
+    "step3": "Swap your endpoint URL. That's it.",
+    "expiresIn": "Expires in {days} {daysLabel}.",
+    "day": "day",
+    "days": "days",
+    "hint": "Questions? Reply to this email."
+  },
+  "teamInvitation": {
+    "preview": "{inviter} invited you to join {team} on GateCtr",
+    "greetingNamed": "Hi {name},",
+    "greeting": "Hi,",
+    "headline": "You've been invited to join {team}",
+    "body": "{inviter} invited you to join the {team} team as {role}. Connect in 5 min. Your API key stays yours.",
+    "cta": "Accept invitation",
+    "expiry": "This invitation expires in {days} {daysLabel}.",
+    "day": "day",
+    "days": "days",
+    "directLink": "Direct link:",
+    "hint": "Questions? Reply to this email."
+  },
+  "onboardingComplete": {
+    "preview": "{workspace} is ready. Your first request is already optimized.",
+    "hi": "Hi",
+    "hiDefault": "Hi,",
+    "headline": "Setup complete. GateCtr is live.",
+    "body": "Your workspace \"{workspace}\" is configured. Every LLM request now goes through GateCtr — optimized, measured, and under budget control.",
+    "cta": "Open dashboard",
+    "nextStepsLabel": "What's next",
+    "stepsWithProvider": [
+      {
+        "title": "Make your first API call",
+        "description": "Swap your endpoint URL. Keep your existing code. Done."
+      },
+      {
+        "title": "Watch the dashboard",
+        "description": "Every token, every cost — real-time."
+      },
+      {
+        "title": "Set up a webhook",
+        "description": "Get Slack or Teams alerts when you hit 80% of your budget."
+      }
+    ],
+    "stepsWithoutProvider": [
+      {
+        "title": "Connect a provider",
+        "description": "Add your OpenAI, Anthropic, or Mistral key in Settings."
+      },
+      {
+        "title": "Make your first API call",
+        "description": "Swap your endpoint URL. Keep your existing code."
+      },
+      {
+        "title": "Watch the dashboard",
+        "description": "Every token, every cost — real-time."
+      }
+    ],
+    "hint": "Questions? Reply to this email — we read every one."
+  },
+  "billingUpgrade": {
+    "preview": "You're now on {plan}. More power, same control.",
+    "headline": "{plan} is active.",
+    "body": "Your plan has been upgraded to {plan}. New limits and features are live immediately. No restart needed.",
+    "cta": "View your plan",
+    "hint": "Questions about your billing? Reply to this email."
+  },
+  "billingReceipt": {
+    "preview": "Payment confirmed — {amount}",
+    "headline": "Payment confirmed.",
+    "body": "Your GateCtr subscription has been renewed. Here's your receipt.",
+    "amountLabel": "Amount charged",
+    "cta": "Download invoice",
+    "hint": "Questions about this charge? Reply to this email."
+  },
+  "billingPaymentFailed": {
+    "preview": "Payment failed. Update your payment method to keep access.",
+    "alert": "⚠️ Action required",
+    "headline": "Payment failed.",
+    "body": "We couldn't process your payment. Update your payment method to keep your plan active. Access continues for now — act before your next retry.",
+    "cta": "Update payment method",
+    "hint": "Need help? Reply to this email."
+  },
+  "billingRenewalReminder": {
+    "preview": "Your GateCtr subscription renews on {date}.",
+    "headline": "Renewal in 7 days.",
+    "body": "Your subscription renews on {date} for {amount}. No action needed — we'll charge your card on file automatically.",
+    "dateLabel": "Renewal date:",
+    "amountLabel": "Amount:",
+    "cta": "Manage billing",
+    "hint": "Want to change your plan? Visit billing settings."
+  },
+  "billingDowngrade": {
+    "preview": "Your plan has been downgraded to Free.",
+    "headline": "You're on the Free plan.",
+    "body": "Your subscription has ended and your account has been moved to the Free plan. Your data is safe — you just have fewer limits now.",
+    "lostLabel": "Features no longer available:",
+    "cta": "Reactivate plan",
+    "hint": "Changed your mind? Reactivate anytime — no setup required."
+  },
+  "billingCancellation": {
+    "preview": "Your {plan} subscription is scheduled to cancel on {date}.",
+    "headline": "Cancellation scheduled.",
+    "body": "Your {plan} subscription will not renew. You keep full access until your current period ends.",
+    "accessLabel": "Access until",
+    "resumeHint": "Changed your mind? You can resume your subscription anytime before that date.",
+    "cta": "Resume subscription",
+    "hint": "Questions? Reply to this email."
+  },
+  "userSuspended": {
+    "preview": "Your GateCtr account has been temporarily suspended.",
+    "hi": "Hi",
+    "hiDefault": "Hi,",
+    "headline": "Your account has been suspended.",
+    "body": "Your GateCtr account has been temporarily suspended. You cannot sign in or make API requests during this period.",
+    "info": "This suspension is temporary. Our team will review your account and contact you within 48 hours.",
+    "appeal": "If you believe this is a mistake, you can appeal by contacting our support team.",
+    "contact": "Need help?",
+    "supportLink": "Contact support"
+  },
+  "userBanned": {
+    "preview": "Your GateCtr account has been permanently banned.",
+    "hi": "Hi",
+    "hiDefault": "Hi,",
+    "headline": "Your account has been banned.",
+    "body": "Your GateCtr account has been permanently banned. All active sessions have been terminated and API access has been revoked.",
+    "reasonLabel": "Reason",
+    "dataNote": "Your data will be retained for 30 days in accordance with our data retention policy, then permanently deleted.",
+    "contact": "If you believe this decision is incorrect, contact us at",
+    "supportLink": "support"
+  },
+  "userReactivated": {
+    "preview": "Your GateCtr account has been reactivated.",
+    "hi": "Hi",
+    "hiDefault": "Hi,",
+    "headline": "Your account is active again.",
+    "body": "Your GateCtr account has been reactivated. You can sign in and resume using the platform immediately.",
+    "cta": "Open dashboard",
+    "contact": "Questions? Contact us at"
+  },
+  "userDeleted": {
+    "preview": "Your GateCtr account has been deleted.",
+    "hi": "Hi",
+    "hiDefault": "Hi,",
+    "headline": "Your account has been deleted.",
+    "body": "Your GateCtr account and all associated data have been permanently deleted. All active sessions have been terminated.",
+    "dataNote": "In accordance with GDPR and our data retention policy, any residual data will be purged within 30 days.",
+    "contact": "If you did not request this or have questions, contact us at"
+  }
+}

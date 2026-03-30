@@ -4,6 +4,13 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { logAudit } from "@/lib/audit";
 import { sendUserWelcomeEmail } from "@/lib/resend";
+import { emailSubject } from "@/lib/email-subjects";
+import {
+  clerkUserPayloadMetadata,
+  mergeUserMetadata,
+  normalizeLocale,
+  resolveLocaleForNewClerkUser,
+} from "@/lib/user-locale";
 
 /**
  * Clerk Webhook Handler
@@ -196,6 +203,22 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
     return;
   }
 
+  const payload = evt.data as unknown as Record<string, unknown>;
+  const { publicMetadata: clerkPublic, unsafeMetadata: clerkUnsafe } =
+    clerkUserPayloadMetadata(payload);
+
+  const waitlistForLocale = await prisma.waitlistEntry.findUnique({
+    where: { email },
+    select: { locale: true },
+  });
+  const locale = waitlistForLocale?.locale
+    ? normalizeLocale(waitlistForLocale.locale)
+    : resolveLocaleForNewClerkUser({
+        publicMetadata: clerkPublic,
+        unsafeMetadata: clerkUnsafe,
+        acceptLanguageHeader: req.headers.get("accept-language"),
+      });
+
   // Create user in database — no system role assigned, plan is the access control
   const authProvider = (external_accounts?.[0]?.provider ?? "email")
     .replace("oauth_", "")
@@ -210,6 +233,7 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
       plan: "FREE",
       isActive: true,
       authProvider,
+      metadata: mergeUserMetadata({}, { locale }) as object,
     },
   });
 
@@ -233,18 +257,22 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
     console.error("Failed to redeem waitlist entry:", err);
   }
 
-  // Set onboardingComplete: false in Clerk publicMetadata immediately.
-  // This ensures the JWT always has the key explicitly set, so the middleware
-  // can distinguish "not done yet" (false) from "stale JWT" (undefined).
+  // Set onboardingComplete + locale in Clerk publicMetadata (merge; do not wipe other keys).
   try {
     const { clerkClient } = await import("@clerk/nextjs/server");
     const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(id);
+    const prevPm = (clerkUser.publicMetadata ?? {}) as Record<string, unknown>;
     await clerk.users.updateUser(id, {
-      publicMetadata: { onboardingComplete: false },
+      publicMetadata: {
+        ...prevPm,
+        onboardingComplete: false,
+        locale,
+      },
     });
   } catch (err) {
     // Non-fatal — onboarding gate will still work via DB fallback
-    console.error("Failed to set onboardingComplete in Clerk metadata:", err);
+    console.error("Failed to set Clerk publicMetadata after signup:", err);
   }
 
   // Log audit entry for user creation
@@ -263,11 +291,6 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
   });
 
   // Send welcome email asynchronously (don't block webhook response)
-  // Detect locale from browser if available, default to English
-  const acceptLanguage = req.headers.get("accept-language");
-  const locale = acceptLanguage?.toLowerCase().includes("fr") ? "fr" : "en";
-
-  // Send email without awaiting (fire and forget)
   sendUserWelcomeEmail(email, name, locale)
     .then(async (result) => {
       // Log email attempt to EmailLog table
@@ -276,8 +299,7 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
           userId: user.id,
           resendId: result.resendId || null,
           to: email,
-          subject:
-            locale === "fr" ? "Bienvenue sur GateCtr" : "Welcome to GateCtr",
+          subject: emailSubject(locale, "userWelcome"),
           template: "user-welcome",
           status: result.success ? "SENT" : "FAILED",
           error: result.success ? null : String(result.error),
@@ -333,6 +355,17 @@ async function handleUserUpdated(evt: WebhookEvent) {
     return;
   }
 
+  const data = evt.data as unknown as Record<string, unknown>;
+  const pm =
+    (data.public_metadata as Record<string, unknown> | undefined) ??
+    (data.publicMetadata as Record<string, unknown> | undefined);
+  const metadataUpdate =
+    pm != null && Object.prototype.hasOwnProperty.call(pm, "locale")
+      ? mergeUserMetadata(existingUser.metadata, {
+          locale: normalizeLocale(pm.locale),
+        })
+      : undefined;
+
   // Re-derive authProvider in case user linked a new OAuth account
   const authProvider =
     external_accounts && external_accounts.length > 0
@@ -349,6 +382,7 @@ async function handleUserUpdated(evt: WebhookEvent) {
       name,
       avatarUrl: image_url || null,
       authProvider,
+      ...(metadataUpdate ? { metadata: metadataUpdate as object } : {}),
     },
   });
 

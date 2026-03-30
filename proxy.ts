@@ -46,6 +46,8 @@ const isPublicRoute = createRouteMatcher([
   "/fr/sign-in(.*)",
   "/sign-up(.*)",
   "/fr/sign-up(.*)",
+  "/forgot-password(.*)",
+  "/fr/forgot-password(.*)",
   // Onboarding must be public so Clerk handshake doesn't redirect to sign-in
   // before userId is resolved. The onboarding gate below handles auth logic.
   "/onboarding",
@@ -129,6 +131,8 @@ export default clerkMiddleware(
         "/fr/sign-in",
         "/sign-up",
         "/fr/sign-up",
+        "/forgot-password",
+        "/fr/forgot-password",
       ];
       const appBase =
         process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com";
@@ -284,11 +288,14 @@ export default clerkMiddleware(
 
     // ── Waitlist redirect ─────────────────────────────────────────────────────
     const waitlistEnabled = process.env.ENABLE_WAITLIST === "true";
-    // When waitlist is active, /sign-up is always blocked regardless of ENABLE_SIGNUPS.
-    // Only invited users can sign up — enforced at the webhook level too.
+    // Waitlist: block generic sign-up unless the user has an invite link (?invite=…).
+    // Invited flow is still enforced server-side (Clerk webhook + invite validity).
     if (waitlistEnabled && pathname.includes("/sign-up")) {
-      const waitlistPath = locale === "fr" ? "/fr/waitlist" : "/waitlist";
-      return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
+      const invite = req.nextUrl.searchParams.get("invite")?.trim();
+      if (!invite) {
+        const waitlistPath = locale === "fr" ? "/fr/waitlist" : "/waitlist";
+        return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
+      }
     }
 
     // ── Auth pages — redirect authenticated users to dashboard ──────────────

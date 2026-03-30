@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Pricing — GateCtr",
-    "description": "Free plan to get started. Pro at $29/mo. Team at $99/mo. Enterprise on request. You pay your LLM provider directly — GateCtr charges for the control layer."
+    "title": "Pricing — GateCtr. Zero token commission.",
+    "description": "Free plan to start. Pro at $29/mo — average $80–120/mo in token savings. You pay your LLM provider directly. GateCtr charges for the control layer."
   },
   "hero": {
     "badge": "No token commission. Ever.",
@@ -150,8 +150,8 @@
   "cta": {
     "headline": "Start free. Upgrade when you need to.",
     "description": "Budget Firewall and Analytics on the free plan. No credit card.",
-    "ctaPrimary": "Start free",
-    "ctaSecondary": "Book a demo",
+    "ctaPrimary": "See your savings — free",
+    "ctaSecondary": "Try the live demo",
     "trust": "No credit card required · Cancel anytime"
   }
 }

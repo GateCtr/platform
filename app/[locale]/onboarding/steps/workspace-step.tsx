@@ -52,6 +52,7 @@ interface WorkspaceStepProps {
 
 export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
   const t = useTranslations("onboarding.workspace");
+  const tErr = useTranslations("onboarding.errors");
 
   const schema = z.object({
     workspaceName: z
@@ -72,9 +73,17 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
     const fd = new FormData();
     fd.set("workspaceName", values.workspaceName);
     fd.set("usageType", values.usageType);
-    const res = await createWorkspace(fd);
-    if (res?.error) {
+    let res: Awaited<ReturnType<typeof createWorkspace>>;
+    try {
+      res = await createWorkspace(fd);
+    } catch {
       form.setError("root", { message: t("errors.failed") });
+      return;
+    }
+    if (res?.error) {
+      const message =
+        res.error === "csrf_invalid" ? tErr("csrfInvalid") : t("errors.failed");
+      form.setError("root", { message });
       return;
     }
     onComplete();
@@ -182,8 +191,10 @@ export function WorkspaceStep({ onComplete }: WorkspaceStepProps) {
           className="w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {t("submit")}
+          <span className="inline-flex items-center justify-center gap-2">
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            <span>{t("submit")}</span>
+          </span>
         </Button>
       </form>
     </Form>

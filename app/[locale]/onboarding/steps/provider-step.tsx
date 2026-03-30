@@ -78,6 +78,7 @@ export function ProviderStep({
 }: ProviderStepProps) {
   const t = useTranslations("onboarding.provider");
   const tNav = useTranslations("onboarding.nav");
+  const tErr = useTranslations("onboarding.errors");
 
   const [selectedProvider, setSelectedProvider] =
     useState<ProviderId>("openai");
@@ -102,9 +103,23 @@ export function ProviderStep({
     fd.set("provider", values.provider);
     fd.set("apiKey", values.apiKey);
     fd.set("name", values.name || "Default");
-    const res = await connectProvider(fd);
-    if (res?.error) {
+    let res: Awaited<ReturnType<typeof connectProvider>>;
+    try {
+      res = await connectProvider(fd);
+    } catch {
       form.setError("root", { message: t("errors.failed") });
+      return;
+    }
+    if (res?.error) {
+      const message =
+        res.error === "csrf_invalid"
+          ? tErr("csrfInvalid")
+          : res.error === "provider_required"
+            ? t("errors.providerRequired")
+            : res.error === "key_required"
+              ? t("errors.keyRequired")
+              : t("errors.failed");
+      form.setError("root", { message });
       return;
     }
     onComplete();
@@ -263,17 +278,14 @@ export function ProviderStep({
           className="w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t("connecting")}
-            </>
-          ) : (
-            <>
-              <ShieldCheck className="mr-2 h-4 w-4" />
-              {t("submit")}
-            </>
-          )}
+          <span className="inline-flex items-center justify-center gap-2">
+            {isSubmitting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ShieldCheck className="h-4 w-4" />
+            )}
+            <span>{isSubmitting ? t("connecting") : t("submit")}</span>
+          </span>
         </Button>
 
         {/* Skip section */}

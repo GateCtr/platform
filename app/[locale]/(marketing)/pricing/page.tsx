@@ -7,6 +7,7 @@ import { Link } from "@/i18n/routing";
 import { ArrowRight, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Pricing } from "@/components/marketing/pricing";
+import { appUrl } from "@/lib/app-url";
 
 type AddonItem = { model: string; description: string; segment: string };
 type FaqItem = { q: string; a: string };
@@ -187,13 +188,13 @@ export default function PricingPage() {
           <p className="text-muted-foreground mb-8">{t("cta.description")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
             <Button variant="cta-primary" size="lg" asChild>
-              <Link href="/sign-up">
+              <a href={appUrl("/sign-up")}>
                 {t("cta.ctaPrimary")}
                 <ArrowRight className="size-4" />
-              </Link>
+              </a>
             </Button>
             <Button variant="cta-secondary" size="lg" asChild>
-              <Link href="/contact">{t("cta.ctaSecondary")}</Link>
+              <Link href="/demo">{t("cta.ctaSecondary")}</Link>
             </Button>
           </div>
           <p className="text-xs text-muted-foreground/60">{t("cta.trust")}</p>

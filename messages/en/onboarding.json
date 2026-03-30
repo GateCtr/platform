@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "title": "Setup",
-    "description": "30 seconds. Your workspace is ready."
+    "title": "Setup — GateCtr",
+    "description": "Connect your LLM. Set your budget. Up and running in 30 seconds."
   },
   "panel": {
-    "eyebrow": "Setup",
-    "headline": "One gateway.\nEvery LLM.",
+    "eyebrow": "AI Cost Infrastructure",
+    "headline": "Cut LLM costs\nby up to 40%.",
     "tagline": "Swap your endpoint. Keep your keys.\nGateCtr controls. You save.",
     "features": {
       "optimizer": {
@@ -36,6 +36,11 @@
   },
   "nav": {
     "back": "Back"
+  },
+  "errors": {
+    "csrfInvalid": "This request was blocked: the page origin does not match NEXT_PUBLIC_APP_URL. If you use a tunnel or preview URL, add that base URL to CSRF_EXTRA_ORIGINS in .env.local (see .env.local.example).",
+    "finalizeFailed": "We couldn’t finish setup. Check your connection and try again. If you use a tunnel or custom URL, set CSRF_EXTRA_ORIGINS in .env to that origin.",
+    "csrfHint": "If you access the app via a URL different from NEXT_PUBLIC_APP_URL, add it to CSRF_EXTRA_ORIGINS (see .env.local.example)."
   },
   "workspace": {
     "title": "Set up your workspace.",
@@ -83,7 +88,7 @@
   },
   "budget": {
     "title": "Set your budget.",
-    "subtitle": "No surprise invoices.",
+    "subtitle": "Blocked before it reaches the LLM.",
     "monthlyLimit": {
       "label": "Monthly token limit",
       "unit": "tokens / month",

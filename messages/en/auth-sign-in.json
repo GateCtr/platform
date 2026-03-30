@@ -1,0 +1,23 @@
+{
+  "title": "Welcome back.",
+  "subtitle": "Sign in to your workspace.",
+  "emailLabel": "Email",
+  "emailPlaceholder": "you@company.com",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Your password",
+  "submit": "Sign in",
+  "submitting": "Signing in…",
+  "forgotPassword": "Forgot password?",
+  "noAccount": "No account?",
+  "signUpCta": "Create account",
+  "divider": "or continue with",
+  "oauthGoogle": "Google",
+  "oauthGithub": "GitHub",
+  "oauthGitlab": "GitLab",
+  "mfaTitle": "Check your email",
+  "mfaSubtitle": "Enter the verification code we sent you.",
+  "mfaCodeLabel": "Verification code",
+  "mfaSubmit": "Verify",
+  "mfaResend": "Resend code",
+  "mfaBack": "Back to sign in"
+}

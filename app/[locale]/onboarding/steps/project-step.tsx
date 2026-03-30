@@ -45,6 +45,7 @@ export function ProjectStep({
 }: ProjectStepProps) {
   const t = useTranslations("onboarding.project");
   const tNav = useTranslations("onboarding.nav");
+  const tErr = useTranslations("onboarding.errors");
 
   const schema = z.object({
     projectName: z
@@ -63,12 +64,20 @@ export function ProjectStep({
   async function onSubmit(values: ProjectValues) {
     const fd = new FormData();
     fd.set("projectName", values.projectName);
-    const res = await createFirstProject(fd);
+    let res: Awaited<ReturnType<typeof createFirstProject>>;
+    try {
+      res = await createFirstProject(fd);
+    } catch {
+      form.setError("root", { message: t("errors.failed") });
+      return;
+    }
     if (res?.error) {
       const msg =
-        res.error === "quota_exceeded"
-          ? t("errors.quotaExceeded")
-          : t("errors.failed");
+        res.error === "csrf_invalid"
+          ? tErr("csrfInvalid")
+          : res.error === "quota_exceeded"
+            ? t("errors.quotaExceeded")
+            : t("errors.failed");
       form.setError("root", { message: msg });
       return;
     }
@@ -158,18 +167,23 @@ export function ProjectStep({
           className="w-full group"
           disabled={isSubmitting || isFinishing}
         >
-          {isSubmitting || isFinishing ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {isFinishing ? t("finishing") : t("submitting")}
-            </>
-          ) : (
-            <>
-              <Sparkles className="mr-2 h-4 w-4" />
-              {t("submit")}
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </>
-          )}
+          <span className="inline-flex w-full min-w-0 items-center justify-center gap-2">
+            {isSubmitting || isFinishing ? (
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+            ) : (
+              <Sparkles className="h-4 w-4 shrink-0" />
+            )}
+            <span className="min-w-0">
+              {isFinishing
+                ? t("finishing")
+                : isSubmitting
+                  ? t("submitting")
+                  : t("submit")}
+            </span>
+            {!isSubmitting && !isFinishing && (
+              <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+            )}
+          </span>
         </Button>
 
         <div className="flex gap-2">

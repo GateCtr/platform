@@ -13,6 +13,15 @@ export default getRequestConfig(async ({ requestLocale }) => {
     common: (await import(`../messages/${locale}/common.json`)).default,
     waitlist: (await import(`../messages/${locale}/waitlist.json`)).default,
     auth: (await import(`../messages/${locale}/auth.json`)).default,
+    authSignIn: (await import(`../messages/${locale}/auth-sign-in.json`))
+      .default,
+    authSignUp: (await import(`../messages/${locale}/auth-sign-up.json`))
+      .default,
+    authForgotPassword: (
+      await import(`../messages/${locale}/auth-forgot-password.json`)
+    ).default,
+    authErrors: (await import(`../messages/${locale}/auth-errors.json`))
+      .default,
     onboarding: (await import(`../messages/${locale}/onboarding.json`)).default,
     home: (await import(`../messages/${locale}/home.json`)).default,
     features: (await import(`../messages/${locale}/features.json`)).default,
@@ -84,6 +93,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     careers: (await import(`../messages/${locale}/careers.json`)).default,
     demo: (await import(`../messages/${locale}/demo.json`)).default,
     comparison: (await import(`../messages/${locale}/comparison.json`)).default,
+    emails: (await import(`../messages/${locale}/emails.json`)).default,
   };
 
   return {

@@ -15,6 +15,7 @@ import {
 import { CodeSnippet } from "@/components/ui/code-snippet";
 import { ComparisonTable } from "@/components/marketing/comparison-table";
 import { useState } from "react";
+import { appUrl } from "@/lib/app-url";
 
 // ─── Icon map ────────────────────────────────────────────────────────────────
 const ICONS = {
@@ -102,13 +103,19 @@ export default function FeaturesPage() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="cta-primary" size="lg" asChild>
-              <Link href="/sign-up">
+              <a href={appUrl("/sign-up")}>
                 {t("hero.ctaPrimary")}
                 <ArrowRight className="size-4" />
-              </Link>
+              </a>
             </Button>
             <Button variant="cta-secondary" size="lg" asChild>
-              <Link href="/docs">{t("hero.ctaSecondary")}</Link>
+              <a
+                href="https://docs.gatectr.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("hero.ctaSecondary")}
+              </a>
             </Button>
           </div>
         </div>
@@ -273,13 +280,13 @@ export default function FeaturesPage() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
             <Button variant="cta-primary" size="lg" asChild>
-              <Link href="/sign-up">
+              <a href={appUrl("/sign-up")}>
                 {t("cta.ctaPrimary")}
                 <ArrowRight className="size-4" />
-              </Link>
+              </a>
             </Button>
             <Button variant="cta-secondary" size="lg" asChild>
-              <Link href="/#pricing">{t("cta.ctaSecondary")}</Link>
+              <Link href="/pricing">{t("cta.ctaSecondary")}</Link>
             </Button>
           </div>
 

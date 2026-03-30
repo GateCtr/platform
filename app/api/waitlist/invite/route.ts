@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { prisma } from "@/lib/prisma";
 import { sendInviteEmail } from "@/lib/resend";
 import { isAdmin } from "@/lib/auth";
+import { normalizeLocale } from "@/lib/user-locale";
 import { rateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 
 const inviteSchema = z.object({
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
           inviteCode,
           expiresAt,
           expiryDays,
+          normalizeLocale(entry.locale),
         ).catch((err) =>
           console.error(`Failed to send invite to ${entry.email}:`, err),
         );

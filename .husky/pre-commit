@@ -1,1 +1,3 @@
-pnpm exec lint-staged
+#!/usr/bin/env sh
+# --no-stash: avoid git stash on App Router paths with []/() on Windows (Git pathspec globs).
+pnpm exec lint-staged --no-stash

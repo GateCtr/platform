@@ -1,0 +1,245 @@
+{
+  "subjects": {
+    "waitlistWelcome": "Vous êtes n°{position} sur la liste d'attente GateCtr !",
+    "waitlistInvite": "Votre invitation GateCtr est prête !",
+    "userWelcome": "Bienvenue sur GateCtr",
+    "onboardingComplete": "{workspace} est prêt — GateCtr est actif",
+    "billingUpgrade": "Votre plan {plan} est actif",
+    "billingReceipt": "Votre reçu GateCtr",
+    "billingPaymentFailed": "Paiement échoué — action requise",
+    "billingRenewalReminder": "Votre abonnement se renouvelle dans 7 jours",
+    "billingCancellation": "Annulation programmée — accès jusqu'au {date}",
+    "billingDowngrade": "Votre plan a été modifié",
+    "userSuspended": "Votre compte GateCtr a été suspendu",
+    "userBanned": "Votre compte GateCtr a été banni",
+    "userReactivated": "Votre compte GateCtr a été réactivé",
+    "userDeleted": "Votre compte GateCtr a été supprimé",
+    "teamInvitation": "{inviter} vous invite à rejoindre {team}"
+  },
+  "brand": {
+    "productName": "GateCtr",
+    "tagline": "Infrastructure de coût IA · Zéro modification de code"
+  },
+  "layout": {
+    "copyright": "© {year} GateCtr SAS. Tous droits réservés.",
+    "websiteLabel": "gatectr.com",
+    "unsubscribe": "Se désabonner",
+    "directLink": "Lien direct :",
+    "questionsReply": "Des questions ? Répondez à cet email.",
+    "supportEmail": "support@gatectr.com",
+    "footerTransactional": "Message envoyé par GateCtr SAS dans le cadre du service GateCtr. Si vous pensez l'avoir reçu par erreur, contactez {support}.",
+    "privacyLabel": "Politique de confidentialité",
+    "termsLabel": "Conditions d'utilisation"
+  },
+  "marketing": {
+    "features": {
+      "budgetFirewall": {
+        "title": "Budget Firewall",
+        "description": "Limites strictes. Alertes douces. Zéro facture surprise."
+      },
+      "contextOptimizer": {
+        "title": "Context Optimizer",
+        "description": "-40% de tokens. Même qualité de sortie."
+      },
+      "modelRouter": {
+        "title": "Model Router",
+        "description": "GateCtr choisit le bon LLM. Vous payez moins."
+      },
+      "usageDashboard": {
+        "title": "Usage Dashboard",
+        "description": "Chaque token. Chaque coût. En temps réel."
+      }
+    },
+    "waitlistWelcome": {
+      "positionLabel": "VOTRE POSITION",
+      "featuresHeading": "Ce qui vous attend"
+    }
+  },
+  "userWelcome": {
+    "preview": "Votre espace GateCtr est prêt.",
+    "hi": "Bonjour",
+    "hiDefault": "Bonjour,",
+    "headline": "C'est parti. Commencez à économiser.",
+    "body": "Votre compte est actif. Connectez votre premier provider LLM — GateCtr optimise immédiatement.",
+    "cta": "Ouvrir le tableau de bord",
+    "hint": "Des questions ? Répondez à cet email.",
+    "items": [
+      {
+        "title": "Budget Firewall",
+        "description": "Limites strictes. Alertes douces. Zéro facture surprise."
+      },
+      {
+        "title": "Context Optimizer",
+        "description": "-40% de tokens. Même qualité de sortie."
+      },
+      {
+        "title": "Model Router",
+        "description": "GateCtr choisit le bon LLM. Vous payez moins."
+      }
+    ]
+  },
+  "waitlistWelcome": {
+    "preview": "Position n°{position} sur la liste d'attente GateCtr. Nous vous écrirons dès qu'une place se libère.",
+    "greetingNamed": "Bonjour {name},",
+    "greeting": "Bonjour,",
+    "headline": "C'est noté. Position n°{position}.",
+    "body": "Nous écrirons à {email} dès qu'une place se libère. Pas de spam. Un seul email."
+  },
+  "waitlistInvite": {
+    "preview": "Votre place GateCtr est ouverte. Il reste {days} jours.",
+    "greetingNamed": "Bonjour {name},",
+    "greeting": "Bonjour,",
+    "headline": "Votre place est ouverte.",
+    "body": "Connexion en 5 min. Votre clé API reste la vôtre. GateCtr route, optimise et contrôle — vous économisez.",
+    "inviteCodeLabel": "CODE D'INVITATION",
+    "cta": "Créer mon compte",
+    "stepsHeading": "Configuration en 5 min",
+    "step1": "Créez votre compte avec {email}",
+    "step2": "Ajoutez vos clés API LLM (OpenAI, Anthropic, Mistral…)",
+    "step3": "Changez l'URL de votre endpoint. C'est tout.",
+    "expiresIn": "Expire dans {days} {daysLabel}.",
+    "day": "jour",
+    "days": "jours",
+    "hint": "Des questions ? Répondez à cet email."
+  },
+  "teamInvitation": {
+    "preview": "{inviter} vous invite à rejoindre {team} sur GateCtr",
+    "greetingNamed": "Bonjour {name},",
+    "greeting": "Bonjour,",
+    "headline": "Vous avez été invité à rejoindre {team}",
+    "body": "{inviter} vous invite à rejoindre l'équipe {team} en tant que {role}. Connectez-vous en 5 min. Votre clé API reste la vôtre.",
+    "cta": "Accepter l'invitation",
+    "expiry": "Cette invitation expire dans {days} {daysLabel}.",
+    "day": "jour",
+    "days": "jours",
+    "directLink": "Lien direct :",
+    "hint": "Des questions ? Répondez à cet email."
+  },
+  "onboardingComplete": {
+    "preview": "{workspace} est prêt. Votre première requête est déjà optimisée.",
+    "hi": "Bonjour",
+    "hiDefault": "Bonjour,",
+    "headline": "Configuration terminée. GateCtr est actif.",
+    "body": "Votre espace « {workspace} » est configuré. Chaque requête LLM passe désormais par GateCtr — optimisée, mesurée, sous contrôle budgétaire.",
+    "cta": "Ouvrir le tableau de bord",
+    "nextStepsLabel": "Prochaines étapes",
+    "stepsWithProvider": [
+      {
+        "title": "Faites votre premier appel API",
+        "description": "Changez l'URL d'endpoint. Gardez votre code. C'est tout."
+      },
+      {
+        "title": "Observez le dashboard",
+        "description": "Chaque token, chaque coût — en temps réel."
+      },
+      {
+        "title": "Configurez un webhook",
+        "description": "Recevez des alertes Slack ou Teams à 80% de votre budget."
+      }
+    ],
+    "stepsWithoutProvider": [
+      {
+        "title": "Connectez un provider",
+        "description": "Ajoutez votre clé OpenAI, Anthropic ou Mistral dans Paramètres."
+      },
+      {
+        "title": "Faites votre premier appel API",
+        "description": "Changez l'URL d'endpoint. Gardez votre code."
+      },
+      {
+        "title": "Observez le dashboard",
+        "description": "Chaque token, chaque coût — en temps réel."
+      }
+    ],
+    "hint": "Des questions ? Répondez à cet email — nous lisons tout."
+  },
+  "billingUpgrade": {
+    "preview": "Vous êtes maintenant sur {plan}. Plus de puissance, même contrôle.",
+    "headline": "{plan} est actif.",
+    "body": "Votre plan a été mis à niveau vers {plan}. Les nouvelles limites et fonctionnalités sont actives immédiatement.",
+    "cta": "Voir votre plan",
+    "hint": "Des questions sur votre facturation ? Répondez à cet email."
+  },
+  "billingReceipt": {
+    "preview": "Paiement confirmé — {amount}",
+    "headline": "Paiement confirmé.",
+    "body": "Votre abonnement GateCtr a été renouvelé. Voici votre reçu.",
+    "amountLabel": "Montant débité",
+    "cta": "Télécharger la facture",
+    "hint": "Des questions sur ce paiement ? Répondez à cet email."
+  },
+  "billingPaymentFailed": {
+    "preview": "Paiement échoué. Mettez à jour votre moyen de paiement.",
+    "alert": "⚠️ Action requise",
+    "headline": "Paiement échoué.",
+    "body": "Nous n'avons pas pu traiter votre paiement. Mettez à jour votre moyen de paiement pour conserver votre plan actif.",
+    "cta": "Mettre à jour le paiement",
+    "hint": "Besoin d'aide ? Répondez à cet email."
+  },
+  "billingRenewalReminder": {
+    "preview": "Votre abonnement GateCtr se renouvelle le {date}.",
+    "headline": "Renouvellement dans 7 jours.",
+    "body": "Votre abonnement se renouvelle le {date} pour {amount}. Aucune action requise — nous débiterons votre carte automatiquement.",
+    "dateLabel": "Date de renouvellement :",
+    "amountLabel": "Montant :",
+    "cta": "Gérer la facturation",
+    "hint": "Vous souhaitez changer de plan ? Consultez les paramètres de facturation."
+  },
+  "billingDowngrade": {
+    "preview": "Votre plan a été rétrogradé vers Free.",
+    "headline": "Vous êtes sur le plan Free.",
+    "body": "Votre abonnement a pris fin et votre compte a été déplacé vers le plan Free. Vos données sont en sécurité.",
+    "lostLabel": "Fonctionnalités non disponibles :",
+    "cta": "Réactiver le plan",
+    "hint": "Vous avez changé d'avis ? Réactivez à tout moment — aucune configuration requise."
+  },
+  "billingCancellation": {
+    "preview": "Votre abonnement {plan} est programmé pour être annulé le {date}.",
+    "headline": "Annulation programmée.",
+    "body": "Votre abonnement {plan} ne sera pas renouvelé. Vous conservez un accès complet jusqu'à la fin de la période en cours.",
+    "accessLabel": "Accès jusqu'au",
+    "resumeHint": "Vous avez changé d'avis ? Vous pouvez reprendre votre abonnement à tout moment avant cette date.",
+    "cta": "Reprendre l'abonnement",
+    "hint": "Des questions ? Répondez à cet email."
+  },
+  "userSuspended": {
+    "preview": "Votre compte GateCtr a été temporairement suspendu.",
+    "hi": "Bonjour",
+    "hiDefault": "Bonjour,",
+    "headline": "Votre compte a été suspendu.",
+    "body": "Votre compte GateCtr a été temporairement suspendu. Vous ne pouvez pas vous connecter ni effectuer de requêtes API pendant cette période.",
+    "info": "Cette suspension est temporaire. Notre équipe examinera votre compte et vous contactera dans les 48 heures.",
+    "appeal": "Si vous pensez qu'il s'agit d'une erreur, vous pouvez faire appel en contactant notre équipe support.",
+    "contact": "Besoin d'aide ?",
+    "supportLink": "Contacter le support"
+  },
+  "userBanned": {
+    "preview": "Votre compte GateCtr a été définitivement banni.",
+    "hi": "Bonjour",
+    "hiDefault": "Bonjour,",
+    "headline": "Votre compte a été banni.",
+    "body": "Votre compte GateCtr a été définitivement banni. Toutes les sessions actives ont été terminées et l'accès API a été révoqué.",
+    "reasonLabel": "Motif",
+    "dataNote": "Vos données seront conservées 30 jours conformément à notre politique de rétention, puis définitivement supprimées.",
+    "contact": "Si vous pensez que cette décision est incorrecte, contactez-nous à",
+    "supportLink": "support"
+  },
+  "userReactivated": {
+    "preview": "Votre compte GateCtr a été réactivé.",
+    "hi": "Bonjour",
+    "hiDefault": "Bonjour,",
+    "headline": "Votre compte est à nouveau actif.",
+    "body": "Votre compte GateCtr a été réactivé. Vous pouvez vous connecter et reprendre l'utilisation de la plateforme immédiatement.",
+    "cta": "Ouvrir le tableau de bord",
+    "contact": "Des questions ? Contactez-nous à"
+  },
+  "userDeleted": {
+    "preview": "Votre compte GateCtr a été supprimé.",
+    "hi": "Bonjour",
+    "hiDefault": "Bonjour,",
+    "headline": "Votre compte a été supprimé.",
+    "body": "Votre compte GateCtr et toutes les données associées ont été définitivement supprimés. Toutes les sessions actives ont été terminées.",
+    "dataNote": "Conformément au RGPD et à notre politique de rétention, les données résiduelles seront purgées dans les 30 jours.",
+    "contact": "Si vous n'avez pas demandé cette suppression ou avez des questions, contactez-nous à"
+  }
+}

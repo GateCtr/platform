@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "title": "Une passerelle. Tous les LLMs.",
-    "description": "Réduisez vos coûts LLM de 40%. Un seul changement d'endpoint. Contrôle total sur les tokens, budgets et le routage.",
-    "ogTitle": "GateCtr — Une passerelle. Tous les LLMs.",
-    "ogDescription": "Réduisez vos coûts LLM de 40%. Sans toucher à votre code."
+    "title": "Réduisez vos coûts LLM jusqu'à 40%. Un seul changement d'endpoint.",
+    "description": "GateCtr compresse chaque prompt, route vers le modèle le moins cher, et bloque les requêtes avant qu'elles dépassent votre budget. Zéro modification de code.",
+    "ogTitle": "GateCtr — Réduisez vos coûts LLM jusqu'à 40%.",
+    "ogDescription": "Compressez les prompts, routez vers le modèle le moins cher, appliquez les budgets. Un seul changement d'endpoint."
   },
   "hero": {
     "badge": "Infrastructure de coût IA · Zéro modification de code",
@@ -186,7 +186,7 @@
       {
         "name": "Pro",
         "price": "{price}",
-        "description": "Pour les devs qui livrent des features LLM en production.",
+        "description": "Pour les devs qui dépensent 50 $/mois+ en appels LLM.",
         "features": [
           "Jusqu'à {tokenLimit} tokens/mois",
           "{projects} projets",
@@ -200,7 +200,7 @@
       {
         "name": "Team",
         "price": "{price}",
-        "description": "Pour les équipes qui ont besoin de visibilité et de gouvernance.",
+        "description": "Pour les équipes où les coûts IA deviennent une ligne budgétaire.",
         "features": [
           "Jusqu'à {tokenLimit} tokens/mois",
           "Projets illimités",
@@ -228,10 +228,10 @@
     ]
   },
   "finalCta": {
-    "headline": "Commencez à économiser sur vos coûts LLM dès aujourd'hui.",
-    "description": "Plan gratuit. Sans carte bancaire. Setup en {setupTime}.",
-    "ctaPrimary": "Démarrer gratuitement",
-    "ctaSecondary": "Réserver une démo",
+    "headline": "Votre facture LLM est plus élevée qu'elle ne devrait l'être.",
+    "description": "Plan gratuit. Sans carte bancaire. Opérationnel en {setupTime}.",
+    "ctaPrimary": "Voir vos économies — gratuit",
+    "ctaSecondary": "Essayer la démo live",
     "trust": "Sans carte bancaire · Annulez à tout moment"
   }
 }
