@@ -109,7 +109,13 @@ export default function FeaturesPage() {
               </a>
             </Button>
             <Button variant="cta-secondary" size="lg" asChild>
-              <a href="https://docs.gatectr.com" target="_blank" rel="noopener noreferrer">{t("hero.ctaSecondary")}</a>
+              <a
+                href="https://docs.gatectr.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("hero.ctaSecondary")}
+              </a>
             </Button>
           </div>
         </div>

@@ -283,8 +283,10 @@ export function BudgetStep({
         disabled={isSubmitting}
         onClick={handleSubmit}
       >
-        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {isSubmitting ? t("submitting") : t("submit")}
+        <span className="inline-flex items-center justify-center gap-2">
+          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+          <span>{isSubmitting ? t("submitting") : t("submit")}</span>
+        </span>
       </Button>
 
       <Button

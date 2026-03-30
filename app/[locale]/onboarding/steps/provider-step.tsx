@@ -278,17 +278,14 @@ export function ProviderStep({
           className="w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t("connecting")}
-            </>
-          ) : (
-            <>
-              <ShieldCheck className="mr-2 h-4 w-4" />
-              {t("submit")}
-            </>
-          )}
+          <span className="inline-flex items-center justify-center gap-2">
+            {isSubmitting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ShieldCheck className="h-4 w-4" />
+            )}
+            <span>{isSubmitting ? t("connecting") : t("submit")}</span>
+          </span>
         </Button>
 
         {/* Skip section */}

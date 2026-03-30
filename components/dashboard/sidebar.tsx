@@ -94,9 +94,14 @@ function TeamSwitcher() {
         <DropdownMenuTrigger asChild>
           <SidebarMenuButton
             size="lg"
+            translate="no"
+            suppressHydrationWarning
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-foreground hover:bg-sidebar-accent"
           >
-            <div className="flex size-8 shrink-0 rounded-md overflow-hidden bg-primary text-primary-foreground text-xs font-bold select-none items-center justify-center">
+            <div
+              className="flex size-8 shrink-0 rounded-md overflow-hidden bg-primary text-primary-foreground text-xs font-bold select-none items-center justify-center"
+              translate="no"
+            >
               {isLoading ? (
                 "…"
               ) : avatarUrl ? (
@@ -109,7 +114,11 @@ function TeamSwitcher() {
                 initials
               )}
             </div>
-            <div className="flex flex-col gap-0.5 leading-none min-w-0">
+            <div
+              className="flex flex-col gap-0.5 leading-none min-w-0"
+              translate="no"
+              suppressHydrationWarning
+            >
               <span className="font-semibold text-sm truncate text-sidebar-foreground">
                 {isLoading ? t("loading") : orgName}
               </span>
