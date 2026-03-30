@@ -29,7 +29,6 @@ export function Logo({
         viewBox="0 0 363.13 361.9"
         className={cn("w-8 h-8", iconClassName)}
         aria-label="GateCtr Logo"
-        translate="no"
       >
         {/* Main circle part - primary color */}
         <path
