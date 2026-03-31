@@ -25,6 +25,7 @@ COPY --from=deps /app/prisma ./prisma
 COPY package.json ./
 COPY workers ./workers
 COPY lib ./lib
+COPY messages ./messages
 COPY config ./config
 COPY types ./types
 COPY tsconfig.json ./
