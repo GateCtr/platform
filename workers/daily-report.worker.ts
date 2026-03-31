@@ -56,33 +56,35 @@ async function aggregateUserDay(userId: string, date: string): Promise<void> {
   // Skip users with zero activity
   if (totalRequests === 0) return;
 
-  // 2. Upsert global DailyUsageCache (no projectId)
-  await prisma.dailyUsageCache.upsert({
-    where: {
-      userId_projectId_date: {
-        userId,
-        projectId: null as unknown as string,
-        date,
-      },
-    },
-    create: {
-      userId,
-      projectId: null,
-      date,
-      totalTokens,
-      savedTokens,
-      totalRequests,
-      totalCostUsd,
-      lastUpdated: new Date(),
-    },
-    update: {
-      totalTokens,
-      savedTokens,
-      totalRequests,
-      totalCostUsd,
-      lastUpdated: new Date(),
-    },
+  // 2. Upsert global DailyUsageCache (no projectId) — null key needs findFirst+update pattern
+  const existingGlobal = await prisma.dailyUsageCache.findFirst({
+    where: { userId, projectId: null, date },
   });
+  if (existingGlobal) {
+    await prisma.dailyUsageCache.update({
+      where: { id: existingGlobal.id },
+      data: {
+        totalTokens,
+        savedTokens,
+        totalRequests,
+        totalCostUsd,
+        lastUpdated: new Date(),
+      },
+    });
+  } else {
+    await prisma.dailyUsageCache.create({
+      data: {
+        userId,
+        projectId: null,
+        date,
+        totalTokens,
+        savedTokens,
+        totalRequests,
+        totalCostUsd,
+        lastUpdated: new Date(),
+      },
+    });
+  }
 
   // 3. Per-project aggregation
   const byProject = await prisma.usageLog.groupBy({
