@@ -33,11 +33,19 @@ vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
 
 const mockUsageLogCreate = vi.fn().mockResolvedValue({});
 const mockDailyUsageCacheUpsert = vi.fn().mockResolvedValue({});
+const mockDailyUsageCacheFindFirst = vi.fn().mockResolvedValue(null);
+const mockDailyUsageCacheUpdate = vi.fn().mockResolvedValue({});
+const mockDailyUsageCacheCreate = vi.fn().mockResolvedValue({});
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
     usageLog: { create: mockUsageLogCreate },
-    dailyUsageCache: { upsert: mockDailyUsageCacheUpsert },
+    dailyUsageCache: {
+      upsert: mockDailyUsageCacheUpsert,
+      findFirst: mockDailyUsageCacheFindFirst,
+      update: mockDailyUsageCacheUpdate,
+      create: mockDailyUsageCacheCreate,
+    },
   },
 }));
 
@@ -103,6 +111,11 @@ async function getProcessor() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockDailyUsageCacheFindFirst.mockResolvedValue(null);
+  mockDailyUsageCacheUpdate.mockResolvedValue({});
+  mockDailyUsageCacheCreate.mockResolvedValue({});
+  mockDailyUsageCacheUpsert.mockResolvedValue({});
+  mockUsageLogCreate.mockResolvedValue({});
 });
 
 // ── Token mismatch correction ─────────────────────────────────────────────────
@@ -224,13 +237,19 @@ describe("DailyUsageCache upsert", () => {
 
     await processor(job);
 
-    expect(mockDailyUsageCacheUpsert).toHaveBeenCalledWith(
+    // No projectId → findFirst path (returns null → create)
+    expect(mockDailyUsageCacheFindFirst).toHaveBeenCalledWith(
       expect.objectContaining({
-        update: expect.objectContaining({
-          totalTokens: { increment: 150 },
-          totalRequests: { increment: 1 },
-          totalCostUsd: { increment: 0.02 },
-          savedTokens: { increment: 10 },
+        where: expect.objectContaining({ projectId: null }),
+      }),
+    );
+    expect(mockDailyUsageCacheCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          totalTokens: 150,
+          totalRequests: 1,
+          totalCostUsd: 0.02,
+          savedTokens: 10,
         }),
       }),
     );
