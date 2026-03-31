@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
         const record = results[i];
         acc[service] = record
           ? { status: record.status, checkedAt: record.checkedAt }
-          : { status: "unknown", checkedAt: null };
+          : { status: "DEGRADED", checkedAt: null };
         return acc;
       },
       {} as Record<string, { status: string; checkedAt: Date | null }>,
