@@ -19,15 +19,18 @@ ENV NODE_ENV=production
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy only what workers need
+# Copy everything the workers need — easier to copy all source than enumerate
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/prisma ./prisma
-COPY package.json ./
+COPY package.json tsconfig.json ./
+
+# Source directories used by workers and their dependencies
 COPY workers ./workers
 COPY lib ./lib
 COPY config ./config
 COPY types ./types
-COPY tsconfig.json ./
+COPY messages ./messages
+COPY components ./components
 
 RUN pnpm prisma generate
 
