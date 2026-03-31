@@ -17,7 +17,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install pnpm globally so CMD can use it
+RUN npm install -g pnpm
 
 # Copy everything the workers need — easier to copy all source than enumerate
 COPY --from=deps /app/node_modules ./node_modules
