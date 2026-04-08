@@ -107,6 +107,14 @@ export const healthWorker = new Worker<HealthJobData>(
   },
 );
 
+healthWorker.on("error", (err) => {
+  console.error("[health.worker] worker error", err.message);
+});
+
+healthWorker.on("ready", () => {
+  console.info("[health.worker] worker ready — listening for jobs");
+});
+
 // ─── Schedule repeatable job (every 60s) ─────────────────────────────────────
 
 export async function scheduleHealthCheck(): Promise<void> {

@@ -9,6 +9,17 @@ import {
 } from "./billing-renewal-reminder.worker";
 
 console.info("[workers] starting all workers");
+console.info(
+  "[workers] redis:",
+  (process.env.REDIS_EXTERNAL_URL ?? process.env.REDIS_URL ?? "NOT SET").slice(
+    0,
+    25,
+  ) + "...",
+);
+console.info(
+  "[workers] redis url prefix:",
+  (process.env.REDIS_EXTERNAL_URL ?? process.env.REDIS_URL ?? "").slice(0, 20),
+);
 
 // ── Global error handlers ────────────────────────────────────────────────────
 process.on("unhandledRejection", (reason, promise) => {

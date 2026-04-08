@@ -158,3 +158,11 @@ analyticsWorker.on("failed", (job, err) => {
 analyticsWorker.on("completed", (job) => {
   console.debug("[analytics-worker] job completed", { jobId: job.id });
 });
+
+analyticsWorker.on("error", (err) => {
+  console.error("[analytics-worker] worker error", err.message);
+});
+
+analyticsWorker.on("ready", () => {
+  console.info("[analytics-worker] worker ready");
+});
