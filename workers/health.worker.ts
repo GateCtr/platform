@@ -85,15 +85,15 @@ export const healthWorker = new Worker<HealthJobData>(
       SERVICES.map(async (service) => {
         const { status, latencyMs } = await checkers[service]();
         await prisma.systemHealth.create({
-          data: {
-            service,
-            status,
-            latencyMs,
-            checkedAt: new Date(),
-          },
+          data: { service, status, latencyMs, checkedAt: new Date() },
         });
       }),
     );
+
+    // Purge records older than 24h to prevent unbounded growth
+    await prisma.systemHealth.deleteMany({
+      where: { checkedAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+    });
 
     const failed = results.filter((r) => r.status === "rejected");
     if (failed.length > 0) {
@@ -106,6 +106,14 @@ export const healthWorker = new Worker<HealthJobData>(
     skipVersionCheck: true,
   },
 );
+
+healthWorker.on("error", (err) => {
+  console.error("[health.worker] worker error", err.message);
+});
+
+healthWorker.on("ready", () => {
+  console.info("[health.worker] worker ready — listening for jobs");
+});
 
 // ─── Schedule repeatable job (every 60s) ─────────────────────────────────────
 

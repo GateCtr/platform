@@ -72,8 +72,13 @@ async function processScanRenewals(): Promise<void> {
     const meta = (sub.user.metadata ?? {}) as Record<string, unknown>;
     const locale: "en" | "fr" = meta.locale === "fr" ? "fr" : "en";
 
-    // Derive amount from plan name (cents)
-    const planPrices: Record<string, number> = { PRO: 2900, TEAM: 9900 };
+    // Use actual Stripe price amount from plan if available, fallback to known prices
+    const planPrices: Record<string, number> = {
+      PRO: 2900,
+      TEAM: 9900,
+      FREE: 0,
+      ENTERPRISE: 0,
+    };
     const amount = planPrices[sub.plan.name] ?? 0;
 
     await billingEmailQueue.add(

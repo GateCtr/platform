@@ -7,6 +7,7 @@
  */
 export function computeOverallStatus(statuses: string[]): string {
   if (statuses.includes("DOWN")) return "down";
-  if (statuses.includes("DEGRADED")) return "degraded";
+  if (statuses.includes("DEGRADED") || statuses.includes("unknown"))
+    return "degraded";
   return "healthy";
 }

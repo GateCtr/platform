@@ -51,31 +51,63 @@ async function processJob(job: Job<AnalyticsJobData>): Promise<void> {
   const today = new Date().toISOString().slice(0, 10);
   const projectIdValue = data.projectId ?? null;
 
-  await prisma.dailyUsageCache.upsert({
-    where: {
-      userId_projectId_date: {
-        userId: data.userId,
-        projectId: projectIdValue as string,
-        date: today,
+  if (projectIdValue) {
+    // Per-project upsert — unique key works with non-null projectId
+    await prisma.dailyUsageCache.upsert({
+      where: {
+        userId_projectId_date: {
+          userId: data.userId,
+          projectId: projectIdValue,
+          date: today,
+        },
       },
-    },
-    create: {
-      userId: data.userId,
-      projectId: projectIdValue,
-      date: today,
-      totalTokens,
-      totalRequests: 1,
-      totalCostUsd: costUsd,
-      savedTokens: data.savedTokens,
-    },
-    update: {
-      totalTokens: { increment: totalTokens },
-      totalRequests: { increment: 1 },
-      totalCostUsd: { increment: costUsd },
-      savedTokens: { increment: data.savedTokens },
-      lastUpdated: new Date(),
-    },
-  });
+      create: {
+        userId: data.userId,
+        projectId: projectIdValue,
+        date: today,
+        totalTokens,
+        totalRequests: 1,
+        totalCostUsd: costUsd,
+        savedTokens: data.savedTokens,
+      },
+      update: {
+        totalTokens: { increment: totalTokens },
+        totalRequests: { increment: 1 },
+        totalCostUsd: { increment: costUsd },
+        savedTokens: { increment: data.savedTokens },
+        lastUpdated: new Date(),
+      },
+    });
+  } else {
+    // Global (no project) — use updateOrCreate pattern to handle null key
+    const existing = await prisma.dailyUsageCache.findFirst({
+      where: { userId: data.userId, projectId: null, date: today },
+    });
+    if (existing) {
+      await prisma.dailyUsageCache.update({
+        where: { id: existing.id },
+        data: {
+          totalTokens: { increment: totalTokens },
+          totalRequests: { increment: 1 },
+          totalCostUsd: { increment: costUsd },
+          savedTokens: { increment: data.savedTokens },
+          lastUpdated: new Date(),
+        },
+      });
+    } else {
+      await prisma.dailyUsageCache.create({
+        data: {
+          userId: data.userId,
+          projectId: null,
+          date: today,
+          totalTokens,
+          totalRequests: 1,
+          totalCostUsd: costUsd,
+          savedTokens: data.savedTokens,
+        },
+      });
+    }
+  }
 
   // ── 7.5 Record budget usage ──────────────────────────────────────────────────
   await recordBudgetUsage(data.userId, data.projectId, totalTokens, costUsd);
@@ -125,4 +157,12 @@ analyticsWorker.on("failed", (job, err) => {
 
 analyticsWorker.on("completed", (job) => {
   console.debug("[analytics-worker] job completed", { jobId: job.id });
+});
+
+analyticsWorker.on("error", (err) => {
+  console.error("[analytics-worker] worker error", err.message);
+});
+
+analyticsWorker.on("ready", () => {
+  console.info("[analytics-worker] worker ready");
 });
