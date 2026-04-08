@@ -115,6 +115,18 @@ healthWorker.on("ready", () => {
   console.info("[health.worker] worker ready — listening for jobs");
 });
 
+healthWorker.on("failed", (job, err) => {
+  console.error("[health.worker] job failed", {
+    jobId: job?.id,
+    error: err.message,
+    stack: err.stack?.slice(0, 300),
+  });
+});
+
+healthWorker.on("completed", (job) => {
+  console.info("[health.worker] job completed", { jobId: job.id });
+});
+
 // ─── Schedule repeatable job (every 60s) ─────────────────────────────────────
 
 export async function scheduleHealthCheck(): Promise<void> {
