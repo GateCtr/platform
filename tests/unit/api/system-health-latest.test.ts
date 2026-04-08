@@ -82,7 +82,7 @@ describe("Property 20: System health returns latest record per service", () => {
     );
   });
 
-  it("returns unknown status for services with no DB record", async () => {
+  it("returns DEGRADED status for services with no DB record", async () => {
     // All findFirst calls return null
     mockFindFirst.mockResolvedValue(null);
 
@@ -91,12 +91,11 @@ describe("Property 20: System health returns latest record per service", () => {
 
     expect(res.status).toBe(200);
     for (const svc of SERVICES) {
-      expect(body.services[svc].status).toBe("unknown");
+      expect(body.services[svc].status).toBe("DEGRADED");
       expect(body.services[svc].checkedAt).toBeNull();
     }
-    // Overall status when all unknown — computeOverallStatus returns "healthy"
-    // (no DOWN or DEGRADED in the list)
-    expect(body.status).toBe("healthy");
+    // Overall status when all DEGRADED
+    expect(body.status).toBe("degraded");
   });
 
   it("overall status is down when any service is DOWN", async () => {
