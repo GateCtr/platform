@@ -17,7 +17,16 @@ function inferCategory(tags: string[]): string {
   if (/code-search|code-gen|ai-ide|ai-coding|open-source|vscode/.test(t))
     return "code-gen";
   if (/voice-ai|audio|transcription|conversational/.test(t)) return "voice-ai";
-  if (/legal-ai|rag|document|search|data-analytics/.test(t)) return "rag";
+  if (/legal-ai|rag|document|search/.test(t)) return "rag";
+  if (/data-analytics|data-enrichment|audit-ai|batch/.test(t))
+    return "data-analytics";
+  if (
+    /saas|crm|hr-tech|no-code/.test(t) &&
+    !/agent|memory|autonomous|rag|document|code-gen|ai-ide|voice-ai|audio/.test(
+      t,
+    )
+  )
+    return "saas-ai";
   return "general";
 }
 // @ts-expect-error - Type mismatch between @types/pg versions
@@ -692,7 +701,7 @@ async function main() {
   }
 
   console.log(
-    `  → Upserting ${outreachTemplates.length} email templates (5 categories × 3 steps)...`,
+    `  → Upserting ${outreachTemplates.length} email templates (7 categories × 3 steps)...`,
   );
   for (const template of outreachTemplates) {
     await prisma.outreachTemplate.upsert({

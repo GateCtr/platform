@@ -44,6 +44,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     switch (event.type) {
+      case "email.opened": {
+        await prisma.outreachEmailLog.updateMany({
+          where: { resendId, openedAt: null },
+          data: { openedAt: new Date(), status: "OPENED" },
+        });
+        break;
+      }
+
+      case "email.clicked": {
+        await prisma.outreachEmailLog.updateMany({
+          where: { resendId, clickedAt: null },
+          data: { clickedAt: new Date(), status: "CLICKED" },
+        });
+        break;
+      }
+
       case "email.bounced": {
         const log = await prisma.outreachEmailLog.findUnique({
           where: { resendId },

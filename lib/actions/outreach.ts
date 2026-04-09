@@ -9,6 +9,7 @@ import { resend } from "@/lib/resend";
 import { outreachQueue } from "@/lib/queues";
 import { appUrl } from "@/lib/app-url";
 import { applyVariableSubstitution } from "@/lib/outreach-utils";
+import { wrapOutreachEmail } from "@/lib/outreach-email-wrapper";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -219,8 +220,28 @@ export async function sendEmailInternal(
   const trackingPixel = `<img src="${pixelUrl}" width="1" height="1" alt="" style="display:none" />`;
 
   const rawHtml = overrides?.bodyHtml ?? template.bodyHtml;
-  const bodyHtml =
-    applyVariableSubstitution(rawHtml, prospect, senderName) + trackingPixel;
+  const substitutedHtml = applyVariableSubstitution(
+    rawHtml,
+    prospect,
+    senderName,
+  );
+
+  // Wrap all href links for click tracking
+  const trackedHtml = substitutedHtml.replace(
+    /href="(https?:\/\/[^"]+)"/gi,
+    (_, url: string) => {
+      const trackUrl = appUrl(
+        `/api/track/click/${trackingId}?url=${encodeURIComponent(url)}`,
+      );
+      return `href="${trackUrl}"`;
+    },
+  );
+
+  const bodyHtml = await wrapOutreachEmail(
+    trackedHtml + trackingPixel,
+    prospect.email,
+    subject,
+  );
 
   let resendId: string | undefined;
 
