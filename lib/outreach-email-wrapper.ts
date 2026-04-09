@@ -16,5 +16,5 @@ export async function wrapOutreachEmail(
   const shell = await render(OutreachWrapper({ recipientEmail, preview }));
   // Replace the placeholder comment with the actual body HTML.
   // bodyHtml is admin-controlled template content from the DB, never user input.
-  return shell.replace("<!-- OUTREACH_BODY_PLACEHOLDER -->", bodyHtml);
+  return shell.replace("__OUTREACH_BODY__", bodyHtml);
 }
