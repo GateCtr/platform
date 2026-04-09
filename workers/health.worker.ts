@@ -83,10 +83,21 @@ export const healthWorker = new Worker<HealthJobData>(
   async () => {
     const results = await Promise.allSettled(
       SERVICES.map(async (service) => {
-        const { status, latencyMs } = await checkers[service]();
-        await prisma.systemHealth.create({
-          data: { service, status, latencyMs, checkedAt: new Date() },
-        });
+        try {
+          const { status, latencyMs } = await checkers[service]();
+          await prisma.systemHealth.create({
+            data: { service, status, latencyMs, checkedAt: new Date() },
+          });
+          console.info(
+            `[health.worker] wrote ${service}: ${status} (${latencyMs}ms)`,
+          );
+        } catch (err) {
+          console.error(
+            `[health.worker] failed to write ${service}:`,
+            err instanceof Error ? err.message : String(err),
+          );
+          throw err;
+        }
       }),
     );
 
