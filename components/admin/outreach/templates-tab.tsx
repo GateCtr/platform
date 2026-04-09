@@ -160,10 +160,14 @@ function TemplateCard({ template, onUpdate }: TemplateCardProps) {
               </p>
               <p className="text-sm font-medium">{previewSubject}</p>
             </div>
-            <div
-              className="rounded-md border p-4 text-sm prose prose-sm max-w-none dark:prose-invert overflow-auto max-h-64"
-              dangerouslySetInnerHTML={{ __html: previewBody }}
-            />
+            <div className="rounded-md border overflow-hidden max-h-64">
+              <iframe
+                srcDoc={previewBody}
+                sandbox=""
+                title="Email preview"
+                className="w-full h-64 border-0"
+              />
+            </div>
             <p className="text-xs text-muted-foreground">
               {t("templates.sampleData")}: {SAMPLE_PROSPECT.firstName}{" "}
               {SAMPLE_PROSPECT.lastName}, {SAMPLE_PROSPECT.company}
