@@ -30,6 +30,8 @@ const isPublicRoute = createRouteMatcher([
   "/fr/blocked",
   "/status",
   "/fr/status",
+  "/status/history",
+  "/fr/status/history",
   "/privacy",
   "/fr/privacy",
   "/terms",
@@ -40,20 +42,15 @@ const isPublicRoute = createRouteMatcher([
   "/fr/about",
   "/careers",
   "/fr/careers",
-  "/demo",
-  "/fr/demo",
   "/sign-in(.*)",
   "/fr/sign-in(.*)",
   "/sign-up(.*)",
   "/fr/sign-up(.*)",
-  "/forgot-password(.*)",
-  "/fr/forgot-password(.*)",
   // Onboarding must be public so Clerk handshake doesn't redirect to sign-in
   // before userId is resolved. The onboarding gate below handles auth logic.
   "/onboarding",
   "/fr/onboarding",
   "/api/waitlist(.*)",
-  "/api/demo",
   "/api/v1/(.*)",
   "/api/health",
   "/api/auth/refresh",
@@ -131,8 +128,6 @@ export default clerkMiddleware(
         "/fr/sign-in",
         "/sign-up",
         "/fr/sign-up",
-        "/forgot-password",
-        "/fr/forgot-password",
       ];
       const appBase =
         process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com";
@@ -224,25 +219,33 @@ export default clerkMiddleware(
       return NextResponse.json({ error: "Not Found" }, { status: 404 });
     }
 
-    // status.gatectr.com → /status page (root only)
-    // Any other path → redirect to gatectr.com/<path>
+    // status.gatectr.com → rewrite to /status/* pages
+    // /          → /en/status
+    // /history   → /en/status/history
+    // anything else → redirect to gatectr.com
     if (host === "status.gatectr.com") {
-      const isRoot =
-        pathname === "/" || pathname === "" || pathname === "/en/status";
-      if (!isRoot) {
-        const marketingBase =
-          process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com";
-        return secure(
-          NextResponse.redirect(
-            new URL(pathname + req.nextUrl.search, marketingBase),
-          ),
-        );
+      const STATUS_PATHS: Record<string, string> = {
+        "/": "/en/status",
+        "": "/en/status",
+        "/history": "/en/status/history",
+      };
+
+      const target = STATUS_PATHS[pathname];
+      if (target) {
+        if (pathname !== target) {
+          return secure(NextResponse.rewrite(new URL(target, req.url)));
+        }
+        return secure(intlMiddleware(req));
       }
-      const statusPath = "/en/status";
-      if (pathname !== statusPath) {
-        return secure(NextResponse.rewrite(new URL(statusPath, req.url)));
-      }
-      return secure(intlMiddleware(req));
+
+      // Unknown path on status subdomain → redirect to marketing
+      const marketingBase =
+        process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com";
+      return secure(
+        NextResponse.redirect(
+          new URL(pathname + req.nextUrl.search, marketingBase),
+        ),
+      );
     }
 
     // gatectr.com routes are handled above before auth() is called — nothing to do here.
@@ -288,14 +291,11 @@ export default clerkMiddleware(
 
     // ── Waitlist redirect ─────────────────────────────────────────────────────
     const waitlistEnabled = process.env.ENABLE_WAITLIST === "true";
-    // Waitlist: block generic sign-up unless the user has an invite link (?invite=…).
-    // Invited flow is still enforced server-side (Clerk webhook + invite validity).
+    // When waitlist is active, /sign-up is always blocked regardless of ENABLE_SIGNUPS.
+    // Only invited users can sign up — enforced at the webhook level too.
     if (waitlistEnabled && pathname.includes("/sign-up")) {
-      const invite = req.nextUrl.searchParams.get("invite")?.trim();
-      if (!invite) {
-        const waitlistPath = locale === "fr" ? "/fr/waitlist" : "/waitlist";
-        return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
-      }
+      const waitlistPath = locale === "fr" ? "/fr/waitlist" : "/waitlist";
+      return secure(NextResponse.redirect(new URL(waitlistPath, req.url)));
     }
 
     // ── Auth pages — redirect authenticated users to dashboard ──────────────
