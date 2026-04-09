@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+// Lazy init — RESEND_API_KEY is not available at build time in Docker
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY ?? "");
+}
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const rawBody = await req.text();
@@ -19,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // Verify signature using resend's built-in Webhooks verifier
   let event: { type: string; data: { email_id?: string } };
   try {
-    event = resend.webhooks.verify({
+    event = getResend().webhooks.verify({
       payload: rawBody,
       headers: {
         id: req.headers.get("svix-id") ?? "",
