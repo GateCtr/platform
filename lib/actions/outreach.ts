@@ -272,27 +272,31 @@ export async function sendEmailInternal(
     });
   }
 
-  // Enqueue follow-up jobs
-  if (step === 1) {
-    await outreachQueue.add(
-      "followup",
-      { type: "outreach_followup", prospectId, step: 2 },
-      { delay: 3 * 24 * 60 * 60 * 1000 },
-    );
-  } else if (step === 2) {
-    await outreachQueue.add(
-      "followup",
-      { type: "outreach_followup", prospectId, step: 3 },
-      { delay: 7 * 24 * 60 * 60 * 1000 },
-    );
-  } else if (step === 3) {
-    // Auto-refuse after AUTO_REFUSE_DAYS days with no reply
-    const AUTO_REFUSE_DAYS = 7;
-    await outreachQueue.add(
-      "auto-refuse",
-      { type: "outreach_auto_refuse", prospectId, step: 3 },
-      { delay: AUTO_REFUSE_DAYS * 24 * 60 * 60 * 1000 },
-    );
+  // Enqueue follow-up jobs (non-blocking — Redis failure must not fail the send)
+  try {
+    if (step === 1) {
+      await outreachQueue.add(
+        "followup",
+        { type: "outreach_followup", prospectId, step: 2 },
+        { delay: 3 * 24 * 60 * 60 * 1000 },
+      );
+    } else if (step === 2) {
+      await outreachQueue.add(
+        "followup",
+        { type: "outreach_followup", prospectId, step: 3 },
+        { delay: 7 * 24 * 60 * 60 * 1000 },
+      );
+    } else if (step === 3) {
+      const AUTO_REFUSE_DAYS = 7;
+      await outreachQueue.add(
+        "auto-refuse",
+        { type: "outreach_auto_refuse", prospectId, step: 3 },
+        { delay: AUTO_REFUSE_DAYS * 24 * 60 * 60 * 1000 },
+      );
+    }
+  } catch (queueErr) {
+    // Queue failure is non-fatal — email was already sent successfully
+    console.error("[outreach] Failed to enqueue follow-up job:", queueErr);
   }
 
   return { success: true, logId: log.id };
@@ -377,11 +381,15 @@ export async function scheduleFollowup(
 ): Promise<void> {
   await requireOutreachAccess();
 
-  await outreachQueue.add(
-    "followup",
-    { type: "outreach_followup", prospectId, step },
-    { delay: delayDays * 24 * 60 * 60 * 1000 },
-  );
+  try {
+    await outreachQueue.add(
+      "followup",
+      { type: "outreach_followup", prospectId, step },
+      { delay: delayDays * 24 * 60 * 60 * 1000 },
+    );
+  } catch (err) {
+    console.error("[outreach] Failed to schedule follow-up:", err);
+  }
 }
 
 // ─── Create prospect ──────────────────────────────────────────────────────────
