@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import DOMPurify from "dompurify";
 import { useTranslations } from "next-intl";
 import {
   Dialog,
@@ -131,7 +132,7 @@ export function SendEmailDialog({
                 </TabsTrigger>
               </TabsList>
 
-              {/* Preview — rendered from editSubject/editBody */}
+              {/* Preview — rendered from editSubject/editBody (sanitized) */}
               <TabsContent value="preview" className="space-y-3 mt-2">
                 <div className="rounded-md border p-3 bg-muted/30">
                   <p className="text-xs text-muted-foreground mb-1">
@@ -142,7 +143,11 @@ export function SendEmailDialog({
                 </div>
                 <div
                   className="rounded-md border p-3 sm:p-4 text-sm prose prose-sm max-w-none dark:prose-invert overflow-auto max-h-48 sm:max-h-64"
-                  dangerouslySetInnerHTML={{ __html: editBody }}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(editBody, {
+                      USE_PROFILES: { html: true },
+                    }),
+                  }}
                 />
               </TabsContent>
 
