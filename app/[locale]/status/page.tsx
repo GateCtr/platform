@@ -311,37 +311,44 @@ export default function StatusPage() {
 
       {/* Header */}
       <header className="border-b border-grey-800">
-        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="https://gatectr.com" aria-label="GateCtr home">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <Link
+            href="https://gatectr.com"
+            aria-label="GateCtr home"
+            className="shrink-0"
+          >
             <Logo
               variant="full"
               iconClassName="w-7 h-7"
               textClassName="text-xl"
             />
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <a
               href={`${process.env.NEXT_PUBLIC_MARKETING_URL ?? "http://localhost:3000"}/help`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-grey-400 hover:text-grey-100 transition-colors border border-grey-700 hover:border-grey-600 rounded-lg px-3 py-1.5"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs text-grey-400 hover:text-grey-100 transition-colors border border-grey-700 hover:border-grey-600 rounded-lg px-3 py-1.5 shrink-0"
             >
               {t("actions.reportIssue")}
               <ExternalLink className="size-3" />
             </a>
             <button
               onClick={() => setSubscribeOpen(true)}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-white bg-primary-500 hover:bg-primary-600 transition-colors rounded-lg px-3 py-1.5"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-white bg-primary-500 hover:bg-primary-600 transition-colors rounded-lg px-3 py-1.5 shrink-0"
             >
               <Bell className="size-3" />
-              {t("actions.subscribe")}
+              <span className="hidden xs:inline">{t("actions.subscribe")}</span>
+              <span className="xs:hidden sr-only">
+                {t("actions.subscribe")}
+              </span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Main */}
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-10 space-y-6">
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-10 space-y-6">
         <OverallBanner status={overallStatus} />
 
         {/* Services card */}
@@ -382,7 +389,7 @@ export default function StatusPage() {
         {/* View history */}
         <div className="flex justify-center pt-2">
           <Link
-            href="/status/history"
+            href="/history"
             className="inline-flex items-center gap-2 text-sm text-grey-400 hover:text-grey-100 transition-colors group"
           >
             <History className="size-4 group-hover:text-secondary-400 transition-colors" />
