@@ -36,7 +36,7 @@ export function AnnouncementBarClient({
   config,
   locale,
 }: AnnouncementBarClientProps) {
-  const dismissKey = `${DISMISS_KEY}_${btoa(config.message).slice(0, 16)}`;
+  const dismissKey = `${DISMISS_KEY}_${encodeURIComponent(config.message).slice(0, 16)}`;
 
   const [dismissed, setDismissed] = useState(() => {
     if (!config.dismissable || typeof window === "undefined") return false;
