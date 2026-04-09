@@ -52,6 +52,11 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
+      - name: Seed outreach data (idempotent)
+        run: pnpm seed:outreach
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+
       - name: Deploy to Vercel (Staging)
         uses: amondnet/vercel-action@v25
         with:
@@ -133,6 +138,11 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
           PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK: "1"
+
+      - name: Seed outreach data (idempotent)
+        run: pnpm seed:outreach
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
 
       - name: Deploy to Vercel (Production)
         id: vercel-deploy

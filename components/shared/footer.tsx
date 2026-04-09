@@ -2,10 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/logo";
+import { StatusDot } from "@/components/shared/status-dot";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { Github } from "lucide-react";
-import { useEffect, useState } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,69 +14,6 @@ export type FooterVariant = "marketing" | "minimal" | "auth";
 export interface FooterProps {
   variant?: FooterVariant;
   className?: string;
-}
-
-// ─── Status dot ───────────────────────────────────────────────────────────────
-
-type OverallStatus = "healthy" | "degraded" | "down" | "unknown";
-
-const STATUS_COLORS: Record<OverallStatus, string> = {
-  healthy: "bg-success-500",
-  degraded: "bg-warning-500",
-  down: "bg-error-500",
-  unknown: "bg-muted-foreground",
-};
-
-// Inline styles fallback — Tailwind purges dynamic class names
-const STATUS_STYLES: Record<OverallStatus, string> = {
-  healthy: "#22c55e",
-  degraded: "#f59e0b",
-  down: "#ef4444",
-  unknown: "#6b7280",
-};
-
-function StatusDot({ label }: { label: string }) {
-  const [status, setStatus] = useState<OverallStatus>("unknown");
-  const t = useTranslations("status");
-
-  useEffect(() => {
-    fetch("/api/v1/system/health")
-      .then((r) => r.json())
-      .then((data: { status?: string }) => {
-        const s = data?.status as OverallStatus | undefined;
-        if (s && s in STATUS_COLORS) setStatus(s);
-      })
-      .catch(() => setStatus("unknown"));
-  }, []);
-
-  const color = STATUS_STYLES[status];
-  const dotLabel =
-    status === "healthy"
-      ? label
-      : t(`overall.${status}` as Parameters<typeof t>[0]);
-
-  return (
-    <a
-      href="https://status.gatectr.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-    >
-      <span className="relative flex size-2">
-        {status === "healthy" && (
-          <span
-            className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60"
-            style={{ backgroundColor: color }}
-          />
-        )}
-        <span
-          className="relative inline-flex rounded-full size-2"
-          style={{ backgroundColor: color }}
-        />
-      </span>
-      {dotLabel}
-    </a>
-  );
 }
 
 // ─── Social links ─────────────────────────────────────────────────────────────
@@ -253,8 +190,19 @@ export function Footer({ variant = "marketing", className }: FooterProps) {
                 </a>
               </li>
               <li>
+                <Link
+                  href="/help"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.help")}
+                </Link>
+              </li>
+              <li>
                 <a
-                  href="https://status.gatectr.com"
+                  href={
+                    process.env.NEXT_PUBLIC_STATUS_URL ??
+                    "https://status.gatectr.com"
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"

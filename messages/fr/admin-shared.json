@@ -8,17 +8,20 @@
     "announcement": "Barre d'annonce",
     "auditLogs": "Journaux d'audit",
     "systemHealth": "Santé du système",
+    "incidents": "Incidents",
     "waitlist": "Liste d'attente",
     "billing": "Facturation",
     "analytics": "Analytics",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "outreachCrm": "CRM Prospection"
   },
   "groups": {
     "platform": "Plateforme",
     "users": "Utilisateurs",
     "revenue": "Revenus",
     "security": "Sécurité",
-    "system": "Système"
+    "system": "Système",
+    "outreach": "Prospection"
   },
   "header": {
     "backToApp": "Retour à l'app",

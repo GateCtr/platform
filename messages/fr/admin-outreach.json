@@ -1,0 +1,143 @@
+{
+  "metadata": {
+    "title": "CRM Prospection",
+    "description": "Gérez vos prospects, envoyez des emails et suivez l'engagement."
+  },
+  "tabs": {
+    "prospects": "Prospects",
+    "templates": "Modèles",
+    "statistics": "Statistiques"
+  },
+  "prospects": {
+    "columns": {
+      "name": "Nom",
+      "company": "Entreprise",
+      "jobTitle": "Poste",
+      "tier": "Niveau",
+      "status": "Statut",
+      "lastContacted": "Dernier contact",
+      "actions": "Actions"
+    },
+    "filters": {
+      "searchPlaceholder": "Rechercher nom, email, entreprise...",
+      "allStatuses": "Tous les statuts",
+      "allTiers": "Tous les niveaux"
+    },
+    "actions": {
+      "sendEmail": "Envoyer un email",
+      "bulkSend": "Envoi groupé ({count})"
+    },
+    "status": {
+      "NEW": "Nouveau",
+      "CONTACTED": "Contacté",
+      "REPLIED": "A répondu",
+      "MEETING_BOOKED": "Réunion planifiée",
+      "CONVERTED": "Converti",
+      "REFUSED": "Refusé",
+      "UNSUBSCRIBED": "Désabonné"
+    },
+    "tier": {
+      "TIER_1": "Niveau 1",
+      "TIER_2": "Niveau 2"
+    },
+    "empty": "Aucun prospect trouvé.",
+    "never": "Jamais",
+    "pagination": {
+      "showing": "{from}–{to} sur {total}",
+      "page": "Page {page} sur {total}"
+    }
+  },
+  "sendDialog": {
+    "title": "Envoyer un email",
+    "step": "Étape",
+    "stepLabel": "Étape {step}",
+    "preview": "Aperçu",
+    "confirm": "Envoyer",
+    "cancel": "Annuler",
+    "success": "Email envoyé avec succès.",
+    "error": "Échec de l'envoi de l'email."
+  },
+  "bulkSend": {
+    "success": "{sent} envoyé(s), {failed} échoué(s).",
+    "error": "L'envoi groupé a échoué.",
+    "confirmTitle": "Envoi groupé",
+    "confirmDescription": "Envoyer l'email de l'étape {step} à {count} prospect(s) sélectionné(s) ?"
+  },
+  "templates": {
+    "step": "Étape {step}",
+    "subject": "Objet",
+    "body": "Corps (HTML)",
+    "variables": "Variables disponibles",
+    "preview": "Aperçu",
+    "save": "Enregistrer le modèle",
+    "success": "Modèle enregistré.",
+    "error": "Échec de l'enregistrement du modèle.",
+    "sampleData": "Données d'exemple"
+  },
+  "stats": {
+    "kpi": {
+      "totalProspects": "Total prospects",
+      "emailsSent": "Emails envoyés",
+      "openRate": "Taux d'ouverture",
+      "clickRate": "Taux de clic",
+      "replyRate": "Taux de réponse",
+      "conversionRate": "Taux de conversion"
+    },
+    "funnel": {
+      "title": "Entonnoir de prospection",
+      "new": "Nouveau",
+      "contacted": "Contacté",
+      "replied": "A répondu",
+      "meetingBooked": "Réunion planifiée",
+      "converted": "Converti"
+    },
+    "activity": {
+      "title": "Activité récente",
+      "sent": "Email envoyé",
+      "opened": "Email ouvert",
+      "clicked": "Lien cliqué",
+      "bounced": "Email rejeté",
+      "delivered": "Email livré",
+      "failed": "Échec d'envoi",
+      "empty": "Aucune activité récente."
+    }
+  },
+  "errors": {
+    "unauthorized": "Non autorisé.",
+    "notFound": "Prospect introuvable.",
+    "templateNotFound": "Modèle introuvable.",
+    "sendFailed": "Échec de l'envoi de l'email.",
+    "updateFailed": "Échec de la mise à jour."
+  },
+  "addProspect": {
+    "button": "Ajouter un prospect",
+    "title": "Ajouter un prospect",
+    "tabManual": "Manuel",
+    "tabCsv": "Importer CSV",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "company": "Entreprise",
+    "jobTitle": "Poste",
+    "tier": "Niveau",
+    "website": "Site web",
+    "linkedin": "URL LinkedIn",
+    "add": "Ajouter le prospect",
+    "adding": "Ajout en cours...",
+    "success": "Prospect ajouté.",
+    "error": "Échec de l'ajout du prospect."
+  },
+  "csvImport": {
+    "formatTitle": "Colonnes CSV attendues :",
+    "formatExample": "email, firstName, lastName, company, jobTitle, tier, website, linkedinUrl",
+    "formatNote": "tier : TIER_1 ou TIER_2 (défaut : TIER_2). Les emails existants sont ignorés.",
+    "dropzone": "Cliquer pour sélectionner un fichier CSV",
+    "rowsDetected": "{count} ligne(s) détectée(s)",
+    "import": "Importer {count} prospect(s)",
+    "importing": "Importation en cours...",
+    "success": "{imported} importé(s), {skipped} ignoré(s).",
+    "error": "L'importation a échoué.",
+    "emptyFile": "Le fichier semble vide.",
+    "parseError": "Impossible de lire le fichier CSV."
+  }
+}

@@ -8,17 +8,20 @@
     "featureFlags": "Feature Flags",
     "auditLogs": "Audit Logs",
     "systemHealth": "System Health",
+    "incidents": "Incidents",
     "waitlist": "Waitlist",
     "billing": "Billing",
     "analytics": "Analytics",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "outreachCrm": "Outreach CRM"
   },
   "groups": {
     "platform": "Platform",
     "users": "Users",
     "revenue": "Revenue",
     "security": "Security",
-    "system": "System"
+    "system": "System",
+    "outreach": "Outreach"
   },
   "header": {
     "backToApp": "Back to app",

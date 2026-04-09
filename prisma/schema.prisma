@@ -535,6 +535,34 @@ model SystemHealth {
   @@map("system_health")
 }
 
+model Incident {
+  id          String         @id @default(cuid())
+  title       String
+  description String
+  status      IncidentStatus @default(INVESTIGATING)
+  impact      IncidentImpact @default(MINOR)
+  services    String[]       @default([])
+  startedAt   DateTime       @default(now())
+  resolvedAt  DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([startedAt])
+  @@index([status])
+  @@map("incidents")
+}
+
+model StatusSubscriber {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  confirmed   Boolean   @default(false)
+  token       String    @unique @default(cuid())
+  createdAt   DateTime  @default(now())
+
+  @@index([email])
+  @@map("status_subscribers")
+}
+
 model RateLimit {
   id        String   @id @default(cuid())
   userId    String?
@@ -759,4 +787,85 @@ enum HealthStatus {
   HEALTHY
   DEGRADED
   DOWN
+}
+
+enum IncidentStatus {
+  INVESTIGATING
+  IDENTIFIED
+  MONITORING
+  RESOLVED
+}
+
+enum IncidentImpact {
+  MINOR
+  MAJOR
+  CRITICAL
+}
+
+model OutreachProspect {
+  id               String             @id @default(cuid())
+  email            String             @unique
+  firstName        String
+  lastName         String
+  company          String
+  jobTitle         String?
+  website          String?
+  linkedinUrl      String?
+  tier             String             // "TIER_1" | "TIER_2"
+  status           String             @default("NEW")
+  // ProspectStatus values: NEW | CONTACTED | REPLIED | MEETING_BOOKED | CONVERTED | REFUSED | UNSUBSCRIBED
+  templateCategory String             @default("general")
+  // "general" | "agents" | "rag" | "code-gen" | "voice-ai"
+  notes            String?
+  tags             String[]           @default([])
+  lastContactedAt  DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  emailLogs        OutreachEmailLog[]
+
+  @@index([tier])
+  @@index([status])
+  @@index([email])
+  @@map("outreach_prospects")
+}
+
+model OutreachEmailLog {
+  id          String           @id @default(cuid())
+  prospectId  String
+  resendId    String?          @unique
+  subject     String
+  step        Int              // 1 | 2 | 3
+  status      String           @default("SENT")
+  // EmailStatus values: SENT | DELIVERED | OPENED | CLICKED | BOUNCED | FAILED
+  trackingId  String           @unique @default(cuid())
+  targetUrl   String?
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  createdAt   DateTime         @default(now())
+  prospect    OutreachProspect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId])
+  @@index([trackingId])
+  @@index([resendId])
+  @@map("outreach_email_logs")
+}
+
+model OutreachTemplate {
+  id        String   @id @default(cuid())
+  step      Int      // 1 | 2 | 3
+  category  String   @default("general") // "general" | "agents" | "rag" | "code-gen" | "voice-ai"
+  name      String
+  subject   String
+  bodyHtml  String
+  bodyText  String
+  variables String[] @default([])
+  // e.g. ["firstName", "lastName", "company", "jobTitle", "senderName", "hook"]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([step, category])
+  @@index([category])
+  @@map("outreach_templates")
 }

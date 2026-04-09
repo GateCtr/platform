@@ -55,6 +55,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
     adminNotifications: (
       await import(`../messages/${locale}/admin-notifications.json`)
     ).default,
+    adminOutreach: (await import(`../messages/${locale}/admin-outreach.json`))
+      .default,
+    adminIncidents: (await import(`../messages/${locale}/admin-incidents.json`))
+      .default,
     settings: (await import(`../messages/${locale}/settings.json`)).default,
     settingsProfile: (
       await import(`../messages/${locale}/settings-profile.json`)
@@ -96,6 +100,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     emails: (await import(`../messages/${locale}/emails.json`)).default,
     cookieBanner: (await import(`../messages/${locale}/cookie-banner.json`))
       .default,
+    help: (await import(`../messages/${locale}/help.json`)).default,
   };
 
   return {

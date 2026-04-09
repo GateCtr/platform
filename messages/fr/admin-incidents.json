@@ -1,0 +1,62 @@
+{
+  "metadata": {
+    "title": "Incidents"
+  },
+  "title": "Incidents",
+  "subtitle": "Gérez les incidents publics et notifiez les abonnés au statut.",
+  "newIncident": "Nouvel incident",
+  "subscribers": "{count} abonné",
+  "subscribers_plural": "{count} abonnés",
+  "noIncidents": {
+    "title": "Aucun incident",
+    "description": "Tous les systèmes sont opérationnels. Créez un incident pour notifier les abonnés."
+  },
+  "table": {
+    "incident": "Incident",
+    "status": "Statut",
+    "impact": "Impact",
+    "services": "Services",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "status": {
+    "INVESTIGATING": "En investigation",
+    "IDENTIFIED": "Identifié",
+    "MONITORING": "Surveillance",
+    "RESOLVED": "Résolu"
+  },
+  "impact": {
+    "MINOR": "Mineur",
+    "MAJOR": "Majeur",
+    "CRITICAL": "Critique"
+  },
+  "form": {
+    "createTitle": "Créer un incident",
+    "editTitle": "Modifier l'incident",
+    "createDescription": "La création d'un incident notifiera immédiatement tous les abonnés par email.",
+    "editDescription": "Mettez à jour les détails de l'incident. Les abonnés ne seront pas re-notifiés.",
+    "titleLabel": "Titre",
+    "titlePlaceholder": "Description brève de l'incident",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Que se passe-t-il et quel est l'impact sur les utilisateurs ?",
+    "statusLabel": "Statut",
+    "impactLabel": "Impact",
+    "servicesLabel": "Services affectés",
+    "cancel": "Annuler",
+    "create": "Créer et notifier les abonnés",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "error": "Échec de l'enregistrement. Veuillez réessayer."
+  },
+  "delete": {
+    "confirm": "Supprimer cet incident ? Cette action est irréversible.",
+    "error": "Échec de la suppression."
+  },
+  "services": {
+    "app": "Application",
+    "database": "Base de données",
+    "redis": "Redis",
+    "queue": "File de tâches",
+    "stripe": "Stripe"
+  }
+}

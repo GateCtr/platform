@@ -1,0 +1,143 @@
+{
+  "metadata": {
+    "title": "Outreach CRM",
+    "description": "Manage prospects, send templated emails, and track engagement."
+  },
+  "tabs": {
+    "prospects": "Prospects",
+    "templates": "Templates",
+    "statistics": "Statistics"
+  },
+  "prospects": {
+    "columns": {
+      "name": "Name",
+      "company": "Company",
+      "jobTitle": "Job Title",
+      "tier": "Tier",
+      "status": "Status",
+      "lastContacted": "Last Contacted",
+      "actions": "Actions"
+    },
+    "filters": {
+      "searchPlaceholder": "Search name, email, company...",
+      "allStatuses": "All statuses",
+      "allTiers": "All tiers"
+    },
+    "actions": {
+      "sendEmail": "Send Email",
+      "bulkSend": "Bulk Send ({count})"
+    },
+    "status": {
+      "NEW": "New",
+      "CONTACTED": "Contacted",
+      "REPLIED": "Replied",
+      "MEETING_BOOKED": "Meeting Booked",
+      "CONVERTED": "Converted",
+      "REFUSED": "Refused",
+      "UNSUBSCRIBED": "Unsubscribed"
+    },
+    "tier": {
+      "TIER_1": "Tier 1",
+      "TIER_2": "Tier 2"
+    },
+    "empty": "No prospects found.",
+    "never": "Never",
+    "pagination": {
+      "showing": "Showing {from}–{to} of {total}",
+      "page": "Page {page} of {total}"
+    }
+  },
+  "sendDialog": {
+    "title": "Send Email",
+    "step": "Step",
+    "stepLabel": "Step {step}",
+    "preview": "Preview",
+    "confirm": "Send",
+    "cancel": "Cancel",
+    "success": "Email sent successfully.",
+    "error": "Failed to send email."
+  },
+  "bulkSend": {
+    "success": "{sent} sent, {failed} failed.",
+    "error": "Bulk send failed.",
+    "confirmTitle": "Bulk Send",
+    "confirmDescription": "Send step {step} email to {count} selected prospect(s)?"
+  },
+  "templates": {
+    "step": "Step {step}",
+    "subject": "Subject",
+    "body": "Body (HTML)",
+    "variables": "Available variables",
+    "preview": "Preview",
+    "save": "Save template",
+    "success": "Template saved.",
+    "error": "Failed to save template.",
+    "sampleData": "Sample data"
+  },
+  "stats": {
+    "kpi": {
+      "totalProspects": "Total Prospects",
+      "emailsSent": "Emails Sent",
+      "openRate": "Open Rate",
+      "clickRate": "Click Rate",
+      "replyRate": "Reply Rate",
+      "conversionRate": "Conversion Rate"
+    },
+    "funnel": {
+      "title": "Prospect Funnel",
+      "new": "New",
+      "contacted": "Contacted",
+      "replied": "Replied",
+      "meetingBooked": "Meeting Booked",
+      "converted": "Converted"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "sent": "Email sent",
+      "opened": "Email opened",
+      "clicked": "Link clicked",
+      "bounced": "Email bounced",
+      "delivered": "Email delivered",
+      "failed": "Email failed",
+      "empty": "No recent activity."
+    }
+  },
+  "errors": {
+    "unauthorized": "Unauthorized.",
+    "notFound": "Prospect not found.",
+    "templateNotFound": "Template not found.",
+    "sendFailed": "Failed to send email.",
+    "updateFailed": "Failed to update."
+  },
+  "addProspect": {
+    "button": "Add Prospect",
+    "title": "Add Prospect",
+    "tabManual": "Manual",
+    "tabCsv": "Import CSV",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "company": "Company",
+    "jobTitle": "Job Title",
+    "tier": "Tier",
+    "website": "Website",
+    "linkedin": "LinkedIn URL",
+    "add": "Add Prospect",
+    "adding": "Adding...",
+    "success": "Prospect added.",
+    "error": "Failed to add prospect."
+  },
+  "csvImport": {
+    "formatTitle": "Expected CSV columns:",
+    "formatExample": "email, firstName, lastName, company, jobTitle, tier, website, linkedinUrl",
+    "formatNote": "tier: TIER_1 or TIER_2 (default: TIER_2). Existing emails are skipped.",
+    "dropzone": "Click to select a CSV file",
+    "rowsDetected": "{count} row(s) detected",
+    "import": "Import {count} prospect(s)",
+    "importing": "Importing...",
+    "success": "{imported} imported, {skipped} skipped.",
+    "error": "Import failed.",
+    "emptyFile": "The file appears to be empty.",
+    "parseError": "Could not parse the CSV file."
+  }
+}
