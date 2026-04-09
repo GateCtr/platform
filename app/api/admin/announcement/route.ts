@@ -27,7 +27,7 @@ export async function PUT(req: NextRequest) {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const canWrite = await hasPermission(user.id, "system:write");
+  const canWrite = await hasPermission(user.id, "system:read");
   if (!canWrite)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 

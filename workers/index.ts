@@ -3,20 +3,13 @@ import { analyticsWorker } from "./analytics.worker";
 import { dailyReportWorker, scheduleDailyReport } from "./daily-report.worker";
 import { emailWorker } from "./email.worker";
 import { healthWorker, scheduleHealthCheck } from "./health.worker";
-import { healthQueue } from "@/lib/queues";
 import {
   billingEmailWorker,
   scheduleRenewalReminders,
 } from "./billing-renewal-reminder.worker";
+import { outreachWorker } from "./outreach.worker";
 
 console.info("[workers] starting all workers");
-console.info(
-  "[workers] redis:",
-  (process.env.REDIS_EXTERNAL_URL ?? process.env.REDIS_URL ?? "NOT SET").slice(
-    0,
-    25,
-  ) + "...",
-);
 
 // ── Global error handlers ────────────────────────────────────────────────────
 process.on("unhandledRejection", (reason, promise) => {
@@ -40,28 +33,6 @@ scheduleRenewalReminders().catch((err) =>
   console.error("[workers] failed to schedule renewal reminders", err),
 );
 
-// Force an immediate health check job after workers are ready
-// Waits 3s to ensure the worker is fully connected before adding the job
-setTimeout(async () => {
-  try {
-    const counts = await healthQueue.getJobCounts(
-      "waiting",
-      "active",
-      "completed",
-      "failed",
-    );
-    console.info("[workers] health queue counts on startup:", counts);
-    await healthQueue.add(
-      "health-check-force",
-      { triggeredAt: new Date().toISOString() },
-      { jobId: `health-force-${Date.now()}` },
-    );
-    console.info("[workers] forced health check job added");
-  } catch (err) {
-    console.error("[workers] failed to add forced health check:", err);
-  }
-}, 3000);
-
 // ── Graceful shutdown ────────────────────────────────────────────────────────
 async function shutdown(signal: string): Promise<void> {
   console.info(`[workers] received ${signal} — shutting down`);
@@ -72,6 +43,7 @@ async function shutdown(signal: string): Promise<void> {
     emailWorker.close(),
     healthWorker.close(),
     billingEmailWorker.close(),
+    outreachWorker.close(),
   ]);
   console.info("[workers] all workers closed");
   process.exit(0);

@@ -68,6 +68,12 @@ export interface HealthJobData {
   triggeredAt: string; // ISO timestamp
 }
 
+export interface OutreachFollowupJobData {
+  type: "outreach_followup" | "outreach_auto_refuse";
+  prospectId: string;
+  step: number;
+}
+
 export const webhooksQueue = new Queue<WebhookJobData>("webhooks", {
   connection: redisConnection,
   ...bullmqDefaults,
@@ -120,3 +126,17 @@ export const healthQueue = new Queue<HealthJobData>("health", {
     removeOnFail: { count: 100 },
   },
 });
+
+export const outreachQueue = new Queue<OutreachFollowupJobData>(
+  "outreach-followups",
+  {
+    connection: redisConnection,
+    ...bullmqDefaults,
+    defaultJobOptions: {
+      attempts: 3,
+      backoff: { type: "exponential", delay: 5000 },
+      removeOnComplete: { count: 1000 },
+      removeOnFail: { count: 2000 },
+    },
+  },
+);

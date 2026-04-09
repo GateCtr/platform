@@ -1,0 +1,121 @@
+{
+  "page": {
+    "title": "Help Center",
+    "description": "Find answers, guides, and resources for GateCtr."
+  },
+  "hero": {
+    "badge": "Help Center",
+    "headline": "How can we help?",
+    "subtext": "Search our docs, guides, and FAQs — or reach out to our team.",
+    "searchPlaceholder": "Search for answers..."
+  },
+  "categories": {
+    "label": "Browse by topic",
+    "title": "Everything you need to get started",
+    "items": [
+      {
+        "title": "Getting Started",
+        "description": "Set up GateCtr in 5 minutes. One endpoint swap.",
+        "url": "https://blog.gatectr.com/category/getting-started"
+      },
+      {
+        "title": "API & SDK",
+        "description": "Node.js, Python SDKs, REST API reference.",
+        "url": "https://blog.gatectr.com/category/api-sdk"
+      },
+      {
+        "title": "Budget & Billing",
+        "description": "Budget Firewall, hard caps, invoices, plans.",
+        "url": "https://blog.gatectr.com/category/budget-billing"
+      },
+      {
+        "title": "Model Router",
+        "description": "Routing rules, cost scoring, fallback logic.",
+        "url": "https://blog.gatectr.com/category/model-router"
+      },
+      {
+        "title": "Security & Privacy",
+        "description": "Encryption, data retention, compliance.",
+        "url": "https://blog.gatectr.com/category/security-privacy"
+      },
+      {
+        "title": "Account & Team",
+        "description": "RBAC, invitations, audit logs, SSO.",
+        "url": "https://blog.gatectr.com/category/account-team"
+      }
+    ]
+  },
+  "popular": {
+    "label": "Popular articles",
+    "title": "Most read guides",
+    "noResults": "No articles match your search.",
+    "items": [
+      {
+        "title": "How to connect your first LLM provider",
+        "category": "Getting Started",
+        "url": "https://blog.gatectr.com/post/how-to-connect-your-first-llm-provider"
+      },
+      {
+        "title": "Setting a hard budget cap per project",
+        "category": "Budget & Billing",
+        "url": "https://blog.gatectr.com/post/setting-a-hard-budget-cap"
+      },
+      {
+        "title": "Installing the Node.js SDK",
+        "category": "API & SDK",
+        "url": "https://blog.gatectr.com/post/installing-the-nodejs-sdk"
+      },
+      {
+        "title": "How the Context Optimizer works",
+        "category": "API & SDK",
+        "url": "https://blog.gatectr.com/post/how-the-context-optimizer-works"
+      },
+      {
+        "title": "Understanding Model Router scoring",
+        "category": "Model Router",
+        "url": "https://blog.gatectr.com/post/understanding-model-router-scoring"
+      },
+      {
+        "title": "How GateCtr handles your API keys",
+        "category": "Security & Privacy",
+        "url": "https://blog.gatectr.com/post/how-gatectr-handles-your-api-keys"
+      },
+      {
+        "title": "Inviting team members and setting roles",
+        "category": "Account & Team",
+        "url": "https://blog.gatectr.com/post/inviting-team-members-and-setting-roles"
+      },
+      {
+        "title": "Webhook events reference",
+        "category": "API & SDK",
+        "url": "https://blog.gatectr.com/post/webhook-events-reference"
+      }
+    ]
+  },
+  "contact": {
+    "label": "Support",
+    "title": "Still need help?",
+    "support": {
+      "title": "Contact support",
+      "description": "Our team typically responds within 24 hours.",
+      "cta": "Send a message"
+    },
+    "community": {
+      "title": "Join the community",
+      "description": "Ask questions and share tips with other developers.",
+      "cta": "Open GitHub Discussions"
+    }
+  },
+  "cta": {
+    "headline": "Ready to cut your LLM costs?",
+    "description": "One endpoint swap. Up to 40% fewer tokens. No code changes.",
+    "primary": "Start free",
+    "secondary": "Read the docs",
+    "trust": "Free plan — no card needed."
+  },
+  "status": {
+    "label": "System status",
+    "operational": "All systems operational",
+    "viewStatus": "View status page"
+  }
+}

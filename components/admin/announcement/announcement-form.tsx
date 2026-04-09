@@ -28,6 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import type { AnnouncementConfig } from "@/lib/announcement-types";
 
 const schema = z.object({
@@ -87,7 +88,11 @@ export function AnnouncementForm({ flag }: Props) {
     });
     if (res.ok) {
       setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
+      toast.success("Announcement saved.");
+      setTimeout(() => setSaved(false), 3000);
+    } else {
+      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      toast.error(body.error ?? "Failed to save announcement.");
     }
   }
 

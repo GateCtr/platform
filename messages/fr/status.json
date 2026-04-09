@@ -1,14 +1,34 @@
 {
   "page": {
-    "title": "État du système",
+    "title": "Statut GateCtr",
     "description": "État en temps réel de tous les services GateCtr."
   },
   "overall": {
     "healthy": "Tous les systèmes opérationnels",
+    "healthy_sub": "Aucun problème affectant nos systèmes.",
     "degraded": "Panne partielle",
+    "degraded_sub": "Certains systèmes rencontrent des problèmes.",
     "down": "Panne majeure",
+    "down_sub": "Nous enquêtons sur un problème majeur.",
     "unknown": "État inconnu"
   },
+  "actions": {
+    "reportIssue": "Signaler un problème",
+    "subscribe": "S'abonner aux mises à jour",
+    "viewHistory": "Voir l'historique",
+    "refresh": "Actualiser"
+  },
+  "subscribeModal": {
+    "title": "S'abonner aux mises à jour",
+    "description": "Recevez un email lors d'incidents ou de maintenances planifiées sur GateCtr.",
+    "emailLabel": "Adresse email",
+    "emailPlaceholder": "vous@entreprise.com",
+    "submit": "S'abonner",
+    "submitting": "Abonnement...",
+    "success": "Vous êtes abonné. Nous vous notifierons en cas d'incident.",
+    "cancel": "Annuler"
+  },
+  "systemStatus": "Statut du système",
   "services": {
     "app": "Application",
     "database": "Base de données",
@@ -22,7 +42,18 @@
     "DOWN": "Hors service",
     "unknown": "Inconnu"
   },
-  "lastChecked": "Vérifié {time}",
+  "uptime": "{value}% de disponibilité",
+  "uptimeFull": "Disponibilité à 100 %",
+  "days": "90 jours",
+  "today": "Aujourd'hui",
   "noData": "Aucune donnée",
-  "refresh": "Actualiser"
+  "lastChecked": "Vérifié {time}",
+  "history": {
+    "title": "Historique des incidents",
+    "noIncidents": "Aucun incident signalé.",
+    "resolved": "Résolu",
+    "investigating": "En cours d'investigation",
+    "monitoring": "Surveillance"
+  },
+  "poweredBy": "Propulsé par GateCtr"
 }
