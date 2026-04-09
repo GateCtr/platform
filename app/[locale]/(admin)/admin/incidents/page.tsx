@@ -406,8 +406,12 @@ export default function AdminIncidentsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t("table.incident")}</TableHead>
-                  <TableHead>{t("table.status")}</TableHead>
-                  <TableHead>{t("table.impact")}</TableHead>
+                  <TableHead className="hidden sm:table-cell">
+                    {t("table.status")}
+                  </TableHead>
+                  <TableHead className="hidden sm:table-cell">
+                    {t("table.impact")}
+                  </TableHead>
                   <TableHead className="hidden md:table-cell">
                     {t("table.services")}
                   </TableHead>
@@ -420,22 +424,51 @@ export default function AdminIncidentsPage() {
               <TableBody>
                 {incidents.map((inc) => (
                   <TableRow key={inc.id}>
-                    <TableCell>
+                    <TableCell className="max-w-0 w-full sm:w-auto">
                       <div className="flex items-start gap-2">
                         <span className="mt-0.5 shrink-0">
                           {statusIcon(inc.status)}
                         </span>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate max-w-[240px]">
+                          <p className="text-sm font-medium text-foreground truncate max-w-[180px] sm:max-w-[280px]">
                             {inc.title}
                           </p>
-                          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                          <p className="text-xs text-muted-foreground line-clamp-2 sm:line-clamp-1 mt-0.5 break-words">
                             {inc.description}
                           </p>
+                          {/* Status + Impact inline on mobile */}
+                          <div className="flex items-center gap-1.5 mt-1.5 sm:hidden">
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                "text-xs",
+                                STATUS_COLORS[inc.status],
+                              )}
+                            >
+                              {t(
+                                `status.${inc.status}` as Parameters<
+                                  typeof t
+                                >[0],
+                              )}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                "text-xs",
+                                IMPACT_COLORS[inc.impact],
+                              )}
+                            >
+                              {t(
+                                `impact.${inc.impact}` as Parameters<
+                                  typeof t
+                                >[0],
+                              )}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <Badge
                         variant="outline"
                         className={cn("text-xs", STATUS_COLORS[inc.status])}
@@ -443,7 +476,7 @@ export default function AdminIncidentsPage() {
                         {t(`status.${inc.status}` as Parameters<typeof t>[0])}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <Badge
                         variant="outline"
                         className={cn("text-xs", IMPACT_COLORS[inc.impact])}

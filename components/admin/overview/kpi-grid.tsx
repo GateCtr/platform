@@ -9,12 +9,12 @@ interface KpiGridProps {
 }
 
 function formatMrr(cents: number): string {
-  const euros = cents / 100;
+  const dollars = cents / 100;
   return new Intl.NumberFormat("en", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
     maximumFractionDigits: 0,
-  }).format(euros);
+  }).format(dollars);
 }
 
 function formatTokens(n: number): string {

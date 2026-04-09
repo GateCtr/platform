@@ -31,6 +31,7 @@ export async function generateMetadata({
       languages: {
         en: alternates.en,
         fr: alternates.fr,
+        "x-default": alternates.xDefault,
       },
     },
     openGraph: {
@@ -38,11 +39,13 @@ export async function generateMetadata({
       siteName: "GateCtr",
       locale: og.locale,
       alternateLocale: og.alternateLocale,
-      images: [{ url: "/og/default.png", width: 1200, height: 630 }],
+      url: canonical,
+      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
-      images: ["/og/default.png"],
+      site: "@gatectr",
+      images: ["/opengraph-image"],
     },
   };
 }
@@ -55,8 +58,31 @@ export default async function MarketingLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const { marketingUrl } = await getSeoContext();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        url: marketingUrl,
+        name: "GateCtr",
+      },
+      {
+        "@type": "Organization",
+        name: "GateCtr",
+        url: marketingUrl,
+        logo: `${marketingUrl}/logo.png`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <AnnouncementBar locale={locale} />
       <Header variant="marketing" />
       <main className="flex-1 flex items-center justify-center px-4 pt-8 pb-12">
