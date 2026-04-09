@@ -36,7 +36,7 @@ export function OutreachWrapper({
         <Container style={emailCard}>
           <EmailHeaderSimple />
           <Section style={emailSectionContentCompact}>
-            {/* OUTREACH_BODY_PLACEHOLDER */}
+            {"__OUTREACH_BODY__"}
           </Section>
           <EmailFooter
             locale="en"
