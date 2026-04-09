@@ -83,21 +83,10 @@ export const healthWorker = new Worker<HealthJobData>(
   async () => {
     const results = await Promise.allSettled(
       SERVICES.map(async (service) => {
-        try {
-          const { status, latencyMs } = await checkers[service]();
-          await prisma.systemHealth.create({
-            data: { service, status, latencyMs, checkedAt: new Date() },
-          });
-          console.info(
-            `[health.worker] wrote ${service}: ${status} (${latencyMs}ms)`,
-          );
-        } catch (err) {
-          console.error(
-            `[health.worker] failed to write ${service}:`,
-            err instanceof Error ? err.message : String(err),
-          );
-          throw err;
-        }
+        const { status, latencyMs } = await checkers[service]();
+        await prisma.systemHealth.create({
+          data: { service, status, latencyMs, checkedAt: new Date() },
+        });
       }),
     );
 
@@ -122,20 +111,11 @@ healthWorker.on("error", (err) => {
   console.error("[health.worker] worker error", err.message);
 });
 
-healthWorker.on("ready", () => {
-  console.info("[health.worker] worker ready — listening for jobs");
-});
-
 healthWorker.on("failed", (job, err) => {
   console.error("[health.worker] job failed", {
     jobId: job?.id,
     error: err.message,
-    stack: err.stack?.slice(0, 300),
   });
-});
-
-healthWorker.on("completed", (job) => {
-  console.info("[health.worker] job completed", { jobId: job.id });
 });
 
 // ─── Schedule repeatable job (every 60s) ─────────────────────────────────────

@@ -1,0 +1,62 @@
+{
+  "metadata": {
+    "title": "Incidents"
+  },
+  "title": "Incidents",
+  "subtitle": "Manage public incidents and notify status subscribers.",
+  "newIncident": "New incident",
+  "subscribers": "{count} subscriber",
+  "subscribers_plural": "{count} subscribers",
+  "noIncidents": {
+    "title": "No incidents",
+    "description": "All systems are operational. Create an incident to notify subscribers."
+  },
+  "table": {
+    "incident": "Incident",
+    "status": "Status",
+    "impact": "Impact",
+    "services": "Services",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "status": {
+    "INVESTIGATING": "Investigating",
+    "IDENTIFIED": "Identified",
+    "MONITORING": "Monitoring",
+    "RESOLVED": "Resolved"
+  },
+  "impact": {
+    "MINOR": "Minor",
+    "MAJOR": "Major",
+    "CRITICAL": "Critical"
+  },
+  "form": {
+    "createTitle": "Create incident",
+    "editTitle": "Edit incident",
+    "createDescription": "Creating an incident will immediately notify all subscribers by email.",
+    "editDescription": "Update the incident details. Subscribers will not be re-notified.",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Brief description of the incident",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "What is happening and what is the impact on users?",
+    "statusLabel": "Status",
+    "impactLabel": "Impact",
+    "servicesLabel": "Affected services",
+    "cancel": "Cancel",
+    "create": "Create & notify subscribers",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "error": "Failed to save incident. Please try again."
+  },
+  "delete": {
+    "confirm": "Delete this incident? This action cannot be undone.",
+    "error": "Failed to delete incident."
+  },
+  "services": {
+    "app": "App",
+    "database": "Database",
+    "redis": "Redis",
+    "queue": "Queue",
+    "stripe": "Stripe"
+  }
+}

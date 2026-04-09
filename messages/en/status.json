@@ -1,14 +1,34 @@
 {
   "page": {
-    "title": "System Status",
+    "title": "GateCtr Status",
     "description": "Real-time status of all GateCtr services."
   },
   "overall": {
     "healthy": "All systems operational",
+    "healthy_sub": "No issues affecting our systems.",
     "degraded": "Partial outage",
+    "degraded_sub": "Some systems are experiencing issues.",
     "down": "Major outage",
+    "down_sub": "We are investigating a major issue.",
     "unknown": "Status unknown"
   },
+  "actions": {
+    "reportIssue": "Report an issue",
+    "subscribe": "Subscribe to updates",
+    "viewHistory": "View history",
+    "refresh": "Refresh"
+  },
+  "subscribeModal": {
+    "title": "Subscribe to updates",
+    "description": "Get notified by email when GateCtr has incidents or scheduled maintenance.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@company.com",
+    "submit": "Subscribe",
+    "submitting": "Subscribing...",
+    "success": "You're subscribed. We'll notify you of any incidents.",
+    "cancel": "Cancel"
+  },
+  "systemStatus": "System status",
   "services": {
     "app": "Application",
     "database": "Database",
@@ -22,7 +42,18 @@
     "DOWN": "Down",
     "unknown": "Unknown"
   },
-  "lastChecked": "Last checked {time}",
+  "uptime": "{value}% uptime",
+  "uptimeFull": "100% uptime",
+  "days": "90 days",
+  "today": "Today",
   "noData": "No data yet",
-  "refresh": "Refresh"
+  "lastChecked": "Last checked {time}",
+  "history": {
+    "title": "Incident history",
+    "noIncidents": "No incidents reported.",
+    "resolved": "Resolved",
+    "investigating": "Investigating",
+    "monitoring": "Monitoring"
+  },
+  "poweredBy": "Powered by GateCtr"
 }

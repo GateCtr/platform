@@ -49,6 +49,8 @@ import {
   BarChart3,
   Bell,
   Megaphone,
+  Mail,
+  AlertTriangle,
   ChevronsUpDown,
   LogOut,
   ExternalLink,
@@ -144,6 +146,17 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    groupKey: "groups.outreach",
+    items: [
+      {
+        key: "sidebar.outreachCrm",
+        href: "/admin/outreach",
+        permission: "analytics:read",
+        icon: Mail,
+      },
+    ],
+  },
+  {
     groupKey: "groups.system",
     items: [
       {
@@ -157,6 +170,12 @@ const NAV_GROUPS: NavGroup[] = [
         href: "/admin/feature-flags",
         permission: "system:read",
         icon: Flag,
+      },
+      {
+        key: "sidebar.incidents",
+        href: "/admin/incidents",
+        permission: "system:read",
+        icon: AlertTriangle,
       },
       {
         key: "sidebar.systemHealth",

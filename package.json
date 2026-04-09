@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "postinstall": "prisma generate",
     "prepare": "husky",
-    "workers": "tsx workers/index.ts"
+    "workers": "tsx workers/index.ts",
+    "seed:outreach": "tsx prisma/seed-outreach.ts"
   },
   "pnpm": {
     "overrides": {

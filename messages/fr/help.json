@@ -1,0 +1,121 @@
+{
+  "page": {
+    "title": "Centre d'aide",
+    "description": "Trouvez des réponses, guides et ressources pour GateCtr."
+  },
+  "hero": {
+    "badge": "Centre d'aide",
+    "headline": "Comment pouvons-nous vous aider ?",
+    "subtext": "Parcourez nos docs, guides et FAQ — ou contactez notre équipe.",
+    "searchPlaceholder": "Rechercher des réponses..."
+  },
+  "categories": {
+    "label": "Parcourir par sujet",
+    "title": "Tout ce qu'il faut pour démarrer",
+    "items": [
+      {
+        "title": "Démarrage rapide",
+        "description": "Configurez GateCtr en 5 minutes. Un seul changement d'endpoint.",
+        "url": "https://blog.gatectr.com/category/getting-started"
+      },
+      {
+        "title": "API & SDK",
+        "description": "SDK Node.js, Python, référence API REST.",
+        "url": "https://blog.gatectr.com/category/api-sdk"
+      },
+      {
+        "title": "Budget & Facturation",
+        "description": "Budget Firewall, limites strictes, factures, plans.",
+        "url": "https://blog.gatectr.com/category/budget-billing"
+      },
+      {
+        "title": "Model Router",
+        "description": "Règles de routage, scoring de coût, logique de fallback.",
+        "url": "https://blog.gatectr.com/category/model-router"
+      },
+      {
+        "title": "Sécurité & Confidentialité",
+        "description": "Chiffrement, rétention des données, conformité.",
+        "url": "https://blog.gatectr.com/category/security-privacy"
+      },
+      {
+        "title": "Compte & Équipe",
+        "description": "RBAC, invitations, journaux d'audit, SSO.",
+        "url": "https://blog.gatectr.com/category/account-team"
+      }
+    ]
+  },
+  "popular": {
+    "label": "Articles populaires",
+    "title": "Les guides les plus lus",
+    "noResults": "Aucun article ne correspond à votre recherche.",
+    "items": [
+      {
+        "title": "Comment connecter votre premier fournisseur LLM",
+        "category": "Démarrage rapide",
+        "url": "https://blog.gatectr.com/post/how-to-connect-your-first-llm-provider"
+      },
+      {
+        "title": "Définir un plafond budgétaire strict par projet",
+        "category": "Budget & Facturation",
+        "url": "https://blog.gatectr.com/post/setting-a-hard-budget-cap"
+      },
+      {
+        "title": "Installer le SDK Node.js",
+        "category": "API & SDK",
+        "url": "https://blog.gatectr.com/post/installing-the-nodejs-sdk"
+      },
+      {
+        "title": "Comment fonctionne le Context Optimizer",
+        "category": "API & SDK",
+        "url": "https://blog.gatectr.com/post/how-the-context-optimizer-works"
+      },
+      {
+        "title": "Comprendre le scoring du Model Router",
+        "category": "Model Router",
+        "url": "https://blog.gatectr.com/post/understanding-model-router-scoring"
+      },
+      {
+        "title": "Comment GateCtr gère vos clés API",
+        "category": "Sécurité & Confidentialité",
+        "url": "https://blog.gatectr.com/post/how-gatectr-handles-your-api-keys"
+      },
+      {
+        "title": "Inviter des membres et définir les rôles",
+        "category": "Compte & Équipe",
+        "url": "https://blog.gatectr.com/post/inviting-team-members-and-setting-roles"
+      },
+      {
+        "title": "Référence des événements webhook",
+        "category": "API & SDK",
+        "url": "https://blog.gatectr.com/post/webhook-events-reference"
+      }
+    ]
+  },
+  "contact": {
+    "label": "Support",
+    "title": "Besoin d'aide supplémentaire ?",
+    "support": {
+      "title": "Contacter le support",
+      "description": "Notre équipe répond généralement sous 24 heures.",
+      "cta": "Envoyer un message"
+    },
+    "community": {
+      "title": "Rejoindre la communauté",
+      "description": "Posez des questions et partagez des conseils avec d'autres développeurs.",
+      "cta": "Ouvrir GitHub Discussions"
+    }
+  },
+  "cta": {
+    "headline": "Prêt à réduire vos coûts LLM ?",
+    "description": "Un seul changement d'endpoint. Jusqu'à 40% de tokens en moins. Zéro modification de code.",
+    "primary": "Démarrer gratuitement",
+    "secondary": "Lire la documentation",
+    "trust": "Plan gratuit — sans carte bancaire."
+  },
+  "status": {
+    "label": "État du système",
+    "operational": "Tous les systèmes opérationnels",
+    "viewStatus": "Voir la page de statut"
+  }
+}
