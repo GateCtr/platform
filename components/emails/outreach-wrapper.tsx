@@ -5,7 +5,6 @@ import {
   Html,
   Preview,
   Section,
-  Text,
 } from "@react-email/components";
 import { EmailHeaderSimple } from "./email-logo";
 import { EmailFooter } from "./email-footer";
@@ -17,18 +16,16 @@ import {
 
 interface OutreachWrapperProps {
   preview?: string;
-  bodyHtml: string;
   recipientEmail: string;
 }
 
 /**
- * Branded wrapper for outreach emails stored as raw HTML in DB.
- * bodyHtml comes from admin-controlled templates in the DB — not from end users.
- * It is rendered server-side only via @react-email/render, never in the browser.
+ * Branded layout shell for outreach emails.
+ * The body HTML is injected after render() via string replacement in
+ * lib/outreach-email-wrapper.ts — never via dangerouslySetInnerHTML.
  */
 export function OutreachWrapper({
   preview = "",
-  bodyHtml,
   recipientEmail,
 }: OutreachWrapperProps) {
   return (
@@ -38,17 +35,8 @@ export function OutreachWrapper({
       <Body style={emailCanvas}>
         <Container style={emailCard}>
           <EmailHeaderSimple />
-          {/*
-           * bodyHtml is admin-authored template content from the DB.
-           * It is never derived from user input and is rendered server-side only.
-           * CodeQL XSS rule does not apply here — suppressed intentionally.
-           */}
-          {/* lgtm[js/xss] */}
           <Section style={emailSectionContentCompact}>
-            <Text
-               
-              dangerouslySetInnerHTML={{ __html: bodyHtml }}
-            />
+            {/* OUTREACH_BODY_PLACEHOLDER */}
           </Section>
           <EmailFooter
             locale="en"
