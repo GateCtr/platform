@@ -245,26 +245,30 @@ export default function HistoryPage() {
 
       {/* Header */}
       <header className="border-b border-grey-800">
-        <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="https://gatectr.com" aria-label="GateCtr home">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <Link
+            href="https://gatectr.com"
+            aria-label="GateCtr home"
+            className="shrink-0"
+          >
             <Logo
               variant="full"
               iconClassName="w-7 h-7"
               textClassName="text-xl"
             />
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <a
               href={`${process.env.NEXT_PUBLIC_MARKETING_URL ?? "http://localhost:3000"}/help`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-grey-400 hover:text-grey-100 transition-colors border border-grey-700 hover:border-grey-600 rounded-lg px-3 py-1.5"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs text-grey-400 hover:text-grey-100 transition-colors border border-grey-700 hover:border-grey-600 rounded-lg px-3 py-1.5 shrink-0"
             >
               {t("actions.reportIssue")}
             </a>
             <button
               onClick={() => setSubscribeOpen(true)}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-white bg-primary-500 hover:bg-primary-600 transition-colors rounded-lg px-3 py-1.5"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-white bg-primary-500 hover:bg-primary-600 transition-colors rounded-lg px-3 py-1.5 shrink-0"
             >
               <Bell className="size-3" />
               {t("actions.subscribe")}
@@ -274,17 +278,17 @@ export default function HistoryPage() {
       </header>
 
       {/* Main */}
-      <main className="flex-1 max-w-2xl mx-auto w-full px-6 py-10">
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-10">
         {/* Back + title + month nav */}
         <div className="mb-8">
           <Link
-            href="/status"
+            href="/"
             className="inline-flex items-center gap-1.5 text-xs text-grey-500 hover:text-grey-300 transition-colors mb-4 group"
           >
             <ArrowLeft className="size-3.5 group-hover:-translate-x-0.5 transition-transform" />
             {t("page.title")}
           </Link>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <h1 className="text-xl font-semibold text-grey-100">
               {t("history.title")}
             </h1>
@@ -297,7 +301,7 @@ export default function HistoryPage() {
               >
                 <ChevronLeft className="size-4" />
               </button>
-              <span className="text-sm font-medium text-grey-300 min-w-[130px] text-center tabular-nums">
+              <span className="text-sm font-medium text-grey-300 min-w-[120px] text-center tabular-nums">
                 {formatMonthLabel(activeKey)}
               </span>
               <button

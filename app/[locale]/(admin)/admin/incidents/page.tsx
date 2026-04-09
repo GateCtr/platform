@@ -157,12 +157,12 @@ function IncidentDialog({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {isEdit ? t("form.editTitle") : t("form.createTitle")}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             {isEdit ? t("form.editDescription") : t("form.createDescription")}
           </DialogDescription>
         </DialogHeader>
@@ -199,7 +199,7 @@ function IncidentDialog({
           </div>
 
           {/* Status + Impact */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label>{t("form.statusLabel")}</Label>
               <Select
