@@ -101,6 +101,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     cookieBanner: (await import(`../messages/${locale}/cookie-banner.json`))
       .default,
     help: (await import(`../messages/${locale}/help.json`)).default,
+    pseo: (await import(`../messages/${locale}/pseo.json`)).default,
   };
 
   return {
