@@ -37,8 +37,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Ban,
+  Trash2,
 } from "lucide-react";
-import { bulkSendEmail, cancelFollowups } from "@/lib/actions/outreach";
+import {
+  bulkSendEmail,
+  cancelFollowups,
+  deleteProspect,
+} from "@/lib/actions/outreach";
 import { SendEmailDialog } from "./send-email-dialog";
 import { AddProspectDialog } from "./add-prospect-dialog";
 import type {
@@ -94,6 +99,7 @@ interface ProspectsTabProps {
   onOpenDialog: (p: SerializedProspect) => void;
   onCloseDialog: () => void;
   onProspectUpdate: (p: SerializedProspect) => void;
+  onProspectDelete: (id: string) => void;
   onProspectsAdded: (prospects: SerializedProspect[]) => void;
 }
 
@@ -109,6 +115,7 @@ export function ProspectsTab({
   onOpenDialog,
   onCloseDialog,
   onProspectUpdate,
+  onProspectDelete,
   onProspectsAdded,
 }: ProspectsTabProps) {
   const t = useTranslations("adminOutreach");
@@ -253,9 +260,11 @@ export function ProspectsTab({
         header: t("prospects.columns.actions"),
         cell: ({ row }) => {
           const p = row.original;
-          const isBounced =
-            p.emailLogs.some((l) => l.status === "BOUNCED") &&
-            p.status !== "REFUSED";
+          const hasBounced = p.emailLogs.some((l) => l.status === "BOUNCED");
+          const isBlocked =
+            p.status === "REFUSED" || p.status === "UNSUBSCRIBED";
+          const showBan =
+            hasBounced || (p.status === "CONTACTED" && !isBlocked);
 
           return (
             <div className="flex items-center gap-1.5">
@@ -263,12 +272,14 @@ export function ProspectsTab({
                 size="sm"
                 variant="outline"
                 onClick={() => onOpenDialog(p)}
-                disabled={p.status === "REFUSED" || p.status === "UNSUBSCRIBED"}
+                disabled={isBlocked}
               >
                 <Mail className="size-3.5 mr-1.5" />
                 {t("prospects.actions.sendEmail")}
               </Button>
-              {(isBounced || p.status === "CONTACTED") && (
+
+              {/* Cancel follow-ups — shown for bounced or contacted prospects */}
+              {showBan && !isBlocked && (
                 <Button
                   size="sm"
                   variant="ghost"
@@ -292,6 +303,34 @@ export function ProspectsTab({
                   <Ban className="size-3.5" />
                 </Button>
               )}
+
+              {/* Delete prospect */}
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-destructive hover:text-destructive"
+                onClick={() => {
+                  if (
+                    !confirm(
+                      `Delete ${p.firstName} ${p.lastName}? This cannot be undone.`,
+                    )
+                  )
+                    return;
+                  startTransition(async () => {
+                    try {
+                      await deleteProspect(p.id);
+                      toast.success("Prospect deleted");
+                      onProspectDelete(p.id);
+                    } catch {
+                      toast.error("Failed to delete prospect");
+                    }
+                  });
+                }}
+                disabled={isPending}
+                title="Delete prospect"
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
             </div>
           );
         },

@@ -393,7 +393,32 @@ export async function bulkSendEmail(
   return result;
 }
 
-// ─── Cancel pending follow-ups ───────────────────────────────────────────────
+// ─── Delete prospect ──────────────────────────────────────────────────────────
+
+export async function deleteProspect(
+  prospectId: string,
+): Promise<{ success: boolean }> {
+  await requireOutreachAccess();
+
+  // Cancel any pending follow-up jobs first
+  try {
+    const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+    for (const job of jobs) {
+      const data = job.data as { prospectId?: string };
+      if (data.prospectId === prospectId) {
+        await job.remove();
+      }
+    }
+  } catch (err) {
+    console.error("[outreach] Failed to cancel jobs before delete:", err);
+  }
+
+  // Delete logs then prospect (cascade should handle it but explicit is safer)
+  await prisma.outreachEmailLog.deleteMany({ where: { prospectId } });
+  await prisma.outreachProspect.delete({ where: { id: prospectId } });
+
+  return { success: true };
+}
 
 export async function cancelFollowups(
   prospectId: string,
