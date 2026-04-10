@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "xo6QtNdYH0oL_2Bu-IWgB"
+uri = "file://.local/pm/rice_backlog.csv"
+type = "table"
+title = "Backlog RICE — GateCtr (CSV)"
+
+[[outputs]]
+id = "jey23aR5fgEv90g-u1Scv"
+uri = "file://.local/pm/acceptance_criteria.md"
+type = "text"
+title = "Critères d'acceptation Gherkin — GateCtr"
