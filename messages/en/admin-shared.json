@@ -13,7 +13,8 @@
     "billing": "Billing",
     "analytics": "Analytics",
     "notifications": "Notifications",
-    "outreachCrm": "Outreach CRM"
+    "outreachCrm": "Outreach CRM",
+    "massEmail": "Launch Email"
   },
   "groups": {
     "platform": "Platform",

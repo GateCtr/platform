@@ -13,7 +13,8 @@
     "billing": "Facturation",
     "analytics": "Analytics",
     "notifications": "Notifications",
-    "outreachCrm": "CRM Prospection"
+    "outreachCrm": "CRM Prospection",
+    "massEmail": "Email Lancement"
   },
   "groups": {
     "platform": "Plateforme",

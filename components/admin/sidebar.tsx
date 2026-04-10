@@ -154,6 +154,12 @@ const NAV_GROUPS: NavGroup[] = [
         permission: "analytics:read",
         icon: Mail,
       },
+      {
+        key: "sidebar.massEmail",
+        href: "/admin/mass-email",
+        permission: "users:write",
+        icon: Mail,
+      },
     ],
   },
   {
