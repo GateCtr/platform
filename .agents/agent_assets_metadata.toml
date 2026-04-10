@@ -12,3 +12,9 @@ id = "jey23aR5fgEv90g-u1Scv"
 uri = "file://.local/pm/acceptance_criteria.md"
 type = "text"
 title = "Critères d'acceptation Gherkin — GateCtr"
+
+[[outputs]]
+id = "1ZvzPeOS8YqlL_U4R6uQY"
+uri = "file://.local/pm/producthunt_launch_kit.md"
+type = "text"
+title = "GateCtr — Kit de Lancement Product Hunt"
