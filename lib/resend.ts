@@ -4,6 +4,7 @@ import { emailSubject } from "@/lib/email-subjects";
 import WaitlistWelcomeEmail from "@/components/emails/waitlist-welcome";
 import WaitlistInviteEmail from "@/components/emails/waitlist-invite";
 import UserWelcomeEmail from "@/components/emails/user-welcome";
+import LaunchAnnouncementEmail from "@/components/emails/launch-announcement";
 
 function getResend(): Resend {
   if (!process.env.RESEND_API_KEY) {
@@ -444,6 +445,42 @@ export async function sendUserDeletedEmail(
   } catch (err) {
     console.error("Failed to send user deleted email:", err);
     Sentry.captureException(err);
+    return { success: false, error: err };
+  }
+}
+
+/**
+ * Send Product Hunt launch announcement email to a single recipient.
+ * Use in a loop (with rate limiting) when blasting the full waitlist.
+ *
+ * @param email   - Recipient email address
+ * @param name    - Recipient name (optional, used for personalised greeting)
+ * @param locale  - Email locale ("en" | "fr")
+ */
+export async function sendLaunchAnnouncementEmail(
+  email: string,
+  name: string | null,
+  locale: "en" | "fr" = "en",
+) {
+  try {
+    const html = await render(
+      LaunchAnnouncementEmail({
+        email,
+        name: name || undefined,
+        locale,
+      }),
+    );
+
+    const result = await resend.emails.send({
+      from: process.env.EMAIL_FROM || "GateCtr <noreply@gatectr.io>",
+      to: email,
+      subject: emailSubject(locale, "launchAnnouncement"),
+      html,
+    });
+
+    return { success: true, resendId: result.data?.id };
+  } catch (err) {
+    console.error("Failed to send launch announcement email:", err);
     return { success: false, error: err };
   }
 }

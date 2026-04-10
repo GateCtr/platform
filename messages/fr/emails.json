@@ -15,7 +15,8 @@
     "userReactivated": "Votre compte GateCtr a été réactivé",
     "userDeleted": "Votre compte GateCtr a été supprimé",
     "teamInvitation": "{inviter} vous invite à rejoindre {team}",
-    "waitlistBetaCoupon": "Pro — gratuit 1 mois. Votre accès bêta est prêt."
+    "waitlistBetaCoupon": "Pro — gratuit 1 mois. Votre accès bêta est prêt.",
+    "launchAnnouncement": "🚀 GateCtr est live sur Product Hunt — offre exclusive à l'intérieur"
   },
   "brand": {
     "productName": "GateCtr",
@@ -250,6 +251,41 @@
     "body": "Votre compte GateCtr et toutes les données associées ont été définitivement supprimés. Toutes les sessions actives ont été terminées.",
     "dataNote": "Conformément au RGPD et à notre politique de rétention, les données résiduelles seront purgées dans les 30 jours.",
     "contact": "Si vous n'avez pas demandé cette suppression ou avez des questions, contactez-nous à"
+  },
+  "launchAnnouncement": {
+    "preview": "GateCtr est live. Votez sur Product Hunt + 3 mois Pro offerts.",
+    "greetingNamed": "Bonjour",
+    "greeting": "Bonjour",
+    "headline": "🚀 GateCtr est live sur Product Hunt.",
+    "body": "C'est le jour J. Nous venons de lancer sur Product Hunt et votre soutien compte énormément. Ça prend 10 secondes — et en remerciement, nous avons une offre exclusive pour vous.",
+    "phBadge": "🎁 Live sur Product Hunt aujourd'hui — votez pour débloquer votre offre exclusive",
+    "ctaUpvote": "Voter sur Product Hunt ↗",
+    "ctaSignup": "Essayer GateCtr gratuitement",
+    "offerBadge": "OFFRE EXCLUSIVE PRODUCT HUNT",
+    "offerHeadline": "3 mois Pro — gratuits pour les 100 premiers upvoters.",
+    "offerNote": "Valable 48 heures uniquement. Applicable sur le plan Pro mensuel ou annuel.",
+    "featuresHeading": "Ce que vous obtenez avec GateCtr",
+    "features": [
+      {
+        "title": "Budget Firewall",
+        "description": "Plafonds stricts par projet. Blocage automatique à la limite. Alertes douces à 80% via Slack, Teams ou webhook custom."
+      },
+      {
+        "title": "Context Optimizer",
+        "description": "Compresse les prompts avant l'envoi. ~40% d'économie de tokens en moyenne. Même qualité de sortie."
+      },
+      {
+        "title": "Model Router",
+        "description": "Choisit automatiquement le modèle le moins cher disponible. Fallback auto si un provider tombe."
+      },
+      {
+        "title": "Analytics en temps réel",
+        "description": "Consommation par projet, provider et utilisateur. Décomposition des coûts, latence, tendances jour par jour."
+      }
+    ],
+    "makerNote": "J'ai construit GateCtr après avoir reçu une facture OpenAI de 340€ en une nuit — sans alerte, sans plafond. Je n'ai pas trouvé de solution SaaS légère, alors je l'ai construite. Votre vote et vos retours comptent énormément à ce stade.",
+    "makerSig": "— L'équipe GateCtr",
+    "ctaFinal": "Commencer gratuitement →"
   },
   "waitlistBetaCoupon": {
     "preview": "Vous êtes dans les 100 premiers. Pro offert — 1 mois, $0.",
