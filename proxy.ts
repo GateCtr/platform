@@ -53,6 +53,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/v1/(.*)",
   "/api/health",
   "/api/auth/refresh",
+  "/api/audit",
   "/sitemap.xml",
   "/robots.txt",
 ]);
@@ -391,10 +392,25 @@ export default clerkMiddleware(
       const hasAccess = role ? ADMIN_ROLES.includes(role) : false;
 
       if (!hasAccess) {
-        console.warn(
-          "[middleware] access.denied",
-          pathname,
-          req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip"),
+        fetch(new URL("/api/audit", req.url), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-internal-secret":
+              process.env.INTERNAL_AUDIT_SECRET ?? "dev-audit-secret",
+          },
+          body: JSON.stringify({
+            resource: pathname,
+            action: "access.denied",
+            success: false,
+            ipAddress:
+              req.headers.get("x-forwarded-for") ??
+              req.headers.get("x-real-ip") ??
+              undefined,
+            userAgent: req.headers.get("user-agent") ?? undefined,
+          }),
+        }).catch((err) =>
+          console.error("[middleware] audit log failed:", err),
         );
 
         const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
