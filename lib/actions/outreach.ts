@@ -393,7 +393,36 @@ export async function bulkSendEmail(
   return result;
 }
 
-// ─── Schedule follow-up ───────────────────────────────────────────────────────
+// ─── Cancel pending follow-ups ───────────────────────────────────────────────
+
+export async function cancelFollowups(
+  prospectId: string,
+): Promise<{ cancelled: number }> {
+  await requireOutreachAccess();
+
+  let cancelled = 0;
+  try {
+    // Get all delayed/waiting jobs for this prospect
+    const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+    for (const job of jobs) {
+      const data = job.data as { prospectId?: string };
+      if (data.prospectId === prospectId) {
+        await job.remove();
+        cancelled++;
+      }
+    }
+  } catch (err) {
+    console.error("[outreach] Failed to cancel follow-up jobs:", err);
+  }
+
+  // Mark prospect as REFUSED to prevent future sends
+  await prisma.outreachProspect.update({
+    where: { id: prospectId },
+    data: { status: "REFUSED" },
+  });
+
+  return { cancelled };
+}
 
 export async function scheduleFollowup(
   prospectId: string,

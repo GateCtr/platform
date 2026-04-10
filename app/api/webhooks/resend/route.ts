@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
+import { outreachQueue } from "@/lib/queues";
 
 // Lazy init — RESEND_API_KEY is not available at build time in Docker
 function getResend() {
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           where: { resendId },
           select: { id: true, prospectId: true },
         });
-        if (!log) break; // resendId not found — idempotent
+        if (!log) break;
 
         await prisma.$transaction([
           prisma.outreachEmailLog.update({
@@ -77,6 +78,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             data: { status: "REFUSED" },
           }),
         ]);
+
+        // Cancel pending follow-up jobs for this prospect
+        try {
+          const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+          for (const job of jobs) {
+            const data = job.data as { prospectId?: string };
+            if (data.prospectId === log.prospectId) {
+              await job.remove();
+            }
+          }
+        } catch (queueErr) {
+          console.error(
+            "[resend webhook] Failed to cancel follow-up jobs:",
+            queueErr,
+          );
+        }
         break;
       }
 

@@ -30,8 +30,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Mail, Send, UserPlus, ChevronLeft, ChevronRight } from "lucide-react";
-import { bulkSendEmail } from "@/lib/actions/outreach";
+import {
+  Mail,
+  Send,
+  UserPlus,
+  ChevronLeft,
+  ChevronRight,
+  Ban,
+} from "lucide-react";
+import { bulkSendEmail, cancelFollowups } from "@/lib/actions/outreach";
 import { SendEmailDialog } from "./send-email-dialog";
 import { AddProspectDialog } from "./add-prospect-dialog";
 import type {
@@ -244,16 +251,50 @@ export function ProspectsTab({
       {
         id: "actions",
         header: t("prospects.columns.actions"),
-        cell: ({ row }) => (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => onOpenDialog(row.original)}
-          >
-            <Mail className="size-3.5 mr-1.5" />
-            {t("prospects.actions.sendEmail")}
-          </Button>
-        ),
+        cell: ({ row }) => {
+          const p = row.original;
+          const isBounced =
+            p.emailLogs.some((l) => l.status === "BOUNCED") &&
+            p.status !== "REFUSED";
+
+          return (
+            <div className="flex items-center gap-1.5">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onOpenDialog(p)}
+                disabled={p.status === "REFUSED" || p.status === "UNSUBSCRIBED"}
+              >
+                <Mail className="size-3.5 mr-1.5" />
+                {t("prospects.actions.sendEmail")}
+              </Button>
+              {(isBounced || p.status === "CONTACTED") && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => {
+                    startTransition(async () => {
+                      try {
+                        const result = await cancelFollowups(p.id);
+                        toast.success(
+                          `Follow-ups cancelled (${result.cancelled} job${result.cancelled !== 1 ? "s" : ""} removed)`,
+                        );
+                        onProspectUpdate({ ...p, status: "REFUSED" });
+                      } catch {
+                        toast.error("Failed to cancel follow-ups");
+                      }
+                    });
+                  }}
+                  disabled={isPending}
+                  title="Cancel follow-ups & mark as refused"
+                >
+                  <Ban className="size-3.5" />
+                </Button>
+              )}
+            </div>
+          );
+        },
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
