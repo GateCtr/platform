@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { geolocation } from "@vercel/functions";
 import { routing } from "./i18n/routing";
-import { logAudit } from "@/lib/audit";
 import { ALLOWED_COUNTRIES } from "./config/geo-allowed-countries";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import type { RoleName } from "@/types/globals";
@@ -15,41 +14,41 @@ const intlMiddleware = createIntlMiddleware(routing);
 // Use (/:locale)? pattern to match both /path and /fr/path without hardcoding locales
 const isPublicRoute = createRouteMatcher([
   "/",
-  "/fr",
+  "/(en|fr)",
+  "/(en|fr)/features",
   "/features",
-  "/fr/features",
+  "/(en|fr)/pricing",
   "/pricing",
-  "/fr/pricing",
+  "/(en|fr)/waitlist",
   "/waitlist",
-  "/fr/waitlist",
+  "/(en|fr)/docs(.*)",
   "/docs(.*)",
-  "/fr/docs(.*)",
+  "/(en|fr)/changelog(.*)",
   "/changelog(.*)",
-  "/fr/changelog(.*)",
+  "/(en|fr)/blocked",
   "/blocked",
-  "/fr/blocked",
-  "/status",
-  "/fr/status",
-  "/status/history",
-  "/fr/status/history",
+  "/(en|fr)/status(.*)",
+  "/status(.*)",
+  "/(en|fr)/privacy",
   "/privacy",
-  "/fr/privacy",
+  "/(en|fr)/terms",
   "/terms",
-  "/fr/terms",
+  "/(en|fr)/cookies",
   "/cookies",
-  "/fr/cookies",
+  "/(en|fr)/about",
   "/about",
-  "/fr/about",
+  "/(en|fr)/careers",
   "/careers",
-  "/fr/careers",
+  "/(en|fr)/launch",
+  "/launch",
+  "/(en|fr)/sign-in(.*)",
   "/sign-in(.*)",
-  "/fr/sign-in(.*)",
+  "/(en|fr)/sign-up(.*)",
   "/sign-up(.*)",
-  "/fr/sign-up(.*)",
   // Onboarding must be public so Clerk handshake doesn't redirect to sign-in
   // before userId is resolved. The onboarding gate below handles auth logic.
+  "/(en|fr)/onboarding",
   "/onboarding",
-  "/fr/onboarding",
   "/api/waitlist(.*)",
   "/api/v1/(.*)",
   "/api/health",
@@ -392,16 +391,11 @@ export default clerkMiddleware(
       const hasAccess = role ? ADMIN_ROLES.includes(role) : false;
 
       if (!hasAccess) {
-        logAudit({
-          resource: pathname,
-          action: "access.denied",
-          success: false,
-          ipAddress:
-            req.headers.get("x-forwarded-for") ??
-            req.headers.get("x-real-ip") ??
-            undefined,
-          userAgent: req.headers.get("user-agent") ?? undefined,
-        }).catch((err) => console.error("[middleware] audit log failed:", err));
+        console.warn(
+          "[middleware] access.denied",
+          pathname,
+          req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip"),
+        );
 
         const dashboardPath = locale === "fr" ? "/fr/dashboard" : "/dashboard";
         const dashboardUrl = new URL(dashboardPath, req.url);
