@@ -224,6 +224,12 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
     .replace("oauth_", "")
     .toLowerCase();
 
+  // Read referral source from unsafeMetadata (set by SignUpForm when ?ref=... is present)
+  const refSource =
+    typeof clerkUnsafe?.ref === "string" && clerkUnsafe.ref.trim()
+      ? clerkUnsafe.ref.trim()
+      : undefined;
+
   const user = await prisma.user.create({
     data: {
       clerkId: id,
@@ -233,7 +239,10 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
       plan: "FREE",
       isActive: true,
       authProvider,
-      metadata: mergeUserMetadata({}, { locale }) as object,
+      metadata: mergeUserMetadata(
+        {},
+        { locale, ...(refSource ? { ref: refSource } : {}) },
+      ) as object,
     },
   });
 
