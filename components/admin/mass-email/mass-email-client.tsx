@@ -8,7 +8,6 @@ import {
   Square,
   Loader2,
   CheckCircle2,
-  XCircle,
   AlertTriangle,
   Mail,
 } from "lucide-react";
@@ -100,7 +99,11 @@ export function MassEmailClient({ recipients }: Props) {
   function toggle(id: string) {
     setSelected((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   }
