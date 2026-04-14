@@ -16,7 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -36,14 +42,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { MassEmailRecipient, SendResult } from "@/app/[locale]/(admin)/admin/mass-email/_actions";
+import type {
+  MassEmailRecipient,
+  SendResult,
+} from "@/app/[locale]/(admin)/admin/mass-email/_actions";
 import { sendLaunchEmailBatch } from "@/app/[locale]/(admin)/admin/mass-email/_actions";
 
 const PLAN_COLORS: Record<string, string> = {
   FREE: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
   PRO: "bg-primary/10 text-primary",
   TEAM: "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400",
-  ENTERPRISE: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+  ENTERPRISE:
+    "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
 };
 
 interface Props {
@@ -119,23 +129,27 @@ export function MassEmailClient({ recipients }: Props) {
           </div>
           <CardDescription>
             Launch announcement — Product Hunt exclusive offer (code{" "}
-            <code className="font-mono font-bold text-primary">PRODUCTHUNT26</code>
-            ). Sent in the recipient's locale (EN/FR).
+            <code className="font-mono font-bold text-primary">
+              PRODUCTHUNT26
+            </code>
+            ). Sent in the recipient&apos;s locale (EN/FR).
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border border-dashed border-border bg-muted/30 p-4 text-sm text-muted-foreground space-y-1">
             <p>
-              <span className="font-semibold text-foreground">Subject:</span>{" "}
-              🚀 GateCtr is live on Product Hunt — exclusive offer inside
+              <span className="font-semibold text-foreground">Subject:</span> 🚀
+              GateCtr is live on Product Hunt — exclusive offer inside
             </p>
             <p>
               <span className="font-semibold text-foreground">From:</span>{" "}
-              {process.env.NEXT_PUBLIC_EMAIL_FROM ?? "GateCtr <noreply@gatectr.io>"}
+              {process.env.NEXT_PUBLIC_EMAIL_FROM ??
+                "GateCtr <noreply@gatectr.io>"}
             </p>
             <p>
               <span className="font-semibold text-foreground">Includes:</span>{" "}
-              PH upvote CTA · 3 months Pro promo code · feature list · maker note
+              PH upvote CTA · 3 months Pro promo code · feature list · maker
+              note
             </p>
           </div>
         </CardContent>
@@ -153,7 +167,8 @@ export function MassEmailClient({ recipients }: Props) {
             <AlertTriangle className="size-4" />
           )}
           <AlertTitle>
-            {result.sent} sent · {result.failed} failed · {result.skipped} skipped
+            {result.sent} sent · {result.failed} failed · {result.skipped}{" "}
+            skipped
           </AlertTitle>
           {result.errors.length > 0 && (
             <AlertDescription className="mt-2 space-y-1">
@@ -187,7 +202,8 @@ export function MassEmailClient({ recipients }: Props) {
         <div className="flex items-center gap-3">
           {selectedCount > 0 && (
             <span className="text-sm text-muted-foreground">
-              <span className="font-bold text-foreground">{selectedCount}</span> selected
+              <span className="font-bold text-foreground">{selectedCount}</span>{" "}
+              selected
             </span>
           )}
           <Button
@@ -220,7 +236,9 @@ export function MassEmailClient({ recipients }: Props) {
                   <button
                     onClick={toggleAll}
                     className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label={allFilteredSelected ? "Deselect all" : "Select all"}
+                    aria-label={
+                      allFilteredSelected ? "Deselect all" : "Select all"
+                    }
                   >
                     {allFilteredSelected ? (
                       <CheckSquare className="size-4" />
@@ -238,7 +256,10 @@ export function MassEmailClient({ recipients }: Props) {
             <TableBody>
               {filtered.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
+                  <TableCell
+                    colSpan={5}
+                    className="text-center text-muted-foreground py-10"
+                  >
                     No recipients match your search.
                   </TableCell>
                 </TableRow>
@@ -259,7 +280,11 @@ export function MassEmailClient({ recipients }: Props) {
                   <TableCell>
                     <div>
                       <p className="font-medium text-sm">
-                        {r.name ?? <span className="text-muted-foreground italic">No name</span>}
+                        {r.name ?? (
+                          <span className="text-muted-foreground italic">
+                            No name
+                          </span>
+                        )}
                       </p>
                       <p className="text-xs text-muted-foreground">{r.email}</p>
                     </div>
@@ -291,11 +316,15 @@ export function MassEmailClient({ recipients }: Props) {
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Send launch email to {selectedCount} users?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Send launch email to {selectedCount} users?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               This will send the Product Hunt launch announcement to{" "}
-              <span className="font-bold text-foreground">{selectedCount} recipients</span>.
-              Each user will receive it once. This action cannot be undone.
+              <span className="font-bold text-foreground">
+                {selectedCount} recipients
+              </span>
+              . Each user will receive it once. This action cannot be undone.
               <br />
               <br />
               Estimated time:{" "}
