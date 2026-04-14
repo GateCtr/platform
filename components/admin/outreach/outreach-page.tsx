@@ -96,6 +96,10 @@ export function OutreachPageClient({
     );
   }
 
+  function handleProspectDelete(id: string) {
+    setProspects((prev) => prev.filter((p) => p.id !== id));
+  }
+
   function handleProspectsAdded(newProspects: SerializedProspect[]) {
     setProspects((prev) => [...newProspects, ...prev]);
   }
@@ -142,6 +146,7 @@ export function OutreachPageClient({
               setDialogProspect(null);
             }}
             onProspectUpdate={handleProspectUpdate}
+            onProspectDelete={handleProspectDelete}
             onProspectsAdded={handleProspectsAdded}
           />
         </TabsContent>

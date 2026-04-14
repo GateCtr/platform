@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
   },
-  title: "GateCtr — One gateway. Every LLM.",
+  title: "GateCtr — AI Cost Infrastructure for LLM APIs.",
   description:
     "Up to 40% fewer tokens on your LLM bill. From the first call. One endpoint swap. No code changes.",
   keywords: [
@@ -60,13 +60,13 @@ export const metadata: Metadata = {
     title: "GateCtr",
   },
   openGraph: {
-    title: "GateCtr — One gateway. Every LLM.",
+    title: "GateCtr — AI Cost Infrastructure for LLM APIs.",
     description:
       "Up to 40% fewer tokens. Hard budget caps. Cost-aware routing. One endpoint swap.",
     type: "website",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com"}/opengraph-image`,
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "GateCtr — One gateway. Every LLM.",
@@ -75,12 +75,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GateCtr — One gateway. Every LLM.",
+    title: "GateCtr — AI Cost Infrastructure for LLM APIs.",
     description:
       "Up to 40% fewer tokens. Hard budget caps. Cost-aware routing. One endpoint swap.",
-    images: [
-      `${process.env.NEXT_PUBLIC_APP_URL ?? "https://app.gatectr.com"}/opengraph-image`,
-    ],
+    images: ["/opengraph-image"],
   },
 };
 

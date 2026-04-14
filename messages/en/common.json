@@ -35,7 +35,11 @@
     "careers": "Careers",
     "contact": "Contact",
     "githubLabel": "GitHub",
-    "xLabel": "X"
+    "xLabel": "X",
+    "modelPricing": "LLM Model Pricing",
+    "modelComparisons": "Model Comparisons",
+    "integrations": "Integrations",
+    "llmGlossary": "LLM Glossary"
   },
   "actions": {
     "submit": "Submit",

@@ -102,6 +102,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       .default,
     help: (await import(`../messages/${locale}/help.json`)).default,
     launch: (await import(`../messages/${locale}/launch.json`)).default,
+    pseo: (await import(`../messages/${locale}/pseo.json`)).default,
   };
 
   return {

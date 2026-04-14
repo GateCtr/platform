@@ -170,6 +170,38 @@ export function Footer({ variant = "marketing", className }: FooterProps) {
             </h4>
             <ul className="space-y-2.5">
               <li>
+                <Link
+                  href="/models"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.modelPricing")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/compare"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.modelComparisons")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/integrations"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.integrations")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/learn"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t("footer.llmGlossary")}
+                </Link>
+              </li>
+              <li>
                 <a
                   href="https://docs.gatectr.com"
                   target="_blank"
@@ -180,35 +212,12 @@ export function Footer({ variant = "marketing", className }: FooterProps) {
                 </a>
               </li>
               <li>
-                <a
-                  href="https://blog.gatectr.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("footer.blog")}
-                </a>
-              </li>
-              <li>
                 <Link
                   href="/help"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {t("footer.help")}
                 </Link>
-              </li>
-              <li>
-                <a
-                  href={
-                    process.env.NEXT_PUBLIC_STATUS_URL ??
-                    "https://status.gatectr.com"
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {t("footer.status")}
-                </a>
               </li>
             </ul>
           </div>

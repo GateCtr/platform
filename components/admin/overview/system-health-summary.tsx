@@ -44,7 +44,8 @@ export function SystemHealthSummary() {
       .catch(() => setError(true));
   }, []);
 
-  const overallStatus = (data?.status ?? "unknown") as ServiceStatus;
+  const overallStatus = (data?.status?.toLowerCase() ??
+    "unknown") as ServiceStatus;
   const services = data?.services ?? {};
 
   return (
@@ -89,7 +90,7 @@ export function SystemHealthSummary() {
           {/* Per-service dots */}
           <div className="flex items-center gap-3 flex-wrap">
             {Object.entries(services).map(([name, svc]) => {
-              const s = svc.status as ServiceStatus;
+              const s = svc.status.toLowerCase() as ServiceStatus;
               return (
                 <div key={name} className="flex items-center gap-1.5">
                   <span
