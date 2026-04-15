@@ -230,6 +230,26 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
       ? clerkUnsafe.ref.trim()
       : undefined;
 
+  // Read UTM data from cookie (set by UTMCapture component on first page load)
+  let utmData: Record<string, unknown> | undefined;
+  try {
+    const cookieHeader = req.headers.get("cookie") ?? "";
+    const match = cookieHeader.match(/gatectr_utm=([^;]+)/);
+    if (match) {
+      utmData = JSON.parse(decodeURIComponent(match[1])) as Record<
+        string,
+        unknown
+      >;
+    }
+  } catch {
+    // Non-fatal — UTM data is optional
+  }
+
+  // Merge ref: prefer unsafeMetadata.ref, fallback to utm.source
+  const resolvedRef =
+    refSource ??
+    (typeof utmData?.source === "string" ? utmData.source : undefined);
+
   const user = await prisma.user.create({
     data: {
       clerkId: id,
@@ -241,7 +261,11 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
       authProvider,
       metadata: mergeUserMetadata(
         {},
-        { locale, ...(refSource ? { ref: refSource } : {}) },
+        {
+          locale,
+          ...(resolvedRef ? { ref: resolvedRef } : {}),
+          ...(utmData ? { utm: utmData } : {}),
+        },
       ) as object,
     },
   });
@@ -330,9 +354,11 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
   console.log(`User created: ${email} (${user.id})`);
 
   // Check launch milestones for referral sources (non-blocking)
-  if (refSource) {
+  if (resolvedRef) {
     import("@/lib/actions/launch")
-      .then(({ checkAndNotifyMilestone }) => checkAndNotifyMilestone(refSource))
+      .then(({ checkAndNotifyMilestone }) =>
+        checkAndNotifyMilestone(resolvedRef),
+      )
       .catch((err) => console.error("[launch] Milestone check failed:", err));
   }
 }

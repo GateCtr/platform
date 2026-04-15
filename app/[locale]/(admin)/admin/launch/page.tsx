@@ -12,6 +12,7 @@ import { FunnelChart } from "@/components/admin/launch/funnel-chart";
 import { CohortTable } from "@/components/admin/launch/cohort-table";
 import { SignupTimeSeries } from "@/components/admin/launch/signup-time-series";
 import { CampaignStatsBar } from "@/components/admin/launch/campaign-stats";
+import { LiveCounter } from "@/components/admin/launch/live-counter";
 import {
   Card,
   CardContent,
@@ -20,7 +21,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, TrendingUp, Mail, Gift, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Rocket, TrendingUp, Mail, Gift, Download } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Launch Analytics — GateCtr Admin",
@@ -53,7 +55,7 @@ export default async function LaunchAnalyticsPage() {
   return (
     <div className="flex flex-col gap-6 p-6">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="size-9 rounded-lg bg-orange-500/10 flex items-center justify-center">
             <Rocket className="size-5 text-orange-500" />
@@ -67,22 +69,38 @@ export default async function LaunchAnalyticsPage() {
             </p>
           </div>
         </div>
-        {phStats && (
-          <Badge
-            variant="outline"
-            className="text-sm bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20 px-3 py-1"
-          >
-            🚀 {phStats.count} from Product Hunt
-          </Badge>
-        )}
+        <div className="flex items-center gap-2">
+          {phStats && (
+            <Badge
+              variant="outline"
+              className="text-sm bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20 px-3 py-1"
+            >
+              🚀 {phStats.count} from Product Hunt
+            </Badge>
+          )}
+          <Button variant="outline" size="sm" asChild className="gap-2">
+            <a href="/api/admin/launch/export" download>
+              <Download className="size-3.5" />
+              Export CSV
+            </a>
+          </Button>
+        </div>
       </div>
+
+      {/* Live counter */}
+      <Card className="py-4">
+        <CardContent className="px-5">
+          <p className="text-xs text-muted-foreground mb-2">Live signups</p>
+          <LiveCounter initialTotal={totalSignups} />
+        </CardContent>
+      </Card>
 
       {/* Top KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Card className="py-4">
           <CardContent className="px-5 flex items-center gap-3">
             <div className="p-2 rounded-md bg-primary/10">
-              <Users className="size-4 text-primary" />
+              <Rocket className="size-4 text-primary" />
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Total signups</p>
