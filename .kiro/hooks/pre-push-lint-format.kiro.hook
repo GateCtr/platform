@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Lint & Format before push",
+  "description": "Runs ESLint and Prettier check on all staged/modified files before pushing to remote",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npx eslint --fix \"**/*.{ts,tsx}\" --ignore-pattern \"node_modules/**\" --ignore-pattern \".next/**\" && npx prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\" --ignore-path .prettierignore"
+  }
+}
