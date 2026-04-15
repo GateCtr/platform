@@ -101,7 +101,7 @@ export default async function IntegrationsHubPage({
           </p>
           <Button variant="cta-primary" size="lg" asChild>
             <a href={appUrl("/sign-up")}>
-              Start saving — free <ArrowRight className="size-4" />
+              {t("ctaStartFree")} <ArrowRight className="size-4" />
             </a>
           </Button>
         </div>
@@ -123,7 +123,9 @@ export default async function IntegrationsHubPage({
                     {label}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {items.length} integration{items.length > 1 ? "s" : ""}
+                    {items.length > 1
+                      ? t("integrationCountPlural", { count: items.length })
+                      : t("integrationCount", { count: items.length })}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -146,7 +148,7 @@ export default async function IntegrationsHubPage({
                           asChild
                         >
                           <Link href={`/integrations/${integration.slug}`}>
-                            View guide <ArrowRight className="size-3" />
+                            {t("viewGuide")} <ArrowRight className="size-3" />
                           </Link>
                         </Button>
                       </CardContent>

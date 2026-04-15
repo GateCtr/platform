@@ -105,7 +105,7 @@ export default async function LearnHubPage({
           </p>
           <Button variant="cta-primary" size="lg" asChild>
             <a href={appUrl("/sign-up")}>
-              Start saving — free <ArrowRight className="size-4" />
+              {t("ctaLabel")} <ArrowRight className="size-4" />
             </a>
           </Button>
         </div>
@@ -136,7 +136,7 @@ export default async function LearnHubPage({
                     asChild
                   >
                     <Link href={`/learn/${term.slug}`}>
-                      Read more <ArrowRight className="size-3" />
+                      {t("readMore")} <ArrowRight className="size-3" />
                     </Link>
                   </Button>
                 </CardContent>

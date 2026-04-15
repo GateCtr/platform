@@ -122,7 +122,7 @@ export default async function CompareHubPage({
           </p>
           <Button variant="cta-primary" size="lg" asChild>
             <a href={appUrl("/sign-up")}>
-              Start saving — free <ArrowRight className="size-4" />
+              {t("ctaLabel")} <ArrowRight className="size-4" />
             </a>
           </Button>
         </div>
