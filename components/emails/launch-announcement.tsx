@@ -45,7 +45,10 @@ export default function LaunchAnnouncementEmail({
 
   const launchUrl = emailMarketingLocaleUrl(locale, "/launch?ref=launch-email");
   const phUrl = "https://www.producthunt.com/posts/gatectr";
-  const signupUrl = emailMarketingLocaleUrl(locale, "/waitlist?ref=launch-email");
+  const signupUrl = emailMarketingLocaleUrl(
+    locale,
+    "/waitlist?ref=launch-email",
+  );
 
   const greeting = name ? `${t.greetingNamed} ${name},` : `${t.greeting},`;
 

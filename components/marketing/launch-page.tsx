@@ -57,10 +57,7 @@ export function LaunchPage() {
     <main className="w-full">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden pt-24 pb-16 px-4">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10"
-        >
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute left-1/2 top-0 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-primary/5 blur-3xl" />
         </div>
 
@@ -177,7 +174,9 @@ export function LaunchPage() {
             <h2 className="text-3xl font-extrabold text-foreground mb-3">
               {t("integration.headline")}
             </h2>
-            <p className="text-muted-foreground">{t("integration.description")}</p>
+            <p className="text-muted-foreground">
+              {t("integration.description")}
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4 items-stretch">
@@ -226,8 +225,7 @@ export function LaunchPage() {
           </h2>
           <div className="grid sm:grid-cols-2 gap-6">
             {features.map((f) => {
-              const Icon =
-                ICON_MAP[f.icon as keyof typeof ICON_MAP] ?? Shield;
+              const Icon = ICON_MAP[f.icon as keyof typeof ICON_MAP] ?? Shield;
               return (
                 <div
                   key={f.title}
@@ -270,11 +268,7 @@ export function LaunchPage() {
           <h2 className="text-3xl font-extrabold mb-3">{t("cta.headline")}</h2>
           <p className="text-muted-foreground mb-8">{t("cta.description")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              size="lg"
-              asChild
-              className="h-12 px-8 text-base font-bold"
-            >
+            <Button size="lg" asChild className="h-12 px-8 text-base font-bold">
               <Link href={appUrl("/sign-up?ref=producthunt")}>
                 {t("cta.button")}
               </Link>

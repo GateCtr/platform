@@ -28,7 +28,8 @@ export default async function MassEmailPage() {
             Launch Email — Product Hunt
           </h1>
           <p className="text-sm text-muted-foreground">
-            Send the PH launch announcement to active users. Rate-limited at 8 emails/sec.
+            Send the PH launch announcement to active users. Rate-limited at 8
+            emails/sec.
           </p>
         </div>
       </div>

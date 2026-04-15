@@ -109,7 +109,8 @@ export async function sendLaunchEmailBatch(
           userId: u.id,
           resendId: (res as { resendId?: string }).resendId ?? undefined,
           to: u.email,
-          subject: "🚀 GateCtr is live on Product Hunt — exclusive offer inside",
+          subject:
+            "🚀 GateCtr is live on Product Hunt — exclusive offer inside",
           template: "launch-announcement",
           status: "SENT",
         },
