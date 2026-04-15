@@ -11,7 +11,7 @@ const BATCH_SIZE = 10;
 async function requireEmailPermission() {
   const user = await getCurrentUser();
   if (!user) throw new Error("Unauthorized");
-  const allowed = await hasPermission(user.clerkId, "users:write");
+  const allowed = await hasPermission(user.id, "users:write");
   if (!allowed) throw new Error("Forbidden: users:write required");
   return user;
 }
