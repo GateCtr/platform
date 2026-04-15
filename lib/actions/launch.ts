@@ -192,3 +192,249 @@ export async function getPromoRedemptionStats(
     revenue: upgrades * 2900, // approximate: assume PRO plan
   };
 }
+
+// ─── 2.1 Conversion Funnel ────────────────────────────────────────────────────
+
+export interface FunnelStep {
+  label: string;
+  count: number;
+  rate: number; // % of previous step
+}
+
+export interface FunnelBySource {
+  source: string;
+  steps: FunnelStep[];
+}
+
+export async function getConversionFunnel(
+  since?: Date,
+): Promise<FunnelBySource[]> {
+  await requireAnalyticsRead();
+
+  const launchDate =
+    since ??
+    (process.env.LAUNCH_DATE
+      ? new Date(process.env.LAUNCH_DATE)
+      : new Date("2026-04-15T00:00:00Z"));
+
+  const users = await prisma.user.findMany({
+    where: { isActive: true, createdAt: { gte: launchDate } },
+    select: { id: true, metadata: true, createdAt: true },
+  });
+
+  // Group by source
+  const bySource: Record<string, string[]> = {};
+  for (const u of users) {
+    const meta = (u.metadata ?? {}) as Record<string, unknown>;
+    const source =
+      typeof meta.ref === "string" && meta.ref.trim()
+        ? meta.ref.trim()
+        : "direct";
+    (bySource[source] ??= []).push(u.id);
+  }
+
+  const results: FunnelBySource[] = [];
+
+  for (const [source, userIds] of Object.entries(bySource)) {
+    const signups = userIds.length;
+
+    // Step 2: onboarding completed
+    const onboarded = await prisma.user.count({
+      where: {
+        id: { in: userIds },
+        metadata: { path: ["onboardingComplete"], equals: true },
+      },
+    });
+
+    // Step 3: first API call
+    const activated = await prisma.usageLog.groupBy({
+      by: ["userId"],
+      where: { userId: { in: userIds } },
+      _count: { _all: true },
+    });
+    const activatedCount = activated.length;
+
+    // Step 4: plan upgrade
+    const upgraded = await prisma.subscription.count({
+      where: {
+        userId: { in: userIds },
+        plan: { name: { not: "FREE" } },
+        status: "ACTIVE",
+      },
+    });
+
+    const pct = (n: number, d: number) =>
+      d === 0 ? 0 : Math.round((n / d) * 100);
+
+    results.push({
+      source,
+      steps: [
+        { label: "Signed up", count: signups, rate: 100 },
+        {
+          label: "Onboarded",
+          count: onboarded,
+          rate: pct(onboarded, signups),
+        },
+        {
+          label: "First API call",
+          count: activatedCount,
+          rate: pct(activatedCount, signups),
+        },
+        {
+          label: "Upgraded",
+          count: upgraded,
+          rate: pct(upgraded, signups),
+        },
+      ],
+    });
+  }
+
+  return results.sort((a, b) => b.steps[0].count - a.steps[0].count);
+}
+
+// ─── 2.2 Cohort Analysis ─────────────────────────────────────────────────────
+
+export interface CohortRow {
+  week: string; // "2026-W15"
+  source: string;
+  signups: number;
+  retention: number[]; // % retained at week+1, week+2, week+4
+}
+
+export async function getCohortRetention(): Promise<CohortRow[]> {
+  await requireAnalyticsRead();
+
+  const launchDate = process.env.LAUNCH_DATE
+    ? new Date(process.env.LAUNCH_DATE)
+    : new Date("2026-04-15T00:00:00Z");
+
+  const users = await prisma.user.findMany({
+    where: { isActive: true, createdAt: { gte: launchDate } },
+    select: { id: true, metadata: true, createdAt: true },
+  });
+
+  // Group by ISO week + source
+  const cohorts: Record<
+    string,
+    { source: string; week: string; userIds: string[]; weekStart: Date }
+  > = {};
+
+  for (const u of users) {
+    const meta = (u.metadata ?? {}) as Record<string, unknown>;
+    const source =
+      typeof meta.ref === "string" && meta.ref.trim()
+        ? meta.ref.trim()
+        : "direct";
+    const week = getISOWeek(u.createdAt);
+    const key = `${week}::${source}`;
+    if (!cohorts[key]) {
+      cohorts[key] = {
+        source,
+        week,
+        userIds: [],
+        weekStart: startOfISOWeek(u.createdAt),
+      };
+    }
+    cohorts[key].userIds.push(u.id);
+  }
+
+  const rows: CohortRow[] = [];
+
+  for (const cohort of Object.values(cohorts)) {
+    const { userIds, weekStart } = cohort;
+    const signups = userIds.length;
+
+    const retentionWeeks = [1, 2, 4];
+    const retention: number[] = [];
+
+    for (const w of retentionWeeks) {
+      const start = new Date(weekStart.getTime() + w * 7 * 24 * 60 * 60 * 1000);
+      const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const now = new Date();
+      if (start > now) {
+        retention.push(-1); // future — not yet measurable
+        continue;
+      }
+      const active = await prisma.usageLog.groupBy({
+        by: ["userId"],
+        where: {
+          userId: { in: userIds },
+          createdAt: { gte: start, lt: end },
+        },
+      });
+      retention.push(
+        signups === 0 ? 0 : Math.round((active.length / signups) * 100),
+      );
+    }
+
+    rows.push({ week: cohort.week, source: cohort.source, signups, retention });
+  }
+
+  return rows.sort((a, b) => a.week.localeCompare(b.week));
+}
+
+// ─── 2.3 Signups time series ──────────────────────────────────────────────────
+
+export interface SignupPoint {
+  date: string; // YYYY-MM-DD
+  total: number;
+  bySource: Record<string, number>;
+}
+
+export async function getSignupTimeSeries(days = 30): Promise<SignupPoint[]> {
+  await requireAnalyticsRead();
+
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+  const users = await prisma.user.findMany({
+    where: { isActive: true, createdAt: { gte: since } },
+    select: { metadata: true, createdAt: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  const map: Record<string, Record<string, number>> = {};
+
+  for (const u of users) {
+    const day = u.createdAt.toISOString().slice(0, 10);
+    const meta = (u.metadata ?? {}) as Record<string, unknown>;
+    const source =
+      typeof meta.ref === "string" && meta.ref.trim()
+        ? meta.ref.trim()
+        : "direct";
+    if (!map[day]) map[day] = {};
+    map[day][source] = (map[day][source] ?? 0) + 1;
+  }
+
+  // Fill gaps
+  const points: SignupPoint[] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    const date = d.toISOString().slice(0, 10);
+    const bySource = map[date] ?? {};
+    const total = Object.values(bySource).reduce((a, b) => a + b, 0);
+    points.push({ date, total, bySource });
+  }
+
+  return points;
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getISOWeek(date: Date): string {
+  const d = new Date(date);
+  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(
+    ((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
+  );
+  return `${d.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+}
+
+function startOfISOWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() - day + 1);
+  d.setUTCHours(0, 0, 0, 0);
+  return d;
+}
