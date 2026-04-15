@@ -199,6 +199,32 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const plan = await prisma.plan.findUnique({ where: { name: newPlanType } });
   if (!plan) return;
 
+  // ── Promo code redemption tracking ───────────────────────────────────────
+  const couponId = (
+    session as {
+      total_details?: {
+        breakdown?: {
+          discounts?: { discount?: { coupon?: { id?: string } } }[];
+        };
+      };
+    }
+  ).total_details?.breakdown?.discounts?.[0]?.discount?.coupon?.id;
+  const phCoupon = process.env.PH_COUPON_ID ?? "PRODUCTHUNT26";
+  if (couponId === phCoupon) {
+    prisma.emailLog
+      .create({
+        data: {
+          userId: user.id,
+          to: user.email,
+          subject: `Promo redeemed: ${phCoupon}`,
+          template: "promo-redemption",
+          status: "SENT",
+        },
+      })
+      .catch((err) => console.error("[promo] Failed to log redemption:", err));
+    console.log(`[promo] ${phCoupon} redeemed by ${user.email}`);
+  }
+
   // Extract metered and seat item IDs
   let stripeMeteredItemId: string | null = null;
   let stripeSeatsItemId: string | null = null;

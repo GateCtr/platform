@@ -21,6 +21,7 @@ import { SystemHealthSummary } from "@/components/admin/overview/system-health-s
 import { SignupTrendChart } from "@/components/admin/overview/signup-trend-chart";
 import { PlanDistributionChart } from "@/components/admin/overview/plan-distribution-chart";
 import { WidgetErrorBoundary } from "@/components/admin/overview/error-boundary";
+import { ReferralSourcesWidget } from "@/components/admin/launch/referral-sources";
 import { fillTrendGaps, computePlanDistribution } from "@/lib/admin/utils";
 import type { OverviewKpiPayload } from "@/app/api/admin/overview/route";
 
@@ -328,6 +329,11 @@ export default async function AdminOverviewPage({
           )}
         </WidgetErrorBoundary>
       </div>
+
+      {/* Referral sources */}
+      <WidgetErrorBoundary>
+        <ReferralSourcesWidget />
+      </WidgetErrorBoundary>
 
       {/* Waitlist funnel */}
       <Card>

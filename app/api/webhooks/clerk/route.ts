@@ -328,6 +328,13 @@ async function handleUserCreated(evt: WebhookEvent, req: Request) {
     });
 
   console.log(`User created: ${email} (${user.id})`);
+
+  // Check launch milestones for referral sources (non-blocking)
+  if (refSource) {
+    import("@/lib/actions/launch")
+      .then(({ checkAndNotifyMilestone }) => checkAndNotifyMilestone(refSource))
+      .catch((err) => console.error("[launch] Milestone check failed:", err));
+  }
 }
 
 /**

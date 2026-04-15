@@ -3,6 +3,7 @@ import { Mail } from "lucide-react";
 import { requirePermission } from "@/lib/auth";
 import { getEmailRecipients } from "./_actions";
 import { MassEmailClient } from "@/components/admin/mass-email/mass-email-client";
+import { CampaignStatsBar } from "@/components/admin/launch/campaign-stats";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata = {
@@ -33,6 +34,11 @@ export default async function MassEmailPage() {
           </p>
         </div>
       </div>
+
+      {/* Campaign stats — shown once emails have been sent */}
+      <Suspense fallback={null}>
+        <CampaignStatsBar template="launch-announcement" />
+      </Suspense>
 
       <Suspense
         fallback={
