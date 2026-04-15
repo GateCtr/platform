@@ -384,10 +384,8 @@ const prodMiddleware = clerkMiddleware(
   { clockSkewInMs: 30_000 },
 );
 
-// Use full Clerk middleware in production, simple dev middleware otherwise
-export default process.env.NODE_ENV === "production"
-  ? prodMiddleware
-  : devMiddleware;
+// Use full Clerk middleware when Clerk keys are available, simple dev middleware otherwise
+export default process.env.CLERK_SECRET_KEY ? prodMiddleware : devMiddleware;
 
 export const config = {
   matcher: [
