@@ -1,0 +1,61 @@
+{
+  "page": {
+    "title": "Boîte mail",
+    "subtitle": "Envoyez et recevez des emails. Chaque événement tracké."
+  },
+  "tabs": {
+    "inbox": "Réception",
+    "sent": "Envoyés"
+  },
+  "filters": {
+    "all": "Tous",
+    "unread": "Non lus",
+    "starred": "Favoris",
+    "archived": "Archivés"
+  },
+  "search": {
+    "placeholder": "Rechercher…"
+  },
+  "actions": {
+    "compose": "Composer",
+    "refresh": "Actualiser",
+    "reply": "Répondre",
+    "archive": "Archiver",
+    "star": "Marquer",
+    "unstar": "Démarquer",
+    "delete": "Supprimer"
+  },
+  "empty": {
+    "inboxTitle": "Aucun email",
+    "inbox": "Les emails reçus apparaîtront ici.",
+    "sentTitle": "Aucun envoi",
+    "sent": "Les emails que vous composez apparaîtront ici.",
+    "selectTitle": "Sélectionnez un email",
+    "select": "Choisissez un message dans la liste pour le lire ici."
+  },
+  "outbox": {
+    "to": "À :"
+  },
+  "detail": {
+    "from": "De",
+    "to": "À",
+    "noContent": "Aucun contenu.",
+    "thread": "Fil"
+  },
+  "compose": {
+    "title": "Nouvel email",
+    "titleReply": "Répondre",
+    "to": "À",
+    "subject": "Objet",
+    "subjectPlaceholder": "Ligne d'objet",
+    "body": "Message",
+    "bodyPlaceholder": "Rédigez votre message…",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "cancel": "Annuler",
+    "errorRequired": "Destinataire, objet et message sont requis.",
+    "errorFailed": "Échec de l'envoi. Réessayez.",
+    "errorUploading": "Les pièces jointes sont en cours d'envoi. Patientez.",
+    "attach": "Joindre un fichier"
+  }
+}

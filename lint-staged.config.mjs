@@ -21,11 +21,17 @@ function toRelPosix(absPath) {
 
 const config = {
   "*.{ts,tsx,js,jsx,json,css,md}": (filenames) => {
-    const rel = filenames.map(toRelPosix).map((f) => `"${f}"`).join(" ");
+    const rel = filenames
+      .map(toRelPosix)
+      .map((f) => `"${f}"`)
+      .join(" ");
     return [`node scripts/prettier-lint-staged.mjs ${rel}`];
   },
   "*.{ts,tsx,js,jsx}": (filenames) => {
-    const rel = filenames.map(toRelPosix).map((f) => `"${f}"`).join(" ");
+    const rel = filenames
+      .map(toRelPosix)
+      .map((f) => `"${f}"`)
+      .join(" ");
     return [`eslint --fix ${rel}`];
   },
 };
