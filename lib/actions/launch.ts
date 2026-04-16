@@ -145,9 +145,8 @@ export async function checkAndNotifyMilestone(source: string): Promise<void> {
     // Update last notified milestone
     await redis.set(REDIS_KEY(source), nextMilestone);
 
-    console.log(
-      `[launch] Milestone ${nextMilestone} notified for source: ${source}`,
-    );
+    // Avoid log injection — don't interpolate user-provided values directly
+    console.log("[launch] Milestone notified", { milestone: nextMilestone });
   } catch (err) {
     // Non-fatal — don't break the signup flow
     console.error("[launch] Failed to check milestone:", err);

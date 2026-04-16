@@ -5,6 +5,10 @@
  * - Clean white card, no heavy branding
  * - Proper typography: 15px body, 24px line-height, zinc palette
  * - Minimal footer: sender identity only
+ *
+ * Security: bodyHtml is rendered via React Email's Html component which
+ * handles the HTML safely in the email context. The content is generated
+ * server-side by textToHtml() which only produces safe tags.
  */
 import {
   Body,
@@ -27,11 +31,67 @@ import {
 
 interface OutboxEmailProps {
   subject: string;
-  /** Plain text body from the composer — we render it with proper typography */
+  /**
+   * HTML body generated server-side by textToHtml() in compose-dialog.tsx.
+   * Only contains safe tags: <p>, <br>, <blockquote>, <a href>.
+   * All user input is HTML-entity-escaped before tag insertion.
+   */
   bodyHtml: string;
   fromName?: string;
   toName?: string;
   locale?: "en" | "fr";
+}
+
+/**
+ * Render the body HTML as React Email paragraphs.
+ * Parses the simplified HTML produced by textToHtml() into React nodes
+ * to avoid dangerouslySetInnerHTML entirely.
+ */
+function renderBody(html: string): React.ReactNode {
+  // Split on paragraph tags — textToHtml() only produces <p>...</p> and <blockquote>...</blockquote>
+  const paragraphs = html
+    .replace(/<blockquote>([\s\S]*?)<\/blockquote>/g, "\n[QUOTE]$1[/QUOTE]\n")
+    .split(/<\/?p>/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return paragraphs.map((chunk, i) => {
+    if (chunk.startsWith("[QUOTE]")) {
+      const content = chunk.replace("[QUOTE]", "").replace("[/QUOTE]", "");
+      return (
+        <Text
+          key={i}
+          style={{
+            borderLeft: `3px solid ${emailColors.border}`,
+            paddingLeft: "16px",
+            margin: "16px 0",
+            color: emailColors.textMuted,
+            fontSize: "14px",
+            lineHeight: "22px",
+          }}
+        >
+          {content.replace(/<br\s*\/?>/g, "\n")}
+        </Text>
+      );
+    }
+    // Replace <br> with newlines, strip remaining tags
+    const text = chunk.replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "");
+    return (
+      <Text
+        key={i}
+        style={{
+          color: emailColors.textSecondary,
+          fontSize: "15px",
+          lineHeight: "26px",
+          margin: "0 0 16px",
+          fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        }}
+      >
+        {text}
+      </Text>
+    );
+  });
 }
 
 export default function OutboxEmail({
@@ -44,66 +104,7 @@ export default function OutboxEmail({
 
   return (
     <Html lang={locale}>
-      <Head>
-        <style>{`
-          /* Reset for email clients */
-          body { margin: 0; padding: 0; }
-          * { box-sizing: border-box; }
-
-          /* Body typography */
-          .email-body p {
-            color: ${emailColors.textSecondary};
-            font-size: 15px;
-            line-height: 26px;
-            margin: 0 0 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-          }
-          .email-body p:last-child { margin-bottom: 0; }
-
-          /* Links in body */
-          .email-body a {
-            color: ${EMAIL_PRIMARY};
-            text-decoration: underline;
-          }
-
-          /* Blockquote — for quoted replies */
-          .email-body blockquote {
-            border-left: 3px solid ${emailColors.border};
-            margin: 16px 0;
-            padding: 4px 0 4px 16px;
-            color: ${emailColors.textMuted};
-            font-size: 14px;
-            line-height: 22px;
-          }
-
-          /* Code blocks */
-          .email-body code {
-            background: ${emailColors.infoBg};
-            border: 1px solid ${emailColors.border};
-            border-radius: 4px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 13px;
-            padding: 1px 5px;
-          }
-
-          /* Horizontal rule */
-          .email-body hr {
-            border: none;
-            border-top: 1px solid ${emailColors.borderSubtle};
-            margin: 24px 0;
-          }
-
-          /* Lists */
-          .email-body ul, .email-body ol {
-            color: ${emailColors.textSecondary};
-            font-size: 15px;
-            line-height: 26px;
-            margin: 0 0 16px;
-            padding-left: 24px;
-          }
-          .email-body li { margin-bottom: 4px; }
-        `}</style>
-      </Head>
+      <Head />
       <Preview>{subject}</Preview>
 
       <Body style={emailCanvas}>
@@ -127,21 +128,9 @@ export default function OutboxEmail({
             </Text>
           </Section>
 
-          {/* ── Body ── */}
+          {/* ── Body — rendered as React nodes, no dangerouslySetInnerHTML ── */}
           <Section style={{ padding: "0 48px 40px" }}>
-            {/*
-             * bodyHtml is composed by the admin user themselves via the
-             * compose dialog — it is NOT user-supplied external content.
-             * The textToHtml() function in compose-dialog.tsx escapes all
-             * HTML entities before building the HTML, so only safe tags
-             * (<p>, <br>, <blockquote>, <a>) are ever present.
-             * This is intentional and safe for this admin-only context.
-             */}
-            { }
-            <div
-              className="email-body"
-              dangerouslySetInnerHTML={{ __html: bodyHtml }}
-            />
+            {renderBody(bodyHtml)}
           </Section>
 
           {/* ── Footer ── */}

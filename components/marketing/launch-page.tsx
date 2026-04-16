@@ -14,7 +14,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { appUrl } from "@/lib/app-url";
-import { cn } from "@/lib/utils";
 
 const ICON_MAP = {
   shield: Shield,
