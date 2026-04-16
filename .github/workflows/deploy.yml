@@ -44,18 +44,34 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          PRISMA_SKIP_GENERATE: "true"
+          DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+
+      - name: Check staging DB secret
+        id: staging_db
+        run: |
+          if [ -n "${{ secrets.STAGING_DATABASE_URL }}" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "⚠️  STAGING_DATABASE_URL not configured — skipping migrations"
+          fi
 
       - name: Generate Prisma Client
+        if: steps.staging_db.outputs.available == 'true'
         run: pnpm prisma generate
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Run database migrations
+        if: steps.staging_db.outputs.available == 'true'
         run: pnpm prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Seed outreach data (idempotent)
+        if: steps.staging_db.outputs.available == 'true'
         run: pnpm seed:outreach
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
@@ -99,6 +115,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          PRISMA_SKIP_GENERATE: "true"
+          DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
