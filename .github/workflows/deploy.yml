@@ -164,11 +164,6 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Alias production domains
-        run: |
-          npx vercel@25 alias ${{ steps.vercel-deploy.outputs.preview-url }} gatectr.com -t ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_ORG_ID }}
-          npx vercel@25 alias ${{ steps.vercel-deploy.outputs.preview-url }} www.gatectr.com -t ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_ORG_ID }}
-
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
