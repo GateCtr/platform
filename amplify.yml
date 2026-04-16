@@ -5,6 +5,7 @@ frontend:
       commands:
         - npm install -g pnpm
         - pnpm install --frozen-lockfile
+        - pnpm prisma generate
     build:
       commands:
         - pnpm build
