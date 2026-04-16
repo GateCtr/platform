@@ -208,11 +208,8 @@ export async function POST(req: NextRequest) {
           content: buffer.toString("base64"),
         });
       } catch (err) {
-        console.error(
-          "[outbox] Failed to fetch attachment from R2:",
-          att.key,
-          err,
-        );
+        // Log only the error, not the user-provided key
+        console.error("[outbox] Failed to fetch attachment from R2:", err);
       }
     }
 
