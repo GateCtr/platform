@@ -257,6 +257,10 @@ jobs:
     continue-on-error: true
     # Only run on direct pushes to main/develop — not on PRs (handled by neon-branch.yml)
     if: github.event_name == 'push'
+    # Provide a dummy DATABASE_URL at job level so prisma.config.ts never sees an empty value.
+    # The real URL is resolved per-step after checking which branch we're on.
+    env:
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
     steps:
       - uses: actions/checkout@v4
 

@@ -1,9 +1,10 @@
+// Load .env first — dotenv never overwrites already-set env vars (e.g. from CI)
+import "dotenv/config";
 import { config } from "dotenv";
 import { defineConfig } from "prisma/config";
 
-// Load .env.local first (takes precedence), then .env as fallback
+// Also attempt .env.local for local dev (won't override CI-injected vars)
 config({ path: ".env.local" });
-config({ path: ".env" });
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -12,9 +13,9 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
+    // Use process.env directly (not env() helper) so missing DATABASE_URL
+    // doesn't throw on commands that don't need a DB connection (e.g. prisma generate)
     url: process.env.DATABASE_URL ?? "",
-    // Shadow DB required by `prisma migrate dev` — use a dedicated Neon branch in production
-    // Create one at: https://console.neon.tech → your project → Branches → New branch
     shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL,
   },
 });
