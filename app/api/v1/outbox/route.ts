@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { resend } from "@/lib/resend";
 import { render } from "@react-email/render";
 import OutboxEmail from "@/components/emails/outbox-compose";
+import { parseBodyForEmail } from "@/lib/email-body-parser";
 import { s3 } from "@/lib/storage";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 
@@ -181,13 +182,15 @@ export async function POST(req: NextRequest) {
   });
 
   try {
+    // Parse plain text body into structured paragraphs — no HTML in the template
+    const paragraphs = parseBodyForEmail(bodyText ?? bodyHtml);
+
     // Render the email with the GateCtr design system
     const html = await render(
       OutboxEmail({
         subject,
-        bodyHtml,
+        paragraphs,
         fromName,
-        toName: toName ?? to,
       }),
     );
 
