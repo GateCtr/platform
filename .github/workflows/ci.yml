@@ -277,6 +277,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         env:
           DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+          PRISMA_SKIP_GENERATE: "true"
 
       - name: Resolve target DATABASE_URL
         id: db

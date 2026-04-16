@@ -1,10 +1,10 @@
-// Load .env first — dotenv never overwrites already-set env vars (e.g. from CI)
-import "dotenv/config";
-import { config } from "dotenv";
 import { defineConfig } from "prisma/config";
 
-// Also attempt .env.local for local dev (won't override CI-injected vars)
-config({ path: ".env.local" });
+// Do NOT load any .env files here.
+// - In CI: DATABASE_URL is injected directly via the workflow env: block.
+// - In local dev: Next.js / tsx load .env.local before this runs.
+// Loading .env.local here would overwrite the CI-injected DATABASE_URL with an empty value
+// if the file exists but contains no DATABASE_URL (e.g. a blank .env.local on the runner).
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -13,8 +13,9 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    // Use process.env directly (not env() helper) so missing DATABASE_URL
-    // doesn't throw on commands that don't need a DB connection (e.g. prisma generate)
+    // process.env.DATABASE_URL is set by:
+    //   - CI: env: block in the workflow step
+    //   - local dev: run `source .env.local` or use `dotenv -e .env.local pnpm prisma ...`
     url: process.env.DATABASE_URL ?? "",
     shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL,
   },
