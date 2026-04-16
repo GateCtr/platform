@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "title": "GateCtr is Live on Product Hunt 🚀",
+    "description": "Stop LLM bill shock. Budget firewall for any AI API, in 5 minutes. Free plan, no credit card.",
+    "ogTitle": "GateCtr is Live on Product Hunt 🚀",
+    "ogDescription": "Stop LLM bill shock. Budget firewall for any AI API — OpenAI, Anthropic, Mistral, Gemini. Free plan."
+  },
+  "hero": {
+    "badge": "🚀 Live on Product Hunt today",
+    "headline": "Stop LLM bill shock.",
+    "headlineSub": "Budget firewall for any AI API.",
+    "description": "GateCtr sits between your app and any LLM. Change one line. Get instant budget caps, ~40% token savings, automatic model routing, and real-time analytics.",
+    "ctaPrimary": "Try GateCtr Free",
+    "ctaSecondary": "Support us on Product Hunt ↗",
+    "productHuntUrl": "https://www.producthunt.com/posts/gatectr",
+    "social": "No credit card required. Free plan forever."
+  },
+  "offer": {
+    "badge": "🎁 Product Hunt Exclusive",
+    "headline": "3 months Pro — free for the first 100 upvoters.",
+    "description": "Use code PRODUCTHUNT26 at checkout. Valid 48 hours only.",
+    "code": "PRODUCTHUNT26",
+    "copy": "Copy code",
+    "copied": "Copied!",
+    "note": "Applies to monthly or yearly Pro plan."
+  },
+  "integration": {
+    "badge": "ONE LINE CHANGE",
+    "headline": "Works with your existing code.",
+    "description": "Change the base URL. That's it. Your app keeps working.",
+    "before": "Before",
+    "after": "After",
+    "compatible": "Compatible with"
+  },
+  "features": {
+    "headline": "Everything you've been missing.",
+    "items": [
+      {
+        "icon": "shield",
+        "title": "Budget Firewall",
+        "description": "Set hard caps per project. Auto-block when reached. Soft alerts at 80% via Slack, Teams, or custom webhook."
+      },
+      {
+        "icon": "zap",
+        "title": "Context Optimizer",
+        "description": "Compresses prompts before forwarding. Removes whitespace, duplicates, and AI filler. ~40% token savings on average."
+      },
+      {
+        "icon": "git-branch",
+        "title": "Model Router",
+        "description": "Automatically picks the cheapest available model. Auto-fallback if a provider goes down. No code change needed."
+      },
+      {
+        "icon": "bar-chart-3",
+        "title": "Real-time Analytics",
+        "description": "Token usage by project, provider, and user. Day-by-day trends, cost breakdown, latency tracking."
+      }
+    ]
+  },
+  "stats": {
+    "items": [
+      { "value": "~40%", "label": "avg token reduction" },
+      { "value": "5 min", "label": "time to integrate" },
+      { "value": "4", "label": "LLM providers supported" },
+      { "value": "99.5%", "label": "uptime SLA" }
+    ]
+  },
+  "makerNote": {
+    "headline": "A note from the founder",
+    "body": "I built GateCtr after a side project generated a $340 OpenAI bill overnight — no alert, no cap. I couldn't find a lightweight SaaS fix. So I built one. Today, we're shipping. Would love your support and your honest feedback.",
+    "signature": "— The GateCtr Team"
+  },
+  "cta": {
+    "headline": "Ready to stop overpaying for LLMs?",
+    "description": "Free plan includes 50k tokens/month. No credit card required.",
+    "button": "Start for free →",
+    "phButton": "Upvote on Product Hunt"
+  }
+}

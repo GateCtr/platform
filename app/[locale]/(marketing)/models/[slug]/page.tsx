@@ -132,7 +132,7 @@ export default async function ModelPage({
               href="/models"
               className="hover:text-foreground transition-colors"
             >
-              Models
+              {t("breadcrumbModels")}
             </Link>
             <span>/</span>
             <span className="text-foreground">{model.name}</span>
@@ -184,7 +184,7 @@ export default async function ModelPage({
           {/* Specs */}
           <Card className="overflow-hidden py-0">
             <CardHeader className="px-6 py-4 border-b border-border bg-muted/30">
-              <CardTitle className="text-base">Specifications</CardTitle>
+              <CardTitle className="text-base">{t("specifications")}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
@@ -207,7 +207,7 @@ export default async function ModelPage({
                       `${model.speedTokensPerSec} ${t("tokensPerSec")}`,
                     ],
                     [t("category"), model.category],
-                    ["Provider", model.provider],
+                    [t("provider"), model.provider],
                   ].map(([label, value]) => (
                     <TableRow key={label}>
                       <TableCell className="pl-6 font-medium text-muted-foreground w-1/2">
@@ -267,7 +267,7 @@ export default async function ModelPage({
                       <TableRow key={vol}>
                         <TableCell className="pl-6 font-medium">
                           {(vol / 1_000_000).toFixed(0)}M tokens/mo
-                        </TableCell>
+                        </TableCell>{" "}
                         <TableCell className="text-right tabular-nums text-muted-foreground">
                           ${without.toFixed(2)}
                         </TableCell>
@@ -325,12 +325,10 @@ export default async function ModelPage({
               <h2 className="text-2xl font-bold text-foreground mb-3">
                 {t("ctaLabel", { model: model.name })}
               </h2>
-              <p className="text-muted-foreground mb-6">
-                No credit card required. Up and running in 5 minutes.
-              </p>
+              <p className="text-muted-foreground mb-6">{t("ctaSubtitle")}</p>
               <Button variant="cta-primary" size="lg" asChild>
                 <a href={appUrl("/sign-up")}>
-                  Start free <ArrowRight className="size-4" />
+                  {t("ctaStartFree")} <ArrowRight className="size-4" />
                 </a>
               </Button>
             </CardContent>

@@ -21,7 +21,7 @@ export async function generateMetadata({
 export default async function SignUpPage({
   searchParams,
 }: {
-  searchParams: Promise<{ invite?: string }>;
+  searchParams: Promise<{ invite?: string; ref?: string }>;
 }) {
   const sp = await searchParams;
   const waitlistEnabled = process.env.ENABLE_WAITLIST === "true";
@@ -30,6 +30,7 @@ export default async function SignUpPage({
     <SignUpForm
       initialInviteCode={sp.invite ?? ""}
       waitlistEnabled={waitlistEnabled}
+      initialRef={sp.ref ?? ""}
     />
   );
 }

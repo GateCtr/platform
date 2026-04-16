@@ -93,7 +93,7 @@ export default async function GlossaryTermPage({
           {
             "@type": "ListItem",
             position: 1,
-            name: "Learn",
+            name: t("breadcrumbLearn"),
             item: "https://gatectr.com/learn",
           },
           {
@@ -131,7 +131,7 @@ export default async function GlossaryTermPage({
             <span className="text-foreground">{entry.name}</span>
           </nav>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground mb-4 leading-tight">
-            What is {entry.name}?
+            {t("whatIs", { term: entry.name })}
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
             {entry.shortDefinition}
@@ -158,10 +158,7 @@ export default async function GlossaryTermPage({
             </CardHeader>
             <CardContent className="px-6 py-5">
               <p className="text-muted-foreground leading-relaxed">
-                GateCtr addresses {entry.name.toLowerCase()} automatically on
-                every API call — no configuration required. The results are
-                visible in real-time in the GateCtr dashboard, with per-request
-                breakdowns of tokens, cost, and savings.
+                {t("howGatectrBody", { term: entry.name.toLowerCase() })}
               </p>
             </CardContent>
           </Card>
@@ -204,12 +201,10 @@ export default async function GlossaryTermPage({
               <h2 className="text-2xl font-bold text-foreground mb-3">
                 {t("ctaLabel")}
               </h2>
-              <p className="text-muted-foreground mb-6">
-                No credit card required. Up and running in 5 minutes.
-              </p>
+              <p className="text-muted-foreground mb-6">{t("ctaSubtitle")}</p>
               <Button variant="cta-primary" size="lg" asChild>
                 <a href={appUrl("/sign-up")}>
-                  Start free <ArrowRight className="size-4" />
+                  {t("ctaStartFree")} <ArrowRight className="size-4" />
                 </a>
               </Button>
             </CardContent>

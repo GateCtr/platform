@@ -1,5 +1,6 @@
-import { Column, Img, Row, Section, Text } from "@react-email/components";
+import { Column, Img, Link, Row, Section, Text } from "@react-email/components";
 import { emailPublicAssetUrl } from "@/lib/email-assets";
+import { emailMarketingBase } from "@/lib/email-urls";
 import {
   EMAIL_ACCENT,
   EMAIL_PRIMARY,
@@ -65,14 +66,19 @@ export function EmailWordmark() {
 }
 
 export function EmailHeaderCard() {
+  const homeUrl = emailMarketingBase();
   return (
     <Section style={emailHeader}>
       <Row>
         <Column style={{ width: 44, verticalAlign: "middle" }}>
-          <EmailLogoMark size={36} />
+          <Link href={homeUrl} style={{ display: "block" }}>
+            <EmailLogoMark size={36} />
+          </Link>
         </Column>
         <Column style={{ verticalAlign: "middle", paddingLeft: "12px" }}>
-          <EmailWordmark />
+          <Link href={homeUrl} style={{ textDecoration: "none" }}>
+            <EmailWordmark />
+          </Link>
         </Column>
       </Row>
     </Section>
@@ -80,14 +86,19 @@ export function EmailHeaderCard() {
 }
 
 export function EmailHeaderSimple() {
+  const homeUrl = emailMarketingBase();
   return (
     <Section style={emailHeaderCompact}>
       <Row>
         <Column style={{ width: 40, verticalAlign: "middle" }}>
-          <EmailLogoMark size={32} />
+          <Link href={homeUrl} style={{ display: "block" }}>
+            <EmailLogoMark size={32} />
+          </Link>
         </Column>
         <Column style={{ verticalAlign: "middle", paddingLeft: "12px" }}>
-          <EmailWordmark />
+          <Link href={homeUrl} style={{ textDecoration: "none" }}>
+            <EmailWordmark />
+          </Link>
         </Column>
       </Row>
     </Section>

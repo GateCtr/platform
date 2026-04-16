@@ -8,7 +8,9 @@ import {
 } from "@/lib/seo";
 import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
+import { Suspense } from "react";
 import { AnnouncementBar } from "@/components/marketing/announcement-bar";
+import { UTMCapture } from "@/components/marketing/utm-capture";
 
 export async function generateMetadata({
   params,
@@ -83,6 +85,9 @@ export default async function MarketingLayout({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <Suspense fallback={null}>
+        <UTMCapture />
+      </Suspense>
       <AnnouncementBar locale={locale} />
       <Header variant="marketing" />
       <main className="flex-1 flex items-center justify-center px-4 pt-8 pb-12">
