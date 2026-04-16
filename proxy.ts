@@ -1,7 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
-import { geolocation } from "@vercel/functions";
 import { routing } from "./i18n/routing";
 import { ALLOWED_COUNTRIES } from "./config/geo-allowed-countries";
 import { applySecurityHeaders } from "@/lib/security-headers";
@@ -98,7 +97,11 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
   const geoEnabled = process.env.ENABLE_GEO_BLOCKING === "true";
   const isBlockedPage = pathname === "/blocked" || pathname === "/fr/blocked";
   if (geoEnabled && !isBlockedPage && !pathname.startsWith("/api")) {
-    const { country } = geolocation(req);
+    // CloudFront header injected by AWS Amplify / CloudFront
+    const country =
+      req.headers.get("cloudfront-viewer-country") ??
+      req.headers.get("x-country-code") ??
+      null;
     if (country && !ALLOWED_COUNTRIES.includes(country)) {
       const blockedPath = pathname.startsWith("/fr")
         ? "/fr/blocked"
@@ -227,7 +230,6 @@ const prodMiddleware = clerkMiddleware(
     // Clerk cookie desync — let Clerk handle the handshake natively
     // Do NOT redirect or clear cookies here; intercepting the handshake
     // causes an infinite loop. Clerk will resolve it and redirect to the app.
-    const hsReason = req.nextUrl.searchParams.get("__clerk_hs_reason");
     const isHandshake =
       req.nextUrl.searchParams.has("__clerk_handshake") ||
       req.nextUrl.searchParams.has("__clerk_hs_reason") ||
@@ -236,31 +238,6 @@ const prodMiddleware = clerkMiddleware(
     if (isHandshake) {
       // Let Clerk middleware resolve the handshake — do not interfere
       return secure(NextResponse.next());
-    }
-
-    // Legacy: clear stale cookies only when NOT in a handshake flow
-    if (hsReason === "session-token-but-no-client-uat" && !isHandshake) {
-      const signInPath = pathname.startsWith("/fr")
-        ? "/fr/sign-in"
-        : "/sign-in";
-      const res = NextResponse.redirect(new URL(signInPath, req.url));
-      for (const cookieName of [
-        "__session",
-        "__client_uat",
-        "__clerk_db_jwt",
-      ]) {
-        res.cookies.set(cookieName, "", {
-          maxAge: 0,
-          path: "/",
-          domain: "app.gatectr.com",
-        });
-        res.cookies.set(cookieName, "", {
-          maxAge: 0,
-          path: "/",
-          domain: ".gatectr.com",
-        });
-      }
-      return secure(res);
     }
 
     const { userId, sessionClaims } = await auth();
@@ -394,7 +371,15 @@ const prodMiddleware = clerkMiddleware(
 
     return secure(intlMiddleware(req));
   },
-  { clockSkewInMs: 30_000 },
+  {
+    clockSkewInMs: 30_000,
+    // authorizedParties prevents subdomain cookie leaking attacks
+    authorizedParties: [
+      "https://app.gatectr.com",
+      "https://gatectr.com",
+      "http://localhost:3000",
+    ],
+  },
 );
 
 // Use full Clerk middleware when Clerk keys are available, simple dev middleware otherwise
