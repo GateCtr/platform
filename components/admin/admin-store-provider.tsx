@@ -1,6 +1,7 @@
 "use client";
 
 import { useUnacknowledgedCount } from "@/hooks/use-unacknowledged-count";
+import { useInboxUnreadCount } from "@/hooks/use-inbox-unread-count";
 
 /**
  * Mounts the unacknowledged-count polling hook once at the admin layout level.
@@ -13,5 +14,6 @@ export function AdminStoreProvider({
   children: React.ReactNode;
 }) {
   useUnacknowledgedCount();
+  useInboxUnreadCount();
   return <>{children}</>;
 }

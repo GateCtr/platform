@@ -15,7 +15,8 @@
     "notifications": "Notifications",
     "outreachCrm": "CRM Prospection",
     "massEmail": "Email Lancement",
-    "launchAnalytics": "Analytics Lancement"
+    "launchAnalytics": "Analytics Lancement",
+    "inbox": "Boîte mail"
   },
   "groups": {
     "platform": "Plateforme",
