@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
   workflow_dispatch:
     inputs:
       environment:
@@ -20,18 +21,18 @@ env:
 
 jobs:
   deploy-staging:
-    name: Deploy to Staging
+    name: Deploy to Staging (Amplify)
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
     environment:
       name: staging
-      url: https://gatectr-git-develop.vercel.app
+      url: https://develop.gatectr.com
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
 
@@ -46,6 +47,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Run database migrations
         run: pnpm prisma migrate deploy
@@ -57,40 +60,34 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
-      - name: Deploy to Vercel (Staging)
-        id: vercel-deploy-staging
+      - name: Trigger Amplify deployment (staging)
         run: |
-          DEPLOY_URL=$(npx vercel@latest --token ${{ secrets.VERCEL_TOKEN }} \
-            --scope ${{ secrets.VERCEL_ORG_ID }} \
-            -m githubCommitSha=${{ github.sha }} \
-            -m githubCommitRef=${{ github.ref_name }} \
-            --yes 2>&1 | tail -1)
-          echo "preview-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $DEPLOY_URL"
+          aws amplify start-job \
+            --app-id ${{ secrets.AMPLIFY_APP_ID_STAGING }} \
+            --branch-name develop \
+            --job-type RELEASE
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Notify deployment success
         if: success()
-        run: |
-          echo "✅ Staging deployment successful"
-          echo "URL: Check the Vercel preview URL in the PR comment"
+        run: echo "✅ Staging deployment triggered on AWS Amplify"
 
   deploy-production:
-    name: Deploy to Production
+    name: Deploy to Production (Amplify)
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
     environment:
       name: production
       url: https://gatectr.com
-    needs: []
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
 
@@ -105,13 +102,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
-
-      - name: Build application
-        run: pnpm build
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL_MAIN }}
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
 
       - name: Wake up Neon database
         run: |
@@ -149,20 +141,16 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
 
-      - name: Deploy to Vercel (Production)
-        id: vercel-deploy
+      - name: Trigger Amplify deployment (production)
         run: |
-          DEPLOY_URL=$(npx vercel@latest --token ${{ secrets.VERCEL_TOKEN }} \
-            --prod \
-            --scope ${{ secrets.VERCEL_ORG_ID }} \
-            -m githubCommitSha=${{ github.sha }} \
-            -m githubCommitRef=${{ github.ref_name }} \
-            --yes 2>&1 | tail -1)
-          echo "preview-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $DEPLOY_URL"
+          aws amplify start-job \
+            --app-id ${{ secrets.AMPLIFY_APP_ID_PRODUCTION }} \
+            --branch-name main \
+            --job-type RELEASE
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
@@ -179,9 +167,7 @@ jobs:
 
       - name: Notify deployment success
         if: success()
-        run: |
-          echo "✅ Production deployment successful"
-          echo "URL: https://gatectr.com"
+        run: echo "✅ Production deployment triggered on AWS Amplify"
 
       - name: Notify deployment failure
         if: failure()
