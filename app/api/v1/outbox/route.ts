@@ -185,11 +185,17 @@ export async function POST(req: NextRequest) {
     // Parse plain text body into structured paragraphs — no HTML in the template
     const paragraphs = parseBodyForEmail(bodyText ?? bodyHtml);
 
+    // Ensure at least one paragraph to avoid empty render
+    const safeParagraphs =
+      paragraphs.length > 0
+        ? paragraphs
+        : [{ type: "paragraph" as const, text: bodyText ?? "" }];
+
     // Render the email with the GateCtr design system
     const html = await render(
       OutboxEmail({
         subject,
-        paragraphs,
+        paragraphs: safeParagraphs,
         fromName,
       }),
     );

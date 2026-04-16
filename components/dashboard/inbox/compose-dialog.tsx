@@ -120,8 +120,14 @@ export function ComposeDialog({
         });
 
         if (!res.ok) {
-          const { error: err } = await res.json();
-          throw new Error(err ?? "Upload failed");
+          let errMsg = "Upload failed";
+          try {
+            const { error: err } = await res.json();
+            errMsg = err ?? errMsg;
+          } catch {
+            errMsg = `Upload error (${res.status})`;
+          }
+          throw new Error(errMsg);
         }
 
         const { key } = await res.json();
@@ -185,8 +191,15 @@ export function ComposeDialog({
         }),
       });
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error ?? "Failed to send");
+        // Safely parse error — body may be empty on gateway errors (502/504)
+        let errorMsg = "Failed to send";
+        try {
+          const data = await res.json();
+          errorMsg = data.error ?? errorMsg;
+        } catch {
+          errorMsg = `Server error (${res.status})`;
+        }
+        throw new Error(errorMsg);
       }
       setSending(false);
       setTo("");
