@@ -29,11 +29,25 @@ vi.mock("@/lib/prisma", () => ({
     outreachProspect: {
       update: mockUpdate,
     },
+    // New models added by inbox system — return no-ops so existing tests pass
+    outboxEmail: {
+      findUnique: vi.fn().mockResolvedValue(null),
+      update: vi.fn().mockResolvedValue({}),
+    },
+    emailLog: {
+      updateMany: vi.fn().mockResolvedValue({ count: 0 }),
+    },
     $transaction: mockTransaction,
   },
 }));
 
 // ─── Mock Resend — use a module-level spy that can be configured per test ─────
+
+vi.mock("@/lib/telegram", () => ({
+  notifyEmailDelivered: vi.fn().mockResolvedValue(false),
+  notifyEmailOpened: vi.fn().mockResolvedValue(false),
+  notifyEmailBounced: vi.fn().mockResolvedValue(false),
+}));
 
 vi.mock("resend", () => {
   // webhooksVerify is a stable reference that tests can configure via vi.mocked

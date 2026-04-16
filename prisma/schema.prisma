@@ -28,6 +28,7 @@ model User {
   budget               Budget?
   dailyUsage           DailyUsageCache[]
   emailLogs            EmailLog[]
+  outboxEmails         OutboxEmail[]
   featureFlagOverrides FeatureFlagOverride[]
   llmProviderKeys      LLMProviderKey[]
   projects             Project[]
@@ -868,4 +869,92 @@ model OutreachTemplate {
   @@unique([step, category])
   @@index([category])
   @@map("outreach_templates")
+}
+
+// ─── Inbox / Outbox ───────────────────────────────────────────────────────────
+
+/// Emails received via Resend inbound routing
+model InboxEmail {
+  id          String          @id @default(cuid())
+  resendId    String?         @unique
+  fromEmail   String
+  fromName    String?
+  toEmail     String
+  subject     String
+  bodyHtml    String?
+  bodyText    String?
+  headers     Json?
+  attachments Json?           @default("[]")
+  isRead      Boolean         @default(false)
+  isStarred   Boolean         @default(false)
+  isArchived  Boolean         @default(false)
+  labels      String[]        @default([])
+  threadId    String?         // groups replies together
+  inReplyTo   String?         // Message-ID of the email being replied to
+  replyToId   String?         // FK to another InboxEmail (reply chain)
+  replyTo     InboxEmail?     @relation("EmailThread", fields: [replyToId], references: [id])
+  replies     InboxEmail[]    @relation("EmailThread")
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([fromEmail])
+  @@index([toEmail])
+  @@index([threadId])
+  @@index([isRead])
+  @@index([isArchived])
+  @@index([createdAt])
+  @@map("inbox_emails")
+}
+
+/// Emails sent via Resend with full event tracking
+model OutboxEmail {
+  id           String            @id @default(cuid())
+  userId       String?
+  resendId     String?           @unique
+  fromEmail    String
+  fromName     String?
+  toEmail      String
+  toName       String?
+  subject      String
+  bodyHtml     String
+  bodyText     String?
+  replyTo      String?
+  status       OutboxEmailStatus @default(QUEUED)
+  scheduledAt  DateTime?
+  sentAt       DateTime?
+  deliveredAt  DateTime?
+  openedAt     DateTime?
+  clickedAt    DateTime?
+  bouncedAt    DateTime?
+  failedAt     DateTime?
+  failReason   String?
+  openCount    Int               @default(0)
+  clickCount   Int               @default(0)
+  trackingId   String            @unique @default(cuid())
+  tags         Json?             @default("{}")  // Resend tags for filtering
+  metadata     Json?             @default("{}")  // arbitrary key/value
+  inReplyToId  String?           // FK to InboxEmail being replied to
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  user         User?             @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([toEmail])
+  @@index([status])
+  @@index([resendId])
+  @@index([trackingId])
+  @@index([createdAt])
+  @@map("outbox_emails")
+}
+
+enum OutboxEmailStatus {
+  QUEUED
+  SENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  FAILED
+  CANCELLED
 }

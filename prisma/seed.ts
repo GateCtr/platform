@@ -1,4 +1,15 @@
-import { prisma } from "../lib/prisma";
+import { config } from "dotenv";
+config({ path: ".env.local" });
+config({ path: ".env" });
+
+import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// @ts-expect-error - Type mismatch between @types/pg versions
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyRecord = Record<string, any>;
@@ -802,4 +813,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });

@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { outreachQueue } from "@/lib/queues";
+import {
+  notifyEmailDelivered,
+  notifyEmailOpened,
+  notifyEmailBounced,
+} from "@/lib/telegram";
 
 // Lazy init — RESEND_API_KEY is not available at build time in Docker
 function getResend() {
@@ -21,7 +26,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   // Verify signature using resend's built-in Webhooks verifier
-  let event: { type: string; data: { email_id?: string } };
+  let event: { type: string; data: { email_id?: string; to?: string[] } };
   try {
     event = getResend().webhooks.verify({
       payload: rawBody,
@@ -31,7 +36,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         signature: req.headers.get("svix-signature") ?? "",
       },
       webhookSecret,
-    }) as { type: string; data: { email_id?: string } };
+    }) as { type: string; data: { email_id?: string; to?: string[] } };
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
@@ -45,64 +50,177 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     switch (event.type) {
+      // ── Outbox tracking ────────────────────────────────────────────────────
+      case "email.delivered": {
+        // Update outbox record
+        const outbox = await prisma.outboxEmail.findUnique({
+          where: { resendId },
+          select: { id: true, toEmail: true, subject: true, status: true },
+        });
+        if (outbox) {
+          await prisma.outboxEmail.update({
+            where: { id: outbox.id },
+            data: { status: "DELIVERED", deliveredAt: new Date() },
+          });
+          await notifyEmailDelivered({
+            to: outbox.toEmail,
+            subject: outbox.subject,
+          });
+        }
+
+        // Also update outreach logs (idempotent)
+        await prisma.outreachEmailLog.updateMany({
+          where: { resendId },
+          data: { status: "DELIVERED" },
+        });
+        // Also update EmailLog
+        await prisma.emailLog.updateMany({
+          where: { resendId },
+          data: { status: "DELIVERED" },
+        });
+        break;
+      }
+
       case "email.opened": {
+        const outbox = await prisma.outboxEmail.findUnique({
+          where: { resendId },
+          select: {
+            id: true,
+            toEmail: true,
+            subject: true,
+            openCount: true,
+            openedAt: true,
+          },
+        });
+        if (outbox) {
+          await prisma.outboxEmail.update({
+            where: { id: outbox.id },
+            data: {
+              status: "OPENED",
+              openedAt: outbox.openedAt ?? new Date(),
+              openCount: { increment: 1 },
+            },
+          });
+          if (!outbox.openedAt) {
+            // First open only
+            await notifyEmailOpened({
+              to: outbox.toEmail,
+              subject: outbox.subject,
+            });
+          }
+        }
+
         await prisma.outreachEmailLog.updateMany({
           where: { resendId, openedAt: null },
           data: { openedAt: new Date(), status: "OPENED" },
+        });
+        await prisma.emailLog.updateMany({
+          where: { resendId },
+          data: { status: "OPENED", openedAt: new Date() },
         });
         break;
       }
 
       case "email.clicked": {
+        const outbox = await prisma.outboxEmail.findUnique({
+          where: { resendId },
+          select: { id: true, clickedAt: true },
+        });
+        if (outbox) {
+          await prisma.outboxEmail.update({
+            where: { id: outbox.id },
+            data: {
+              status: "CLICKED",
+              clickedAt: outbox.clickedAt ?? new Date(),
+              clickCount: { increment: 1 },
+            },
+          });
+        }
+
         await prisma.outreachEmailLog.updateMany({
           where: { resendId, clickedAt: null },
           data: { clickedAt: new Date(), status: "CLICKED" },
+        });
+        await prisma.emailLog.updateMany({
+          where: { resendId },
+          data: { status: "CLICKED", clickedAt: new Date() },
         });
         break;
       }
 
       case "email.bounced": {
-        const log = await prisma.outreachEmailLog.findUnique({
+        // Outbox
+        const outbox = await prisma.outboxEmail.findUnique({
+          where: { resendId },
+          select: { id: true, toEmail: true, subject: true },
+        });
+        if (outbox) {
+          await prisma.outboxEmail.update({
+            where: { id: outbox.id },
+            data: { status: "BOUNCED", bouncedAt: new Date() },
+          });
+          await notifyEmailBounced({
+            to: outbox.toEmail,
+            subject: outbox.subject,
+          });
+        }
+
+        // Outreach
+        const outreachLog = await prisma.outreachEmailLog.findUnique({
           where: { resendId },
           select: { id: true, prospectId: true },
         });
-        if (!log) break;
+        if (outreachLog) {
+          await prisma.$transaction([
+            prisma.outreachEmailLog.update({
+              where: { id: outreachLog.id },
+              data: { status: "BOUNCED" },
+            }),
+            prisma.outreachProspect.update({
+              where: { id: outreachLog.prospectId },
+              data: { status: "REFUSED" },
+            }),
+          ]);
 
-        await prisma.$transaction([
-          prisma.outreachEmailLog.update({
-            where: { id: log.id },
-            data: { status: "BOUNCED" },
-          }),
-          prisma.outreachProspect.update({
-            where: { id: log.prospectId },
-            data: { status: "REFUSED" },
-          }),
-        ]);
-
-        // Cancel pending follow-up jobs for this prospect
-        try {
-          const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
-          for (const job of jobs) {
-            const data = job.data as { prospectId?: string };
-            if (data.prospectId === log.prospectId) {
-              await job.remove();
+          try {
+            const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+            for (const job of jobs) {
+              const data = job.data as { prospectId?: string };
+              if (data.prospectId === outreachLog.prospectId) {
+                await job.remove();
+              }
             }
+          } catch (queueErr) {
+            console.error(
+              "[resend webhook] Failed to cancel follow-up jobs:",
+              queueErr,
+            );
           }
-        } catch (queueErr) {
-          console.error(
-            "[resend webhook] Failed to cancel follow-up jobs:",
-            queueErr,
-          );
         }
+
+        await prisma.emailLog.updateMany({
+          where: { resendId },
+          data: { status: "BOUNCED", bouncedAt: new Date() },
+        });
         break;
       }
 
-      case "email.delivered": {
-        // updateMany is idempotent — no-op if resendId not found
-        await prisma.outreachEmailLog.updateMany({
+      case "email.complained": {
+        // Spam complaint — mark bounced
+        const outbox = await prisma.outboxEmail.findUnique({
           where: { resendId },
-          data: { status: "DELIVERED" },
+          select: { id: true },
         });
+        if (outbox) {
+          await prisma.outboxEmail.update({
+            where: { id: outbox.id },
+            data: {
+              status: "BOUNCED",
+              bouncedAt: new Date(),
+              failReason: "spam_complaint",
+            },
+          });
+        }
         break;
       }
 

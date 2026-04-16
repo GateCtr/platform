@@ -50,6 +50,7 @@ import {
   Bell,
   Megaphone,
   Mail,
+  Rocket,
   AlertTriangle,
   ChevronsUpDown,
   LogOut,
@@ -57,6 +58,7 @@ import {
   Sun,
   Moon,
   Monitor,
+  Inbox,
 } from "lucide-react";
 import { useAdminStore } from "@/lib/stores/admin-store";
 import type { Permission } from "@/lib/permissions";
@@ -149,10 +151,28 @@ const NAV_GROUPS: NavGroup[] = [
     groupKey: "groups.outreach",
     items: [
       {
+        key: "sidebar.inbox",
+        href: "/admin/inbox",
+        permission: "analytics:read",
+        icon: Inbox,
+      },
+      {
         key: "sidebar.outreachCrm",
         href: "/admin/outreach",
         permission: "analytics:read",
         icon: Mail,
+      },
+      {
+        key: "sidebar.massEmail",
+        href: "/admin/mass-email",
+        permission: "users:write",
+        icon: Mail,
+      },
+      {
+        key: "sidebar.launchAnalytics",
+        href: "/admin/launch",
+        permission: "analytics:read",
+        icon: Rocket,
       },
     ],
   },
@@ -315,6 +335,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
   const { data: permissions = [], isLoading } = usePermissions();
   const unacknowledgedCount = useAdminStore((s) => s.unacknowledgedCount);
+  const inboxUnreadCount = useAdminStore((s) => s.inboxUnreadCount);
 
   const cleanPath = pathname.replace(/^\/fr/, "") || "/";
 
@@ -325,6 +346,9 @@ export function AdminSidebar() {
       .map((item) => {
         if (item.href === "/admin/notifications" && unacknowledgedCount > 0) {
           return { ...item, badge: String(unacknowledgedCount) };
+        }
+        if (item.href === "/admin/inbox" && inboxUnreadCount > 0) {
+          return { ...item, badge: String(inboxUnreadCount) };
         }
         return item;
       }),

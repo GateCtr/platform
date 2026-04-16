@@ -123,8 +123,16 @@ export async function POST(req: Request) {
           }
         : {}),
       duration: body.duration,
-      ...(body.duration === "repeating" && body.durationInMonths
-        ? { duration_in_months: body.durationInMonths }
+      ...(body.duration === "repeating"
+        ? {
+            duration_in_months: body.durationInMonths
+              ? Number(body.durationInMonths)
+              : (() => {
+                  throw new Error(
+                    "duration_in_months is required for repeating coupons",
+                  );
+                })(),
+          }
         : {}),
       ...(body.maxRedemptions ? { max_redemptions: body.maxRedemptions } : {}),
       ...(body.redeemBy

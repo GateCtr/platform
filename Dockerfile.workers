@@ -28,6 +28,7 @@ COPY package.json tsconfig.json ./
 # Source directories used by workers and their dependencies
 COPY workers ./workers
 COPY lib ./lib
+COPY messages ./messages
 COPY config ./config
 COPY types ./types
 COPY messages ./messages

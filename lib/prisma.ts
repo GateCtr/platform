@@ -7,8 +7,14 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 // Create PostgreSQL connection pool
+// On serverless (Vercel), each function instance creates its own pool.
+// Limit to 1 connection per pool to avoid exhausting Neon's connection limit.
+// Use Neon's pooled endpoint (pgbouncer) in production for best results.
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  max: process.env.NODE_ENV === "production" ? 1 : 5,
+  idleTimeoutMillis: 10_000,
+  connectionTimeoutMillis: 5_000,
 });
 
 // Create Prisma adapter

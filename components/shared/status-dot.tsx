@@ -17,9 +17,12 @@ export function StatusDot({ label }: { label: string }) {
   const t = useTranslations("status");
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_APP_URL
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/api/v1/system/health`
-      : "/api/v1/system/health";
+    // Always use an absolute URL to avoid the locale prefix being prepended
+    // when this component renders on a /fr/* page.
+    const base =
+      process.env.NEXT_PUBLIC_APP_URL ??
+      (typeof window !== "undefined" ? window.location.origin : "");
+    const apiUrl = `${base}/api/v1/system/health`;
     fetch(apiUrl)
       .then((r) => r.json())
       .then((data: { status?: string }) => {

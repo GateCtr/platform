@@ -29,9 +29,11 @@ type OAuthProvider = "oauth_google" | "oauth_github" | "oauth_gitlab";
 export function SignUpForm({
   initialInviteCode,
   waitlistEnabled,
+  initialRef = "",
 }: {
   initialInviteCode: string;
   waitlistEnabled: boolean;
+  initialRef?: string;
 }) {
   const t = useTranslations("authSignUp");
   const te = useTranslations("authErrors");
@@ -142,6 +144,11 @@ export function SignUpForm({
         return;
       }
 
+      // Persist referral source in Clerk unsafeMetadata (read by webhook on user.created)
+      if (initialRef) {
+        await signUp.update({ unsafeMetadata: { ref: initialRef } });
+      }
+
       await signUp.verifications.sendEmailCode();
 
       setPhase("verify");
@@ -211,6 +218,7 @@ export function SignUpForm({
         redirectUrl: paths.withOrigin(paths.dashboard),
         redirectCallbackUrl: paths.withOrigin(paths.ssoCallback),
         legalAccepted: legal,
+        ...(initialRef ? { unsafeMetadata: { ref: initialRef } } : {}),
       });
       if (error) showError(error);
     } catch (err) {

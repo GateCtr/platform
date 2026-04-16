@@ -139,11 +139,11 @@ export default async function ModelsHubPage({
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="cta-primary" size="lg" asChild>
               <a href={appUrl("/sign-up")}>
-                Start saving — free <ArrowRight className="size-4" />
+                {t("ctaStartSaving")} <ArrowRight className="size-4" />
               </a>
             </Button>
             <Button variant="cta-secondary" size="lg" asChild>
-              <Link href="/compare">Compare models</Link>
+              <Link href="/compare">{t("ctaCompare")}</Link>
             </Button>
           </div>
         </div>
@@ -162,14 +162,16 @@ export default async function ModelsHubPage({
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/30">
                   <CardTitle className="text-base">{provider}</CardTitle>
                   <CardDescription>
-                    {models.length} model{models.length > 1 ? "s" : ""}
+                    {models.length > 1
+                      ? t("modelCountPlural", { count: models.length })
+                      : t("modelCount", { count: models.length })}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   <Table>
                     <TableHeader>
                       <TableRow className="hover:bg-transparent">
-                        <TableHead className="pl-6">Model</TableHead>
+                        <TableHead className="pl-6">{t("model")}</TableHead>
                         <TableHead className="text-right hidden sm:table-cell">
                           {t("inputPrice")}
                         </TableHead>
@@ -241,7 +243,7 @@ export default async function ModelsHubPage({
                               className="text-xs gap-1"
                             >
                               <Link href={`/models/${m.slug}`}>
-                                Details <ArrowRight className="size-3" />
+                                {t("details")} <ArrowRight className="size-3" />
                               </Link>
                             </Button>
                           </TableCell>
@@ -260,15 +262,12 @@ export default async function ModelsHubPage({
       <section className="py-20 px-4 bg-muted/20">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-foreground mb-4">
-            Cut your LLM bill by up to 40%
+            {t("hubCtaTitle")}
           </h2>
-          <p className="text-muted-foreground mb-8">
-            One endpoint swap. GateCtr compresses, routes, and caps —
-            automatically.
-          </p>
+          <p className="text-muted-foreground mb-8">{t("hubCtaSubtitle")}</p>
           <Button variant="cta-primary" size="lg" asChild>
             <a href={appUrl("/sign-up")}>
-              Start free — no card needed <ArrowRight className="size-4" />
+              {t("ctaNoCard")} <ArrowRight className="size-4" />
             </a>
           </Button>
         </div>

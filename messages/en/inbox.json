@@ -1,0 +1,61 @@
+{
+  "page": {
+    "title": "Inbox",
+    "subtitle": "Send and receive emails. Every event tracked."
+  },
+  "tabs": {
+    "inbox": "Inbox",
+    "sent": "Sent"
+  },
+  "filters": {
+    "all": "All",
+    "unread": "Unread",
+    "starred": "Starred",
+    "archived": "Archived"
+  },
+  "search": {
+    "placeholder": "Search emails…"
+  },
+  "actions": {
+    "compose": "Compose",
+    "refresh": "Refresh",
+    "reply": "Reply",
+    "archive": "Archive",
+    "star": "Star",
+    "unstar": "Unstar",
+    "delete": "Delete"
+  },
+  "empty": {
+    "inboxTitle": "No emails yet",
+    "inbox": "Emails sent to your inbox address will appear here.",
+    "sentTitle": "Nothing sent yet",
+    "sent": "Emails you compose and send will appear here.",
+    "selectTitle": "Select an email",
+    "select": "Choose a message from the list to read it here."
+  },
+  "outbox": {
+    "to": "To:"
+  },
+  "detail": {
+    "from": "From",
+    "to": "To",
+    "noContent": "No content.",
+    "thread": "Thread"
+  },
+  "compose": {
+    "title": "New email",
+    "titleReply": "Reply",
+    "to": "To",
+    "subject": "Subject",
+    "subjectPlaceholder": "Subject line",
+    "body": "Message",
+    "bodyPlaceholder": "Write your message…",
+    "send": "Send",
+    "sending": "Sending…",
+    "cancel": "Cancel",
+    "errorRequired": "To, subject and message are required.",
+    "errorFailed": "Failed to send. Try again.",
+    "errorUploading": "Attachments are still uploading. Please wait.",
+    "attach": "Attach file"
+  }
+}

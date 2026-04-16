@@ -151,7 +151,7 @@ export default async function ComparisonPage({
               href="/compare"
               className="hover:text-foreground transition-colors"
             >
-              Compare
+              {t("breadcrumbCompare")}
             </Link>
             <span>/</span>
             <span className="text-foreground truncate">
@@ -164,7 +164,7 @@ export default async function ComparisonPage({
             <span className="text-secondary-500">{modelB.name}</span>
           </h1>
           <p className="text-lg text-muted-foreground">
-            Price, speed, and context window comparison — 2025
+            {t("comparisonSubtitle")}
           </p>
         </div>
       </section>
@@ -176,7 +176,7 @@ export default async function ComparisonPage({
           {/* Side-by-side specs */}
           <Card className="overflow-hidden py-0">
             <CardHeader className="px-6 py-4 border-b border-border bg-muted/30">
-              <CardTitle className="text-base">Specifications</CardTitle>
+              <CardTitle className="text-base">{t("specifications")}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
@@ -213,7 +213,7 @@ export default async function ComparisonPage({
                       `${modelA.speedTokensPerSec} tok/s`,
                       `${modelB.speedTokensPerSec} tok/s`,
                     ],
-                    ["Provider", modelA.provider, modelB.provider],
+                    [t("provider"), modelA.provider, modelB.provider],
                   ].map(([label, valA, valB]) => (
                     <TableRow key={label}>
                       <TableCell className="pl-6 font-medium text-muted-foreground">
@@ -333,7 +333,7 @@ export default async function ComparisonPage({
                         </div>
                         <div className="flex justify-between">
                           <span className="text-muted-foreground">
-                            With GateCtr
+                            {t("withGatectrLabel")}
                           </span>
                           <span className="font-semibold text-foreground tabular-nums">
                             ${compressed.toFixed(2)}
@@ -384,12 +384,9 @@ export default async function ComparisonPage({
           <Card className="bg-muted/20 text-center py-10">
             <CardContent className="px-6">
               <h2 className="text-2xl font-bold text-foreground mb-3">
-                Reduce both bills by up to 40%
+                {t("ctaTitle")}
               </h2>
-              <p className="text-muted-foreground mb-6">
-                One endpoint swap. GateCtr compresses, routes, and caps —
-                automatically.
-              </p>
+              <p className="text-muted-foreground mb-6">{t("ctaSubtitle")}</p>
               <Button variant="cta-primary" size="lg" asChild>
                 <a href={appUrl("/sign-up")}>
                   {t("ctaLabel")} <ArrowRight className="size-4" />

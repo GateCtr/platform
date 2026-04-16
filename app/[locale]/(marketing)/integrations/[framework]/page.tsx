@@ -141,7 +141,7 @@ export default async function IntegrationPage({
               href="/integrations"
               className="hover:text-foreground transition-colors"
             >
-              Integrations
+              {t("breadcrumbIntegrations")}
             </Link>
             <span>/</span>
             <span className="text-foreground">{integration.name}</span>
@@ -172,15 +172,14 @@ export default async function IntegrationPage({
             {
               step: 1,
               label: t("step1"),
-              content: `No additional packages required. Use your existing ${integration.name} installation.`,
+              content: t("step1Content", { framework: integration.name }),
               code: null,
             },
             { step: 2, label: t("step2"), content: null, code: true },
             {
               step: 3,
               label: t("step3"),
-              content:
-                "Make a test call and check the GateCtr dashboard for token savings and cost data.",
+              content: t("step3Content"),
               code: null,
             },
           ].map(({ step, label, content, code }) => (
@@ -252,12 +251,10 @@ export default async function IntegrationPage({
               <h2 className="text-2xl font-bold text-foreground mb-3">
                 {t("ctaLabel", { framework: integration.name })}
               </h2>
-              <p className="text-muted-foreground mb-6">
-                No credit card required. Up and running in 5 minutes.
-              </p>
+              <p className="text-muted-foreground mb-6">{t("ctaSubtitle")}</p>
               <Button variant="cta-primary" size="lg" asChild>
                 <a href={appUrl("/sign-up")}>
-                  Start free <ArrowRight className="size-4" />
+                  {t("ctaStartFree")} <ArrowRight className="size-4" />
                 </a>
               </Button>
             </CardContent>
