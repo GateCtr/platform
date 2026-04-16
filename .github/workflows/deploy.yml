@@ -58,13 +58,18 @@ jobs:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
       - name: Deploy to Vercel (Staging)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          scope: ${{ secrets.VERCEL_ORG_ID }}
-          github-comment: true
+        id: vercel-deploy-staging
+        run: |
+          DEPLOY_URL=$(npx vercel@latest --token ${{ secrets.VERCEL_TOKEN }} \
+            --scope ${{ secrets.VERCEL_ORG_ID }} \
+            -m githubCommitSha=${{ github.sha }} \
+            -m githubCommitRef=${{ github.ref_name }} \
+            --yes 2>&1 | tail -1)
+          echo "preview-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $DEPLOY_URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Notify deployment success
         if: success()
@@ -146,13 +151,18 @@ jobs:
 
       - name: Deploy to Vercel (Production)
         id: vercel-deploy
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: "--prod"
-          scope: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          DEPLOY_URL=$(npx vercel@latest --token ${{ secrets.VERCEL_TOKEN }} \
+            --prod \
+            --scope ${{ secrets.VERCEL_ORG_ID }} \
+            -m githubCommitSha=${{ github.sha }} \
+            -m githubCommitRef=${{ github.ref_name }} \
+            --yes 2>&1 | tail -1)
+          echo "preview-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $DEPLOY_URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Alias production domains
         run: |
