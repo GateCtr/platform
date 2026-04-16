@@ -76,7 +76,18 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
 
+      - name: Check Amplify secrets
+        id: amplify_staging
+        run: |
+          if [ -n "${{ secrets.AMPLIFY_APP_ID_STAGING }}" ] && [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "⚠️  Amplify secrets not configured — skipping deployment trigger"
+          fi
+
       - name: Trigger Amplify deployment (staging)
+        if: steps.amplify_staging.outputs.available == 'true'
         run: |
           aws amplify start-job \
             --app-id ${{ secrets.AMPLIFY_APP_ID_STAGING }} \
@@ -89,7 +100,7 @@ jobs:
 
       - name: Notify deployment success
         if: success()
-        run: echo "✅ Staging deployment triggered on AWS Amplify"
+        run: echo "✅ Staging deploy complete (Amplify triggered if secrets configured)"
 
   deploy-production:
     name: Deploy to Production (Amplify)
@@ -160,7 +171,18 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.NEON_DIRECT_URL_MAIN }}
 
+      - name: Check Amplify secrets
+        id: amplify_prod
+        run: |
+          if [ -n "${{ secrets.AMPLIFY_APP_ID_PRODUCTION }}" ] && [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "⚠️  Amplify secrets not configured — skipping deployment trigger"
+          fi
+
       - name: Trigger Amplify deployment (production)
+        if: steps.amplify_prod.outputs.available == 'true'
         run: |
           aws amplify start-job \
             --app-id ${{ secrets.AMPLIFY_APP_ID_PRODUCTION }} \
@@ -186,7 +208,7 @@ jobs:
 
       - name: Notify deployment success
         if: success()
-        run: echo "✅ Production deployment triggered on AWS Amplify"
+        run: echo "✅ Production deploy complete"
 
       - name: Notify deployment failure
         if: failure()
