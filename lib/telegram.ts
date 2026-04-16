@@ -41,7 +41,6 @@ export async function sendTelegramMessage(
   const chatId = msg.chatId ?? getDefaultChatId();
 
   if (!token || !chatId) {
-    // Not configured — silent skip
     return false;
   }
 
@@ -165,8 +164,15 @@ export async function notifyBudgetAlert(opts: {
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 
-/** Escape special Markdown characters for Telegram Markdown mode */
+/**
+ * Escape special Markdown characters for Telegram Markdown v1.
+ * Escapes backslash first, then * _ ` [
+ */
 function escapeMarkdown(text: string): string {
-  // Telegram Markdown v1 — only escape * _ ` [
-  return text.replace(/[*_`[]/g, "\\$&");
+  return text
+    .replace(/\\/g, "\\\\")
+    .replace(/\*/g, "\\*")
+    .replace(/_/g, "\\_")
+    .replace(/`/g, "\\`")
+    .replace(/\[/g, "\\[");
 }

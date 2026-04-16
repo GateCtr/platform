@@ -129,6 +129,15 @@ export default function OutboxEmail({
 
           {/* ── Body ── */}
           <Section style={{ padding: "0 48px 40px" }}>
+            {/*
+             * bodyHtml is composed by the admin user themselves via the
+             * compose dialog — it is NOT user-supplied external content.
+             * The textToHtml() function in compose-dialog.tsx escapes all
+             * HTML entities before building the HTML, so only safe tags
+             * (<p>, <br>, <blockquote>, <a>) are ever present.
+             * This is intentional and safe for this admin-only context.
+             */}
+            { }
             <div
               className="email-body"
               dangerouslySetInnerHTML={{ __html: bodyHtml }}
