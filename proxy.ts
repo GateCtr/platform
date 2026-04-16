@@ -224,9 +224,22 @@ const prodMiddleware = clerkMiddleware(
     const { pathname } = req.nextUrl;
     const secure = (res: NextResponse) => applySecurityHeaders(res);
 
-    // Clerk cookie desync
+    // Clerk cookie desync — let Clerk handle the handshake natively
+    // Do NOT redirect or clear cookies here; intercepting the handshake
+    // causes an infinite loop. Clerk will resolve it and redirect to the app.
     const hsReason = req.nextUrl.searchParams.get("__clerk_hs_reason");
-    if (hsReason === "session-token-but-no-client-uat") {
+    const isHandshake =
+      req.nextUrl.searchParams.has("__clerk_handshake") ||
+      req.nextUrl.searchParams.has("__clerk_hs_reason") ||
+      req.headers.get("x-clerk-auth-status") === "handshake";
+
+    if (isHandshake) {
+      // Let Clerk middleware resolve the handshake — do not interfere
+      return secure(NextResponse.next());
+    }
+
+    // Legacy: clear stale cookies only when NOT in a handshake flow
+    if (hsReason === "session-token-but-no-client-uat" && !isHandshake) {
       const signInPath = pathname.startsWith("/fr")
         ? "/fr/sign-in"
         : "/sign-in";
