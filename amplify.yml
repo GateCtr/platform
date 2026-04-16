@@ -9,11 +9,16 @@ frontend:
     build:
       commands:
         - pnpm build
+        # Copy public assets and static files into standalone output
+        - cp -r public .next/standalone/public
+        - cp -r .next/static .next/standalone/.next/static
   artifacts:
-    baseDirectory: .next
+    # Deploy only the standalone output — excludes .next/cache and node_modules
+    baseDirectory: .next/standalone
     files:
       - "**/*"
   cache:
     paths:
+      # Cache node_modules and Next.js build cache between deployments
       - node_modules/**/*
       - .next/cache/**/*
