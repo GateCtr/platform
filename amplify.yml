@@ -9,16 +9,16 @@ frontend:
     build:
       commands:
         - pnpm build
-        # Copy public assets and static files into standalone output
-        - cp -r public .next/standalone/public
-        - cp -r .next/static .next/standalone/.next/static
+        # Remove build cache from .next before packaging — it's preserved separately
+        # in the Amplify cache layer above and would push the artifact over 230MB
+        - rm -rf .next/cache
   artifacts:
-    # Deploy only the standalone output — excludes .next/cache and node_modules
-    baseDirectory: .next/standalone
+    # Must be .next (not .next/standalone) — Amplify Hosting compute reads
+    # required-server-files.json from this directory to configure the SSR runtime
+    baseDirectory: .next
     files:
       - "**/*"
   cache:
     paths:
-      # Cache node_modules and Next.js build cache between deployments
       - node_modules/**/*
       - .next/cache/**/*
