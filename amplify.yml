@@ -8,16 +8,34 @@ frontend:
         - pnpm prisma generate
     build:
       commands:
+        # Write all env vars to .env.production so Next.js SSR runtime can access them.
+        # Amplify makes env vars available during build but NOT in the SSR Lambda by default.
+        # This is the official AWS-recommended approach (see docs.aws.amazon.com/amplify/.../ssr-environment-variables.html)
+        - env | grep -e DATABASE_URL >> .env.production
+        - env | grep -e SHADOW_DATABASE_URL >> .env.production
+        - env | grep -e REDIS_URL >> .env.production
+        - env | grep -e UPSTASH_REDIS >> .env.production
+        - env | grep -e CLERK >> .env.production
+        - env | grep -e NEXT_PUBLIC_ >> .env.production
+        - env | grep -e STRIPE >> .env.production
+        - env | grep -e RESEND >> .env.production
+        - env | grep -e ENCRYPTION_KEY >> .env.production
+        - env | grep -e WEBHOOK_SIGNING_SECRET >> .env.production
+        - env | grep -e GATECTR_INTERNAL_SECRET >> .env.production
+        - env | grep -e SENTRY >> .env.production
+        - env | grep -e R2_ >> .env.production
+        - env | grep -e TELEGRAM >> .env.production
+        - env | grep -e ENABLE_ >> .env.production
+        - env | grep -e LAUNCH_DATE >> .env.production
+        - env | grep -e PH_COUPON_ID >> .env.production
+        - env | grep -e SLACK_LAUNCH_WEBHOOK_URL >> .env.production
+        - env | grep -e DEMO_SANDBOX_OPENAI_KEY >> .env.production
+        - env | grep -e EMAIL_FROM >> .env.production
+        - env | grep -e INBOX_ >> .env.production
+        - env | grep -e OUTREACH_ >> .env.production
+        - env | grep -e EMAIL_ASSET_BASE_URL >> .env.production
         - pnpm build
-        # Strip everything that's not needed at runtime to stay under 230MB
-        # Keep: server/, static/, required-server-files.json, BUILD_ID, routes-manifest.json
         - rm -rf .next/cache
-        - rm -rf .next/standalone
-        - find .next/server -name "*.map" -delete 2>/dev/null || true
-        - find .next/server -name "*.pack" -delete 2>/dev/null || true
-        - find .next -name "*.map" -maxdepth 2 -delete 2>/dev/null || true
-        # Log final size for debugging
-        - du -sh .next && du -sh .next/* 2>/dev/null || true
   artifacts:
     baseDirectory: .next
     files:
