@@ -19,15 +19,12 @@
 import { readFileSync } from "fs";
 import { execSync } from "child_process";
 
-const SKIP = new Set([
-  "NEXT_PUBLIC_APP_URL", // set per-branch in Amplify Console
-  "VERCEL_OIDC_TOKEN",
-  "CSRF_EXTRA_ORIGINS",
-]);
+const SKIP = new Set(["VERCEL_OIDC_TOKEN", "CSRF_EXTRA_ORIGINS"]);
 
 // Variables that are safe to store as String (not SecureString)
 // Everything else goes as SecureString
 const PLAIN_STRING = new Set([
+  "NEXT_PUBLIC_APP_URL",
   "NEXT_PUBLIC_MARKETING_URL",
   "NEXT_PUBLIC_STATUS_URL",
   "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
@@ -80,6 +77,16 @@ function parseEnvFile(path: string): Record<string, string> {
     ) {
       value = value.slice(1, -1);
     }
+    // Strip inline comments — handles both: value # comment AND "value"   # comment
+    const commentIdx = value.indexOf("   #");
+    if (commentIdx !== -1) value = value.slice(0, commentIdx).trim();
+    // Strip any remaining surrounding quotes after comment removal
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
     if (key && value) vars[key] = value;
   }
   return vars;
@@ -122,6 +129,21 @@ async function main() {
   console.log(`   Mode   : ${dryRun ? "DRY RUN" : "LIVE"}\n`);
 
   const vars = parseEnvFile(".env.local");
+
+  // Fix localhost URLs — replace with real values for staging/prod
+  if (branch !== "local") {
+    vars["NEXT_PUBLIC_APP_URL"] =
+      branch === "main"
+        ? "https://app.gatectr.com"
+        : "https://develop.gatectr.com";
+    if (vars["NEXT_PUBLIC_MARKETING_URL"]?.includes("localhost"))
+      vars["NEXT_PUBLIC_MARKETING_URL"] = "https://gatectr.com";
+    if (vars["NEXT_PUBLIC_STATUS_URL"]?.includes("localhost"))
+      vars["NEXT_PUBLIC_STATUS_URL"] = "https://status.gatectr.com";
+  }
+
+  // NEXT_PUBLIC_APP_URL is handled with override above — not in SKIP
+
   let pushed = 0;
   let skipped = 0;
 
