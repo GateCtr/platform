@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { emailQueue } from "@/lib/queues";
+import { getEmailQueue } from "@/lib/queues";
 import { logAudit } from "@/lib/audit";
 import { validateCsrf } from "@/lib/csrf";
 import type { TeamRole } from "@prisma/client";
@@ -68,17 +68,19 @@ export async function inviteMember(formData: FormData) {
     const acceptUrl = `${appUrl}/api/v1/teams/invitations/${token}/accept`;
     const locale: "en" | "fr" = meta.locale === "fr" ? "fr" : "en";
 
-    emailQueue
-      .add("team_invitation", {
-        type: "team_invitation",
-        to: email,
-        inviterName: dbUser.name ?? "Someone",
-        teamName: team.name,
-        role,
-        acceptUrl,
-        expiryDays: 7,
-        locale,
-      })
+    getEmailQueue()
+      .then((q) =>
+        q.add("team_invitation", {
+          type: "team_invitation",
+          to: email,
+          inviterName: dbUser.name ?? "Someone",
+          teamName: team.name,
+          role,
+          acceptUrl,
+          expiryDays: 7,
+          locale,
+        }),
+      )
       .catch(() => {});
 
     logAudit({

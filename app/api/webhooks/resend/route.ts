@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
-import { outreachQueue } from "@/lib/queues";
+import { getOutreachQueue } from "@/lib/queues";
 import {
   notifyEmailDelivered,
   notifyEmailOpened,
@@ -183,7 +183,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           ]);
 
           try {
-            const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+            const jobs = await (
+              await getOutreachQueue()
+            ).getJobs(["delayed", "waiting"]);
             for (const job of jobs) {
               const data = job.data as { prospectId?: string };
               if (data.prospectId === outreachLog.prospectId) {

@@ -9,7 +9,7 @@ import { optimize } from "@/lib/optimizer";
 import { route } from "@/lib/router";
 import { decrypt } from "@/lib/encryption";
 import { dispatchWebhook } from "@/lib/webhooks";
-import { analyticsQueue } from "@/lib/queues";
+import { getAnalyticsQueue } from "@/lib/queues";
 import { ProviderError } from "@/lib/llm/types";
 import type { GatewayRequest, Message } from "@/lib/llm/types";
 import * as openai from "@/lib/llm/openai";
@@ -415,34 +415,36 @@ export async function POST(req: NextRequest) {
   };
 
   // Enqueue analytics job; fall back to direct DB write if queue unavailable
-  analyticsQueue.add("analytics", analyticsPayload).catch((queueErr) => {
-    console.warn(
-      "[chat] analyticsQueue.add failed — falling back to direct write",
-      queueErr,
-    );
-    prisma.usageLog
-      .create({
-        data: {
-          userId,
-          projectId: projectId ?? null,
-          apiKeyId: apiKeyId ?? null,
-          model: gatewayReq.model,
-          provider: usedFallback ? fallbackProvider : providerName,
-          promptTokens: llmResponse.promptTokens,
-          completionTokens: llmResponse.completionTokens,
-          totalTokens: llmResponse.totalTokens,
-          savedTokens,
-          costUsd,
-          latencyMs: llmResponse.latencyMs,
-          statusCode: 200,
-          optimized,
-          routed,
-          fallback: usedFallback,
-          ipAddress: ip ?? null,
-        },
-      })
-      .catch(() => {});
-  });
+  getAnalyticsQueue()
+    .then((q) => q.add("analytics", analyticsPayload))
+    .catch((queueErr) => {
+      console.warn(
+        "[chat] analyticsQueue.add failed — falling back to direct write",
+        queueErr,
+      );
+      prisma.usageLog
+        .create({
+          data: {
+            userId,
+            projectId: projectId ?? null,
+            apiKeyId: apiKeyId ?? null,
+            model: gatewayReq.model,
+            provider: usedFallback ? fallbackProvider : providerName,
+            promptTokens: llmResponse.promptTokens,
+            completionTokens: llmResponse.completionTokens,
+            totalTokens: llmResponse.totalTokens,
+            savedTokens,
+            costUsd,
+            latencyMs: llmResponse.latencyMs,
+            statusCode: 200,
+            optimized,
+            routed,
+            fallback: usedFallback,
+            ipAddress: ip ?? null,
+          },
+        })
+        .catch(() => {});
+    });
 
   recordBudgetUsage(userId, projectId, llmResponse.totalTokens, costUsd).catch(
     () => {},

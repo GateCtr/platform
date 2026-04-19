@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { emailQueue } from "@/lib/queues";
+import { getEmailQueue } from "@/lib/queues";
 import { logAudit } from "@/lib/audit";
 import type { TeamRole } from "@prisma/client";
 
@@ -76,17 +76,19 @@ export async function POST(req: NextRequest) {
     const locale: "en" | "fr" = meta.locale === "fr" ? "fr" : "en";
     const inviterName = dbUser.name ?? "Someone";
 
-    emailQueue
-      .add("team_invitation", {
-        type: "team_invitation",
-        to: body.email!,
-        inviterName,
-        teamName: team.name,
-        role: body.role ?? "MEMBER",
-        acceptUrl,
-        expiryDays: 7,
-        locale,
-      })
+    getEmailQueue()
+      .then((q) =>
+        q.add("team_invitation", {
+          type: "team_invitation",
+          to: body.email!,
+          inviterName,
+          teamName: team.name,
+          role: body.role ?? "MEMBER",
+          acceptUrl,
+          expiryDays: 7,
+          locale,
+        }),
+      )
       .catch(() => {});
 
     logAudit({
