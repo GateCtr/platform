@@ -8,9 +8,7 @@ frontend:
         - pnpm prisma generate
     build:
       commands:
-        # Write env vars to .env.production so Next.js SSR runtime can access them at runtime.
-        # grep exits with code 1 when no match — use || true to prevent build failure.
-        # See: https://docs.aws.amazon.com/amplify/latest/userguide/ssr-environment-variables.html
+        # Write env vars to .env.production for SSR runtime access
         - env | grep -e DATABASE_URL >> .env.production || true
         - env | grep -e SHADOW_DATABASE_URL >> .env.production || true
         - env | grep -e REDIS_URL >> .env.production || true
@@ -35,7 +33,13 @@ frontend:
         - env | grep -e OUTREACH_ >> .env.production || true
         - env | grep -e EMAIL_ASSET_BASE_URL >> .env.production || true
         - pnpm build
+        # Show sizes before cleanup for debugging
+        - echo "=== .next sizes before cleanup ===" && du -sh .next/* 2>/dev/null || true
+        # Remove cache and source maps to reduce artifact size
         - rm -rf .next/cache
+        - find .next -name "*.map" -delete 2>/dev/null || true
+        # Show final size
+        - echo "=== .next total after cleanup ===" && du -sh .next 2>/dev/null || true
   artifacts:
     baseDirectory: .next
     files:
