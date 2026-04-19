@@ -35,6 +35,18 @@ frontend:
         - pnpm build
         # Show sizes before cleanup for debugging
         - echo "=== .next sizes before cleanup ===" && du -sh .next/* 2>/dev/null || true
+        # Copy missing transitive dependencies into standalone node_modules.
+        # With pnpm, packages are symlinked — use node to resolve real paths.
+        - |
+          for pkg in tslib pg-types debug ms pg-int8 postgres-array postgres-bytea postgres-date postgres-interval; do
+            src=$(node -e "try{console.log(require.resolve('$pkg').replace(/\/[^/]+$/, ''))}catch(e){}" 2>/dev/null)
+            if [ -n "$src" ] && [ -d "$src" ]; then
+              cp -rL "$src" ".next/standalone/node_modules/$pkg" 2>/dev/null || true
+              echo "Copied $pkg from $src"
+            else
+              echo "Skipped $pkg (not found)"
+            fi
+          done
         # Remove cache and source maps to reduce artifact size
         - rm -rf .next/cache
         - find .next -name "*.map" -delete 2>/dev/null || true
