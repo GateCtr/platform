@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
 import { resend } from "@/lib/resend";
-import { outreachQueue } from "@/lib/queues";
+import { getOutreachQueue } from "@/lib/queues";
 import { appUrl } from "@/lib/app-url";
 import { applyVariableSubstitution } from "@/lib/outreach-utils";
 import { wrapOutreachEmail } from "@/lib/outreach-email-wrapper";
@@ -295,21 +295,22 @@ export async function sendEmailInternal(
 
   // Enqueue follow-up jobs (non-blocking — Redis failure must not fail the send)
   try {
+    const q = await getOutreachQueue();
     if (step === 1) {
-      await outreachQueue.add(
+      await q.add(
         "followup",
         { type: "outreach_followup", prospectId, step: 2 },
         { delay: 3 * 24 * 60 * 60 * 1000 },
       );
     } else if (step === 2) {
-      await outreachQueue.add(
+      await q.add(
         "followup",
         { type: "outreach_followup", prospectId, step: 3 },
         { delay: 7 * 24 * 60 * 60 * 1000 },
       );
     } else if (step === 3) {
       const AUTO_REFUSE_DAYS = 7;
-      await outreachQueue.add(
+      await q.add(
         "auto-refuse",
         { type: "outreach_auto_refuse", prospectId, step: 3 },
         { delay: AUTO_REFUSE_DAYS * 24 * 60 * 60 * 1000 },
@@ -402,7 +403,9 @@ export async function deleteProspect(
 
   // Cancel any pending follow-up jobs first
   try {
-    const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+    const jobs = await (
+      await getOutreachQueue()
+    ).getJobs(["delayed", "waiting"]);
     for (const job of jobs) {
       const data = job.data as { prospectId?: string };
       if (data.prospectId === prospectId) {
@@ -428,7 +431,9 @@ export async function cancelFollowups(
   let cancelled = 0;
   try {
     // Get all delayed/waiting jobs for this prospect
-    const jobs = await outreachQueue.getJobs(["delayed", "waiting"]);
+    const jobs = await (
+      await getOutreachQueue()
+    ).getJobs(["delayed", "waiting"]);
     for (const job of jobs) {
       const data = job.data as { prospectId?: string };
       if (data.prospectId === prospectId) {
@@ -457,7 +462,9 @@ export async function scheduleFollowup(
   await requireOutreachAccess();
 
   try {
-    await outreachQueue.add(
+    await (
+      await getOutreachQueue()
+    ).add(
       "followup",
       { type: "outreach_followup", prospectId, step },
       { delay: delayDays * 24 * 60 * 60 * 1000 },
