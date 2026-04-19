@@ -217,6 +217,45 @@ export async function getOutreachQueue(): Promise<
   );
 }
 
-// Legacy sync exports for workers (they run in Node.js, not Lambda)
-// Workers import these directly — they don't go through Next.js
-export { getRedisConnection as getRedisConnectionSync };
+// Workers should import from lib/queues.worker.ts, not this file.
+// This file is imported by Next.js app routes — no sync module-level code allowed.
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const IORedisSync = require("ioredis");
+
+export const redisConnection = new IORedisSync(
+  process.env.REDIS_EXTERNAL_URL ?? process.env.REDIS_URL,
+  {
+    maxRetriesPerRequest: null,
+    retryStrategy: (times: number) => {
+      if (times >= 10) return null;
+      return Math.min(times * 1000, 30000);
+    },
+  },
+);
+
+// Sync queue exports for workers
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { Queue: QueueSync } = require("bullmq");
+
+export const dailyReportQueue = new QueueSync("daily-report", {
+  connection: redisConnection,
+  ...bullmqDefaults,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: { type: "fixed", delay: 5000 },
+    removeOnComplete: { count: 90 },
+    removeOnFail: { count: 30 },
+  },
+});
+
+export const healthQueue = new QueueSync("health", {
+  connection: redisConnection,
+  ...bullmqDefaults,
+  defaultJobOptions: {
+    attempts: 2,
+    backoff: { type: "fixed", delay: 5000 },
+    removeOnComplete: { count: 100 },
+    removeOnFail: { count: 100 },
+  },
+});

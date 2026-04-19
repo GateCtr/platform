@@ -1,7 +1,11 @@
 import { Worker } from "bullmq";
 import { prisma } from "@/lib/prisma";
 import { HealthStatus } from "@prisma/client";
-import { redisConnection, healthQueue, HealthJobData } from "@/lib/queues";
+import {
+  redisConnection,
+  healthQueue,
+  HealthJobData,
+} from "@/lib/queues.worker";
 
 const SERVICES = ["app", "database", "redis", "queue", "stripe"] as const;
 type ServiceName = (typeof SERVICES)[number];

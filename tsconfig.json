@@ -37,6 +37,7 @@
     "examples",
     "sdk-node",
     "sdk-python",
-    "playwright-report"
+    "playwright-report",
+    "workers"
   ]
 }

@@ -1,7 +1,10 @@
 import { Worker, type Job } from "bullmq";
 import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/prisma";
-import { redisConnection, type OutreachFollowupJobData } from "@/lib/queues";
+import {
+  redisConnection,
+  type OutreachFollowupJobData,
+} from "@/lib/queues.worker";
 
 const SKIPPED_STATUSES = ["REFUSED", "UNSUBSCRIBED"] as const;
 

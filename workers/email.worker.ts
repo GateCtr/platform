@@ -2,7 +2,7 @@ import { Worker, type Job } from "bullmq";
 import { render } from "@react-email/render";
 import * as Sentry from "@sentry/nextjs";
 import { emailSubject } from "@/lib/email-subjects";
-import { redisConnection, type EmailJobData } from "@/lib/queues";
+import { redisConnection, type EmailJobData } from "@/lib/queues.worker";
 import TeamInvitationEmail from "@/components/emails/team-invitation";
 
 const FROM = process.env.EMAIL_FROM ?? "GateCtr <noreply@gatectr.io>";

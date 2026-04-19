@@ -8,7 +8,7 @@
 import { Queue, Worker, Job } from "bullmq";
 import { prisma } from "@/lib/prisma";
 import { sendBillingRenewalReminderEmail } from "@/lib/resend";
-import { redisConnection } from "@/lib/queues";
+import { redisConnection } from "@/lib/queues.worker";
 
 // ─── Queue ────────────────────────────────────────────────────────────────────
 

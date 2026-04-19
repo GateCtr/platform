@@ -2,7 +2,7 @@ import { Worker, type Job } from "bullmq";
 import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/prisma";
 import { recordBudgetUsage } from "@/lib/firewall";
-import { redisConnection, type AnalyticsJobData } from "@/lib/queues";
+import { redisConnection, type AnalyticsJobData } from "@/lib/queues.worker";
 
 async function processJob(job: Job<AnalyticsJobData>): Promise<void> {
   const startMs = Date.now();
