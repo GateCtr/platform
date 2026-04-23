@@ -153,6 +153,9 @@ importers:
       pg:
         specifier: ^8.20.0
         version: 8.20.0
+      pg-connection-string:
+        specifier: ^2.12.0
+        version: 2.12.0
       pg-int8:
         specifier: ^1.0.1
         version: 1.0.1
@@ -162,9 +165,15 @@ importers:
       pg-pool:
         specifier: ^3.13.0
         version: 3.13.0(pg@8.20.0)
+      pg-protocol:
+        specifier: ^1.13.0
+        version: 1.13.0
       pg-types:
         specifier: ^4.1.0
         version: 4.1.0
+      pgpass:
+        specifier: ^1.0.5
+        version: 1.0.5
       postgres-array:
         specifier: ^3.0.4
         version: 3.0.4
@@ -216,6 +225,9 @@ importers:
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      split2:
+        specifier: ^4.2.0
+        version: 4.2.0
       stripe:
         specifier: ^20.4.1
         version: 20.4.1(@types/node@20.19.37)
