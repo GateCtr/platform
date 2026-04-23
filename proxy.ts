@@ -163,7 +163,9 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
       return secure(NextResponse.rewrite(rewriteUrl));
     }
     if (pathname === "/health") {
-      return secure(NextResponse.rewrite(new URL("/api/health", req.url)));
+      return secure(
+        NextResponse.rewrite(new URL("/api/v1/system/health", req.url)),
+      );
     }
     return NextResponse.json({ error: "Not Found" }, { status: 404 });
   }
