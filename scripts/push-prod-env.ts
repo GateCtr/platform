@@ -75,8 +75,12 @@ const inputObj = {
 
 import { tmpdir } from "os";
 import { join } from "path";
+import { randomBytes } from "crypto";
 
-const tmpFile = join(tmpdir(), `amplify-prod-env-${Date.now()}.json`);
+const tmpFile = join(
+  tmpdir(),
+  `amplify-prod-env-${randomBytes(16).toString("hex")}.json`,
+);
 writeFileSync(tmpFile, JSON.stringify(inputObj), "utf-8");
 
 try {

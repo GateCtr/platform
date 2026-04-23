@@ -16,8 +16,11 @@
  * (either not needed at build time, or Amplify injects them automatically)
  */
 
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync, unlinkSync } from "fs";
 import { execSync } from "child_process";
+import { tmpdir } from "os";
+import { join } from "path";
+import { randomBytes } from "crypto";
 
 const SKIP = new Set(["VERCEL_OIDC_TOKEN", "CSRF_EXTRA_ORIGINS"]);
 
@@ -106,12 +109,28 @@ function putParameter(
     return;
   }
   try {
-    const escaped = value.replace(/'/g, "'\\''");
-    execSync(
-      `aws ssm put-parameter --name "${name}" --value '${escaped}' --type ${type} --overwrite --region ${region}`,
-      { stdio: "pipe" },
+    const tmpFile = join(
+      tmpdir(),
+      `ssm-param-${randomBytes(16).toString("hex")}.json`,
     );
-    console.log(`✅ ${type.padEnd(12)} ${name}`);
+    const paramJson = JSON.stringify({
+      Name: name,
+      Value: value,
+      Type: type,
+      Overwrite: true,
+    });
+    writeFileSync(tmpFile, paramJson, "utf-8");
+    try {
+      execSync(
+        `aws ssm put-parameter --cli-input-json file://${tmpFile} --region ${region}`,
+        { stdio: "pipe" },
+      );
+      console.log(`✅ ${type.padEnd(12)} ${name}`);
+    } finally {
+      try {
+        unlinkSync(tmpFile);
+      } catch {}
+    }
   } catch (e) {
     console.error(`❌ Failed: ${name}`, (e as Error).message);
   }

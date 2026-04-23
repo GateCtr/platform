@@ -92,7 +92,8 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
   const host = req.headers.get("host") ?? "";
   const isDev = process.env.NODE_ENV !== "production";
   const isStagingDomain =
-    host === "develop.gatectr.com" || host.includes(".amplifyapp.com");
+    host === "develop.gatectr.com" ||
+    (host.endsWith(".amplifyapp.com") && host.includes("d3ntbka0r4vvb1"));
   const isAppSubdomain = isDev || isStagingDomain || host.startsWith("app.");
   const secure = (res: NextResponse) => applySecurityHeaders(res);
 
