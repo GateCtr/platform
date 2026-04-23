@@ -91,11 +91,9 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
   const { pathname } = req.nextUrl;
   const host = req.headers.get("host") ?? "";
   const isDev = process.env.NODE_ENV !== "production";
-  const isAppSubdomain =
-    isDev ||
-    host.startsWith("app.") ||
-    host.includes(".amplifyapp.com") ||
-    host === "develop.gatectr.com";
+  const isStagingDomain =
+    host === "develop.gatectr.com" || host.includes(".amplifyapp.com");
+  const isAppSubdomain = isDev || isStagingDomain || host.startsWith("app.");
   const secure = (res: NextResponse) => applySecurityHeaders(res);
 
   // Geo-blocking
@@ -187,7 +185,8 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
   }
 
   // App subdomain: redirect marketing routes to gatectr.com
-  if (isAppSubdomain && !isDev) {
+  // Skip for staging domains — they serve everything on one domain
+  if (isAppSubdomain && !isDev && !isStagingDomain) {
     const marketingRoutes = [
       "/waitlist",
       "/fr/waitlist",
