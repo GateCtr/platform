@@ -1,4 +1,4 @@
-import { webhooksQueue } from "@/lib/queues";
+import { getWebhooksQueue } from "@/lib/queues";
 
 /**
  * Enqueue a webhook delivery job into BullMQ.
@@ -10,7 +10,8 @@ export async function dispatchWebhook(
   data: Record<string, unknown>,
 ): Promise<void> {
   try {
-    await webhooksQueue.add("deliver", { userId, event, payload: data });
+    const queue = await getWebhooksQueue();
+    await queue.add("deliver", { userId, event, payload: data });
   } catch (err) {
     console.warn("[webhooks] failed to enqueue job:", err);
   }

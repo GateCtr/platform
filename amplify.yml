@@ -1,0 +1,98 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install -g pnpm
+        - pnpm install --frozen-lockfile
+        - pnpm prisma generate
+    build:
+      commands:
+        # Write env vars to .env.production for SSR runtime access
+        - env | grep -e DATABASE_URL >> .env.production || true
+        - env | grep -e SHADOW_DATABASE_URL >> .env.production || true
+        - env | grep -e REDIS_URL >> .env.production || true
+        - env | grep -e UPSTASH_REDIS >> .env.production || true
+        - env | grep -e CLERK >> .env.production || true
+        - env | grep -e NEXT_PUBLIC_ >> .env.production || true
+        - env | grep -e STRIPE >> .env.production || true
+        - env | grep -e RESEND >> .env.production || true
+        - env | grep -e ENCRYPTION_KEY >> .env.production || true
+        - env | grep -e WEBHOOK_SIGNING_SECRET >> .env.production || true
+        - env | grep -e GATECTR_INTERNAL_SECRET >> .env.production || true
+        - env | grep -e SENTRY >> .env.production || true
+        - env | grep -e R2_ >> .env.production || true
+        - env | grep -e TELEGRAM >> .env.production || true
+        - env | grep -e ENABLE_ >> .env.production || true
+        - env | grep -e LAUNCH_DATE >> .env.production || true
+        - env | grep -e PH_COUPON_ID >> .env.production || true
+        - env | grep -e SLACK_LAUNCH_WEBHOOK_URL >> .env.production || true
+        - env | grep -e DEMO_SANDBOX_OPENAI_KEY >> .env.production || true
+        - env | grep -e EMAIL_FROM >> .env.production || true
+        - env | grep -e INBOX_ >> .env.production || true
+        - env | grep -e OUTREACH_ >> .env.production || true
+        - env | grep -e EMAIL_ASSET_BASE_URL >> .env.production || true
+        - echo "=== .env.production ===" && wc -l .env.production
+        - pnpm build
+        # Fix missing transitive deps in .next/node_modules/ hashed dirs.
+        # Turbopack externalizes packages with hashed names but misses transitive deps.
+        # We install them directly into .next/node_modules/ where require() looks.
+        - |
+          MISSING_PKGS="tslib @ioredis/commands pg-types pg-int8 postgres-array postgres-bytea postgres-date postgres-interval debug ms module-details-from-path require-in-the-middle"
+          echo "=== Installing missing transitive deps into .next/node_modules/ ==="
+          mkdir -p .next/node_modules
+          for pkg in $MISSING_PKGS; do
+            # Create parent dir for scoped packages (@scope/name)
+            mkdir -p ".next/node_modules/$(dirname $pkg)" 2>/dev/null || true
+            src=$(node -e "try{const p=require.resolve('$pkg/package.json');console.log(p.replace('/package.json',''))}catch(e){}" 2>/dev/null)
+            if [ -n "$src" ] && [ -d "$src" ]; then
+              cp -rL "$src" ".next/node_modules/$pkg" 2>/dev/null && echo "  ✅ $pkg" || echo "  ❌ $pkg (copy failed)"
+            else
+              echo "  ⚠️  $pkg not found in node_modules"
+            fi
+          done
+          # Also copy into each hashed external dir that needs them
+          for hashdir in .next/node_modules/*/; do
+            dirname=$(basename "$hashdir")
+            case "$dirname" in
+              ioredis-*)
+                cp -rL ".next/node_modules/@ioredis" "$hashdir/node_modules/@ioredis" 2>/dev/null || true
+                mkdir -p "$hashdir/node_modules/@ioredis"
+                cp -rL ".next/node_modules/@ioredis/commands" "$hashdir/node_modules/@ioredis/commands" 2>/dev/null || true
+                cp -rL ".next/node_modules/tslib" "$hashdir/node_modules/tslib" 2>/dev/null || true
+                cp -rL ".next/node_modules/debug" "$hashdir/node_modules/debug" 2>/dev/null || true
+                cp -rL ".next/node_modules/ms" "$hashdir/node_modules/ms" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+              bullmq-*)
+                cp -rL ".next/node_modules/tslib" "$hashdir/node_modules/tslib" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+              pg-*)
+                cp -rL ".next/node_modules/pg-types" "$hashdir/node_modules/pg-types" 2>/dev/null || true
+                cp -rL ".next/node_modules/pg-int8" "$hashdir/node_modules/pg-int8" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-array" "$hashdir/node_modules/postgres-array" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-bytea" "$hashdir/node_modules/postgres-bytea" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-date" "$hashdir/node_modules/postgres-date" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-interval" "$hashdir/node_modules/postgres-interval" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+              require-in-the-middle-*)
+                cp -rL ".next/node_modules/debug" "$hashdir/node_modules/debug" 2>/dev/null || true
+                cp -rL ".next/node_modules/ms" "$hashdir/node_modules/ms" 2>/dev/null || true
+                cp -rL ".next/node_modules/module-details-from-path" "$hashdir/node_modules/module-details-from-path" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+            esac
+          done
+        - rm -rf .next/cache
+        - find .next -name "*.map" -delete 2>/dev/null || true
+        - echo "=== .next total ===" && du -sh .next
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*

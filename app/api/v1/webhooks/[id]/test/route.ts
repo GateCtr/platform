@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { webhooksQueue } from "@/lib/queues";
+import { getWebhooksQueue } from "@/lib/queues";
 
 export async function POST(
   _req: NextRequest,
@@ -29,7 +29,9 @@ export async function POST(
   if (!webhook)
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  await webhooksQueue.add("webhook.test", {
+  await (
+    await getWebhooksQueue()
+  ).add("webhook.test", {
     webhookId: id,
     userId: dbUser.id,
     event: "webhook.test",

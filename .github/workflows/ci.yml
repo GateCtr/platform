@@ -257,6 +257,10 @@ jobs:
     continue-on-error: true
     # Only run on direct pushes to main/develop — not on PRs (handled by neon-branch.yml)
     if: github.event_name == 'push'
+    # Provide a dummy DATABASE_URL at job level so prisma.config.ts never sees an empty value.
+    # The real URL is resolved per-step after checking which branch we're on.
+    env:
+      DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
     steps:
       - uses: actions/checkout@v4
 
@@ -271,11 +275,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+          PRISMA_SKIP_GENERATE: "true"
 
-      - name: Generate Prisma Client
-        run: pnpm prisma generate
-
-      - name: Run migrations and seed on Neon branch
+      - name: Resolve target DATABASE_URL
+        id: db
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             DB_URL="${{ secrets.NEON_DATABASE_URL_MAIN }}"
@@ -285,11 +290,33 @@ jobs:
             DIRECT_URL="${{ secrets.NEON_DIRECT_URL_DEVELOP }}"
           fi
           if [ -z "$DB_URL" ]; then
-            echo "⚠️  No DATABASE_URL secret configured for this branch — skipping migrations."
-            exit 0
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            MIGRATE_URL="${DIRECT_URL:-$DB_URL}"
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "migrate_url=$MIGRATE_URL" >> $GITHUB_OUTPUT
           fi
-          # Use direct URL for both migrate and seed (pooler not supported with adapter-pg)
-          # Fall back to pooler URL if no direct URL configured
-          MIGRATE_URL="${DIRECT_URL:-$DB_URL}"
-          DATABASE_URL="$MIGRATE_URL" DIRECT_URL="$MIGRATE_URL" pnpm prisma migrate deploy
-          DATABASE_URL="$MIGRATE_URL" DIRECT_URL="$MIGRATE_URL" pnpm prisma db seed
+
+      - name: Skip if no DATABASE_URL configured
+        if: steps.db.outputs.skip == 'true'
+        run: echo "⚠️  No DATABASE_URL secret configured for this branch — skipping migrations."
+
+      - name: Generate Prisma Client
+        if: steps.db.outputs.skip == 'false'
+        run: pnpm prisma generate
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.migrate_url }}
+
+      - name: Run migrations
+        if: steps.db.outputs.skip == 'false'
+        run: pnpm prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.migrate_url }}
+          DIRECT_URL: ${{ steps.db.outputs.migrate_url }}
+
+      - name: Seed database
+        if: steps.db.outputs.skip == 'false'
+        run: pnpm prisma db seed
+        env:
+          DATABASE_URL: ${{ steps.db.outputs.migrate_url }}
+          DIRECT_URL: ${{ steps.db.outputs.migrate_url }}

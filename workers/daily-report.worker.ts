@@ -15,7 +15,7 @@ import {
   redisConnection,
   type DailyReportJobData,
   dailyReportQueue,
-} from "@/lib/queues";
+} from "@/lib/queues.worker";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 

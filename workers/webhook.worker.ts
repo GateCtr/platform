@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
-import { redisConnection, type WebhookJobData } from "@/lib/queues";
+import { redisConnection, type WebhookJobData } from "@/lib/queues.worker";
 
 const MAX_RESPONSE_BYTES = 1_048_576; // 1 MB
 const RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 16000];

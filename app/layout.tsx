@@ -4,7 +4,6 @@ import { cookies, headers } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryProvider } from "@/components/query-provider";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -128,7 +127,6 @@ export default async function RootLayout({
             <TooltipProvider>{children}</TooltipProvider>
           </ReactQueryProvider>
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );

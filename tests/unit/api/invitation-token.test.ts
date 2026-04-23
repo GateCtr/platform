@@ -26,6 +26,16 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
+vi.mock("@/lib/queues", () => ({
+  getEmailQueue: vi.fn().mockResolvedValue({
+    add: vi.fn().mockResolvedValue({}),
+  }),
+}));
+
+vi.mock("@/lib/audit", () => ({
+  logAudit: vi.fn().mockResolvedValue(undefined),
+}));
+
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { POST } from "@/app/api/v1/teams/invitations/route";
@@ -42,6 +52,8 @@ describe("P8: team invitation token is unique and expires in 7 days", () => {
     } as ReturnType<typeof auth> extends Promise<infer T> ? T : never);
     vi.mocked(prisma.user.findUnique).mockResolvedValue({
       id: OWNER_ID,
+      name: "Test User",
+      metadata: {},
     } as never);
     vi.mocked(prisma.team.findUnique).mockResolvedValue({
       id: TEAM_ID,
