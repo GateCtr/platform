@@ -27,7 +27,7 @@ export default async function ApiKeysSettingsPage() {
     createdAt: Date;
   };
 
-  const [keys, projects] = ctx
+  const [rawKeys, projects] = ctx
     ? await Promise.all([
         prisma.apiKey.findMany({
           where: { teamId: ctx.teamId },
@@ -53,6 +53,14 @@ export default async function ApiKeysSettingsPage() {
         }),
       ])
     : ([[], []] as [ApiKeyRow[], { id: string; name: string }[]]);
+
+  // Serialize Date objects to ISO strings for client component props
+  const keys = rawKeys.map((k) => ({
+    ...k,
+    lastUsedAt: k.lastUsedAt?.toISOString() ?? null,
+    expiresAt: k.expiresAt?.toISOString() ?? null,
+    createdAt: k.createdAt.toISOString(),
+  }));
 
   return (
     <div className="max-w-2xl">
