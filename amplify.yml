@@ -44,7 +44,12 @@ frontend:
           for pkg in $MISSING_PKGS; do
             # Create parent dir for scoped packages (@scope/name)
             mkdir -p ".next/node_modules/$(dirname $pkg)" 2>/dev/null || true
+            # Try require.resolve first, then fall back to pnpm store lookup
             src=$(node -e "try{const p=require.resolve('$pkg/package.json');console.log(p.replace('/package.json',''))}catch(e){}" 2>/dev/null)
+            if [ -z "$src" ] || [ ! -d "$src" ]; then
+              # Fallback: find in pnpm store
+              src=$(find node_modules/.pnpm -path "*/node_modules/$pkg/package.json" -not -path "*.next/*" 2>/dev/null | head -1 | sed 's|/package.json$||')
+            fi
             if [ -n "$src" ] && [ -d "$src" ]; then
               cp -rL "$src" ".next/node_modules/$pkg" 2>/dev/null && echo "  ✅ $pkg" || echo "  ❌ $pkg (copy failed)"
             else
