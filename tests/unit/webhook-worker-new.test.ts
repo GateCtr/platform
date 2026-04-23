@@ -19,15 +19,20 @@ vi.mock("bullmq", () => {
   return { Worker: WorkerMock };
 });
 
-vi.mock("ioredis", () => ({
-  default: vi.fn().mockImplementation(() => ({
-    on: vi.fn(),
-    quit: vi.fn(),
-  })),
-}));
+vi.mock("ioredis", () => {
+  const IORedis = vi.fn(function (this: Record<string, unknown>) {
+    this.on = vi.fn();
+    this.quit = vi.fn();
+  });
+  return { default: IORedis, __esModule: true };
+});
 
 vi.mock("@/lib/queues", () => ({
   redisConnection: {},
+}));
+vi.mock("@/lib/queues.worker", () => ({
+  redisConnection: { on: vi.fn(), quit: vi.fn() },
+  bullmqDefaults: { skipVersionCheck: true },
 }));
 
 vi.mock("@sentry/nextjs", () => ({
