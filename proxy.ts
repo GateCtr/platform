@@ -90,6 +90,15 @@ function sanitizeRedirectUrl(
 function handlePreAuth(req: NextRequest): NextResponse | null {
   const { pathname } = req.nextUrl;
   const host = req.headers.get("host") ?? "";
+  // Temporary debug endpoint — remove after troubleshooting
+  if (pathname === "/_debug-middleware") {
+    return NextResponse.json({
+      host,
+      xForwardedHost: req.headers.get("x-forwarded-host"),
+      pathname,
+      url: req.url,
+    });
+  }
   const isDev = process.env.NODE_ENV !== "production";
   const isStagingDomain =
     host === "develop.gatectr.com" ||
@@ -150,8 +159,16 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
     return secure(intlMiddleware(req));
   }
 
-  // api.gatectr.com
-  if (host === "api.gatectr.com") {
+  // api.gatectr.com (or api.develop.gatectr.com for staging)
+  if (host === "api.gatectr.com" || host.startsWith("api.")) {
+    // Debug: return host info for troubleshooting
+    if (pathname === "/debug-host") {
+      return NextResponse.json({
+        host,
+        pathname,
+        forwarded: req.headers.get("x-forwarded-host"),
+      });
+    }
     if (pathname.startsWith("/v1/")) {
       const rewriteUrl = new URL(`/api${pathname}`, req.url);
       rewriteUrl.search = req.nextUrl.search;

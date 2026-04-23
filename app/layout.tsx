@@ -32,10 +32,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL ??
       process.env.NEXT_PUBLIC_MARKETING_URL ??
-      "https://gatectr.com",
+      "https://www.gatectr.com",
   ),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com",
+    canonical:
+      process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://www.gatectr.com",
   },
   title: "GateCtr — AI Cost Infrastructure for LLM APIs.",
   description:

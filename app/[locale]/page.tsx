@@ -50,7 +50,7 @@ export default async function Home({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home.metadata" });
   const marketingUrl =
-    process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://gatectr.com";
+    process.env.NEXT_PUBLIC_MARKETING_URL ?? "https://www.gatectr.com";
 
   if (process.env.ENABLE_WAITLIST === "true") {
     redirect("/waitlist");

@@ -54,7 +54,7 @@ const vars = parseEnvFile(ENV_FILE);
 
 // Production URL overrides
 vars["NEXT_PUBLIC_APP_URL"] = "https://app.gatectr.com";
-vars["NEXT_PUBLIC_MARKETING_URL"] = "https://gatectr.com";
+vars["NEXT_PUBLIC_MARKETING_URL"] = "https://www.gatectr.com";
 vars["NEXT_PUBLIC_STATUS_URL"] = "https://status.gatectr.com";
 
 // Remove vars that shouldn't be in production

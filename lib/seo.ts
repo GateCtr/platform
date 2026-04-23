@@ -11,7 +11,7 @@ export interface SeoContext {
   isAppSubdomain: boolean;
 }
 
-const DEFAULT_MARKETING_URL = "https://gatectr.com";
+const DEFAULT_MARKETING_URL = "https://www.gatectr.com";
 const DEFAULT_APP_URL = "https://app.gatectr.com";
 
 function resolveUrls(): { marketingUrl: string; appUrl: string } {
