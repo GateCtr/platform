@@ -32,6 +32,8 @@ frontend:
         - env | grep -e INBOX_ >> .env.production || true
         - env | grep -e OUTREACH_ >> .env.production || true
         - env | grep -e EMAIL_ASSET_BASE_URL >> .env.production || true
+        # Debug: show what was written to .env.production
+        - echo "=== .env.production contents ===" && wc -l .env.production && head -5 .env.production
         - pnpm build
         # Show sizes before cleanup for debugging
         - echo "=== .next sizes before cleanup ===" && du -sh .next/* 2>/dev/null || true

@@ -65,6 +65,7 @@ const ALLOWED_REDIRECT_HOSTS = new Set([
   "localhost:3000",
   "localhost:5000",
   "app.gatectr.com",
+  "develop.gatectr.com",
   ...(process.env.NEXT_PUBLIC_APP_URL
     ? [new URL(process.env.NEXT_PUBLIC_APP_URL).host]
     : []),
@@ -90,7 +91,11 @@ function handlePreAuth(req: NextRequest): NextResponse | null {
   const { pathname } = req.nextUrl;
   const host = req.headers.get("host") ?? "";
   const isDev = process.env.NODE_ENV !== "production";
-  const isAppSubdomain = isDev || host.startsWith("app.");
+  const isAppSubdomain =
+    isDev ||
+    host.startsWith("app.") ||
+    host.includes(".amplifyapp.com") ||
+    host === "develop.gatectr.com";
   const secure = (res: NextResponse) => applySecurityHeaders(res);
 
   // Geo-blocking
@@ -377,6 +382,7 @@ const prodMiddleware = clerkMiddleware(
     authorizedParties: [
       "https://app.gatectr.com",
       "https://gatectr.com",
+      "https://develop.gatectr.com",
       "http://localhost:3000",
     ],
   },
