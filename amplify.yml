@@ -32,28 +32,59 @@ frontend:
         - env | grep -e INBOX_ >> .env.production || true
         - env | grep -e OUTREACH_ >> .env.production || true
         - env | grep -e EMAIL_ASSET_BASE_URL >> .env.production || true
-        # Debug: show what was written to .env.production
-        - echo "=== .env.production contents ===" && wc -l .env.production && head -5 .env.production
+        - echo "=== .env.production ===" && wc -l .env.production
         - pnpm build
-        # Show sizes before cleanup for debugging
-        - echo "=== .next sizes before cleanup ===" && du -sh .next/* 2>/dev/null || true
-        # Copy missing transitive dependencies into standalone node_modules.
-        # With pnpm, packages are symlinked — use node to resolve real paths.
+        # Fix missing transitive deps in .next/node_modules/ hashed dirs.
+        # Turbopack externalizes packages with hashed names but misses transitive deps.
+        # We install them directly into .next/node_modules/ where require() looks.
         - |
-          for pkg in tslib pg-types debug ms pg-int8 postgres-array postgres-bytea postgres-date postgres-interval; do
-            src=$(node -e "try{console.log(require.resolve('$pkg').replace(/\/[^/]+$/, ''))}catch(e){}" 2>/dev/null)
+          MISSING_PKGS="tslib @ioredis/commands pg-types pg-int8 postgres-array postgres-bytea postgres-date postgres-interval debug ms"
+          echo "=== Installing missing transitive deps into .next/node_modules/ ==="
+          mkdir -p .next/node_modules
+          for pkg in $MISSING_PKGS; do
+            src=$(node -e "try{const p=require.resolve('$pkg/package.json');console.log(p.replace('/package.json',''))}catch(e){}" 2>/dev/null)
             if [ -n "$src" ] && [ -d "$src" ]; then
-              cp -rL "$src" ".next/standalone/node_modules/$pkg" 2>/dev/null || true
-              echo "Copied $pkg from $src"
+              cp -rL "$src" ".next/node_modules/$pkg" 2>/dev/null && echo "  ✅ $pkg" || echo "  ❌ $pkg (copy failed)"
             else
-              echo "Skipped $pkg (not found)"
+              echo "  ⚠️  $pkg not found in node_modules"
             fi
           done
-        # Remove cache and source maps to reduce artifact size
+          # Also copy into each hashed external dir that needs them
+          for hashdir in .next/node_modules/*/; do
+            dirname=$(basename "$hashdir")
+            case "$dirname" in
+              ioredis-*)
+                cp -rL ".next/node_modules/@ioredis" "$hashdir/node_modules/@ioredis" 2>/dev/null || true
+                mkdir -p "$hashdir/node_modules/@ioredis"
+                cp -rL ".next/node_modules/@ioredis/commands" "$hashdir/node_modules/@ioredis/commands" 2>/dev/null || true
+                cp -rL ".next/node_modules/tslib" "$hashdir/node_modules/tslib" 2>/dev/null || true
+                cp -rL ".next/node_modules/debug" "$hashdir/node_modules/debug" 2>/dev/null || true
+                cp -rL ".next/node_modules/ms" "$hashdir/node_modules/ms" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+              bullmq-*)
+                cp -rL ".next/node_modules/tslib" "$hashdir/node_modules/tslib" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+              pg-*)
+                cp -rL ".next/node_modules/pg-types" "$hashdir/node_modules/pg-types" 2>/dev/null || true
+                cp -rL ".next/node_modules/pg-int8" "$hashdir/node_modules/pg-int8" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-array" "$hashdir/node_modules/postgres-array" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-bytea" "$hashdir/node_modules/postgres-bytea" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-date" "$hashdir/node_modules/postgres-date" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-interval" "$hashdir/node_modules/postgres-interval" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+              require-in-the-middle-*)
+                cp -rL ".next/node_modules/debug" "$hashdir/node_modules/debug" 2>/dev/null || true
+                cp -rL ".next/node_modules/ms" "$hashdir/node_modules/ms" 2>/dev/null || true
+                echo "  ✅ Patched $dirname"
+                ;;
+            esac
+          done
         - rm -rf .next/cache
         - find .next -name "*.map" -delete 2>/dev/null || true
-        # Show final size
-        - echo "=== .next total after cleanup ===" && du -sh .next 2>/dev/null || true
+        - echo "=== .next total ===" && du -sh .next
   artifacts:
     baseDirectory: .next
     files:
