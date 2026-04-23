@@ -38,7 +38,7 @@ frontend:
         # Turbopack externalizes packages with hashed names but misses transitive deps.
         # We install them directly into .next/node_modules/ where require() looks.
         - |
-          MISSING_PKGS="tslib @ioredis/commands pg-types pg-int8 postgres-array postgres-bytea postgres-date postgres-interval debug ms module-details-from-path require-in-the-middle obuf"
+          MISSING_PKGS="tslib @ioredis/commands pg-types pg-int8 pg-numeric pg-pool postgres-array postgres-bytea postgres-date postgres-interval postgres-range debug ms module-details-from-path require-in-the-middle obuf"
           echo "=== Installing missing transitive deps into .next/node_modules/ ==="
           mkdir -p .next/node_modules
           for pkg in $MISSING_PKGS; do
@@ -71,10 +71,13 @@ frontend:
               pg-*)
                 cp -rL ".next/node_modules/pg-types" "$hashdir/node_modules/pg-types" 2>/dev/null || true
                 cp -rL ".next/node_modules/pg-int8" "$hashdir/node_modules/pg-int8" 2>/dev/null || true
+                cp -rL ".next/node_modules/pg-numeric" "$hashdir/node_modules/pg-numeric" 2>/dev/null || true
+                cp -rL ".next/node_modules/pg-pool" "$hashdir/node_modules/pg-pool" 2>/dev/null || true
                 cp -rL ".next/node_modules/postgres-array" "$hashdir/node_modules/postgres-array" 2>/dev/null || true
                 cp -rL ".next/node_modules/postgres-bytea" "$hashdir/node_modules/postgres-bytea" 2>/dev/null || true
                 cp -rL ".next/node_modules/postgres-date" "$hashdir/node_modules/postgres-date" 2>/dev/null || true
                 cp -rL ".next/node_modules/postgres-interval" "$hashdir/node_modules/postgres-interval" 2>/dev/null || true
+                cp -rL ".next/node_modules/postgres-range" "$hashdir/node_modules/postgres-range" 2>/dev/null || true
                 cp -rL ".next/node_modules/obuf" "$hashdir/node_modules/obuf" 2>/dev/null || true
                 echo "  ✅ Patched $dirname"
                 ;;
