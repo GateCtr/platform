@@ -38,7 +38,7 @@ frontend:
         # Turbopack externalizes packages with hashed names but misses transitive deps.
         # We install them directly into .next/node_modules/ where require() looks.
         - |
-          MISSING_PKGS="tslib @ioredis/commands pg-types pg-int8 postgres-array postgres-bytea postgres-date postgres-interval debug ms"
+          MISSING_PKGS="tslib @ioredis/commands pg-types pg-int8 postgres-array postgres-bytea postgres-date postgres-interval debug ms module-details-from-path require-in-the-middle"
           echo "=== Installing missing transitive deps into .next/node_modules/ ==="
           mkdir -p .next/node_modules
           for pkg in $MISSING_PKGS; do
@@ -80,6 +80,7 @@ frontend:
               require-in-the-middle-*)
                 cp -rL ".next/node_modules/debug" "$hashdir/node_modules/debug" 2>/dev/null || true
                 cp -rL ".next/node_modules/ms" "$hashdir/node_modules/ms" 2>/dev/null || true
+                cp -rL ".next/node_modules/module-details-from-path" "$hashdir/node_modules/module-details-from-path" 2>/dev/null || true
                 echo "  ✅ Patched $dirname"
                 ;;
             esac
