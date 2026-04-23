@@ -1,6 +1,6 @@
 import type { EmailLocale } from "@/lib/email-messages";
 
-const DEFAULT_MARKETING_URL = "https://gatectr.com";
+const DEFAULT_MARKETING_URL = "https://www.gatectr.com";
 const DEFAULT_APP_URL = "https://app.gatectr.com";
 
 /** Public marketing + legal site (e.g. gatectr.com). */
