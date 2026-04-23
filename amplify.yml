@@ -42,6 +42,8 @@ frontend:
           echo "=== Installing missing transitive deps into .next/node_modules/ ==="
           mkdir -p .next/node_modules
           for pkg in $MISSING_PKGS; do
+            # Create parent dir for scoped packages (@scope/name)
+            mkdir -p ".next/node_modules/$(dirname $pkg)" 2>/dev/null || true
             src=$(node -e "try{const p=require.resolve('$pkg/package.json');console.log(p.replace('/package.json',''))}catch(e){}" 2>/dev/null)
             if [ -n "$src" ] && [ -d "$src" ]; then
               cp -rL "$src" ".next/node_modules/$pkg" 2>/dev/null && echo "  ✅ $pkg" || echo "  ❌ $pkg (copy failed)"
